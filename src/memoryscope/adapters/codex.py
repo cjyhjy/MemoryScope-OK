@@ -8,6 +8,7 @@ never touched. See ``cli.py`` for the shared isolation and memory model.
 import json
 import os
 import shutil
+from typing import Any
 
 from memoryscope.adapters.cli import API_KEY_ENV, CallResult, CliMemoryAgent
 
@@ -58,6 +59,8 @@ class CodexAgent(CliMemoryAgent):
 
     def parse_output(self, stdout: str) -> CallResult:
         result = CallResult()
+        completed = False
+        transient: list[Any] = []
         for line in stdout.splitlines():
             try:
                 event = json.loads(line)
@@ -73,7 +76,14 @@ class CodexAgent(CliMemoryAgent):
                 elif item.get("type") in ("command_execution", "file_change", "mcp_tool_call"):
                     result.tool_events.append({key: item.get(key) for key in ("type", "command", "changes", "exit_code", "status")})
             elif kind == "turn.completed":
+                completed = True
                 result.usage = event.get("usage")
+            elif kind == "error" and str(event.get("message") or "").startswith("Reconnecting..."):
+                # Codex retries dropped streams itself; only fatal if the turn never completes.
+                transient.append(event.get("message"))
+                result.tool_events.append({"type": "transient_error", "message": event.get("message")})
             elif kind in ("turn.failed", "error"):
                 result.errors.append(event.get("error") or event.get("message"))
+        if transient and not completed:
+            result.errors.extend(transient)
         return result

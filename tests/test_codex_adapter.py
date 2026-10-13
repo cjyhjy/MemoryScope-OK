@@ -100,3 +100,39 @@ def test_full_run_with_codex_adapter_is_not_synthetic(fake_codex, project):
     assert agent["describe"]["model"] == "deepseek-flash"
     text = (run_dir / "events.jsonl").read_text(encoding="utf-8") + (run_dir / "metadata.json").read_text(encoding="utf-8")
     assert "sk-test-secret" not in text
+
+
+def _jsonl(*events):
+    return "\n".join(json.dumps(event) for event in events)
+
+
+def test_reconnect_notice_is_transient_when_turn_completes():
+    agent = CodexAgent(AgentConfig(id="codex", type="codex"))
+    parsed = agent.parse_output(_jsonl(
+        {"type": "thread.started", "thread_id": "t1"},
+        {"type": "error", "message": "Reconnecting... 1/5 (stream disconnected before completion)"},
+        {"type": "item.completed", "item": {"type": "agent_message", "text": "答案：5734"}},
+        {"type": "turn.completed", "usage": {}},
+    ))
+    assert parsed.errors == []
+    assert parsed.messages == ["答案：5734"]
+    assert parsed.tool_events[0]["type"] == "transient_error"
+
+
+def test_reconnect_notice_without_completed_turn_is_an_error():
+    agent = CodexAgent(AgentConfig(id="codex", type="codex"))
+    parsed = agent.parse_output(_jsonl(
+        {"type": "thread.started", "thread_id": "t1"},
+        {"type": "error", "message": "Reconnecting... waiting for network"},
+    ))
+    assert parsed.errors == ["Reconnecting... waiting for network"]
+
+
+def test_other_error_events_stay_fatal():
+    agent = CodexAgent(AgentConfig(id="codex", type="codex"))
+    parsed = agent.parse_output(_jsonl(
+        {"type": "error", "message": "unexpected status 401"},
+        {"type": "item.completed", "item": {"type": "agent_message", "text": "x"}},
+        {"type": "turn.completed", "usage": {}},
+    ))
+    assert parsed.errors == ["unexpected status 401"]
