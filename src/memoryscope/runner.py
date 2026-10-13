@@ -17,7 +17,7 @@ from memoryscope.adapters import ADAPTERS
 from memoryscope.adapters.base import AgentAdapter
 from memoryscope.evaluator import EVALUATOR_VERSION, evaluate
 from memoryscope.io import contained_path, load_config, load_env_file, load_dataset, sha256_bytes, write_json
-from memoryscope.models import BenchmarkCase, Category, MessageStep, NewSessionStep
+from memoryscope.models import BenchmarkCase, Category, CheckFileStep, CheckMemoryStep, Evaluation, MessageStep, NewSessionStep
 
 
 def utc_now() -> str:
@@ -148,6 +148,32 @@ def _run_case(agent: AgentAdapter, agent_id: str, case: BenchmarkCase, writer: E
                 agent.reset_session(session_id)
                 writer.emit("session_reset", **ids, session_id=session_id, step=index,
                             reason="new_session_step", evidence=agent.collect_evidence())
+            elif isinstance(step, CheckMemoryStep):
+                stored = agent.memory_text()
+                if stored is None:
+                    evaluation = {"type": "check_memory", "status": "unknown", "score": None, "passed": None,
+                                  "explanation": "Adapter cannot expose stored memory."}
+                else:
+                    evaluation = dict(evaluate(stored, step.expected, Evaluation(type="contains")),
+                                      type="check_memory", scope="stored_memory")
+                event = writer.emit("evaluation", **ids, session_id=session_id, step=index, probe_id=step.id,
+                                    evaluation=evaluation, evidence=agent.collect_evidence())
+                probe_results.append({"probe_id": step.id, "kind": "check_memory", "session_id": session_id,
+                                      "status": evaluation["status"], "evaluation": evaluation,
+                                      "evaluation_event": event})
+            elif isinstance(step, CheckFileStep):
+                content = agent.read_workspace_file(step.path)
+                if content is None:
+                    evaluation = {"type": "check_file", "status": "fail", "score": 0.0, "passed": False,
+                                  "path": step.path, "explanation": f"File not found in sandbox workspace: {step.path}"}
+                else:
+                    evaluation = dict(evaluate(content, step.expected, Evaluation(type="contains")),
+                                      type="check_file", scope="workspace_file", path=step.path)
+                event = writer.emit("evaluation", **ids, session_id=session_id, step=index, probe_id=step.id,
+                                    evaluation=evaluation, evidence=agent.collect_evidence())
+                probe_results.append({"probe_id": step.id, "kind": "check_file", "session_id": session_id,
+                                      "status": evaluation["status"], "evaluation": evaluation,
+                                      "evaluation_event": event})
             else:
                 # Only the public probe is passed to the adapter; expected stays in the evaluator.
                 public = step.public()
@@ -161,7 +187,7 @@ def _run_case(agent: AgentAdapter, agent_id: str, case: BenchmarkCase, writer: E
                 evaluation = evaluate(response, step.expected, step.evaluation)
                 event = writer.emit("evaluation", **ids, session_id=session_id, step=index,
                                     probe_id=step.id, evaluation=evaluation)
-                probe_results.append({"probe_id": step.id, "session_id": session_id, "response": response,
+                probe_results.append({"probe_id": step.id, "kind": "probe", "session_id": session_id, "response": response,
                                       "status": evaluation["status"], "evaluation": evaluation,
                                       "evaluation_event": event})
     except Exception as error:
@@ -215,7 +241,7 @@ def run_benchmark(config_path: Path) -> tuple[Path, dict[str, Any]]:
                         "namespace": f"{run_id}/{agent_config.id}/{case.id}",
                         "protocol": case.protocol.model_dump(),
                     }
-                    missing = sorted(c.value for c in case.metadata.requires if c not in agent.capabilities)
+                    missing = sorted(c.value for c in case.required_capabilities if c not in agent.capabilities)
                     if missing:
                         writer.emit("case_unsupported", agent_id=agent_config.id, case_id=case.id,
                                     missing_capabilities=missing)

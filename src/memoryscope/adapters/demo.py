@@ -86,6 +86,9 @@ class DemoAgent(AgentAdapter):
         self.context.append({"role": "assistant", "content": response})
         return response
 
+    def memory_text(self) -> str | None:
+        return "\n".join(self.memory)
+
     def collect_evidence(self) -> dict[str, Any]:
         return {
             "synthetic": True,

@@ -21,6 +21,14 @@ class AgentAdapter(ABC):
         return {"class": type(self).__name__, "synthetic": self.synthetic,
                 "capabilities": sorted(capability.value for capability in self.capabilities)}
 
+    def memory_text(self) -> str | None:
+        """Stored long-term memory as text, or None when it cannot be inspected."""
+        return None
+
+    def read_workspace_file(self, relative: str) -> str | None:
+        """Content of a sandbox workspace file, or None if missing/unsupported."""
+        return None
+
     @abstractmethod
     def start(self, run_id: str, agent_id: str, sandbox: Path) -> None: ...
 

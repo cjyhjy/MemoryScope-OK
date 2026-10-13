@@ -97,6 +97,6 @@ def test_full_run_with_codex_adapter_is_not_synthetic(fake_codex, project):
     agent = result["agent_results"][0]
     assert result["synthetic"] is False and agent["synthetic"] is False
     assert agent["cases"][0]["status"] == "pass"
-    assert agent["describe"]["model"] == "deepseek-v4-flash"
+    assert agent["describe"]["model"] == "deepseek-flash"
     text = (run_dir / "events.jsonl").read_text(encoding="utf-8") + (run_dir / "metadata.json").read_text(encoding="utf-8")
     assert "sk-test-secret" not in text

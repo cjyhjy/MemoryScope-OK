@@ -7,6 +7,7 @@ import typer
 
 from memoryscope import __version__
 from memoryscope.io import InputError, load_dataset
+from memoryscope.reporting import build_report, load_results, summary
 from memoryscope.runner import run_benchmark
 
 app = typer.Typer(no_args_is_help=True, invoke_without_command=True, help="MemoryScope-OK: auditable long-term memory benchmark for AI agents.")
@@ -56,20 +57,26 @@ def run(config: Path = typer.Argument(..., help="YAML configuration inside the p
 
 @app.command()
 def report(run_dir: Path = typer.Argument(..., help="Existing run directory.")) -> None:
-    """Print a JSON summary. CSV/Markdown/radar generation is planned for Phase 6."""
+    """Rebuild JSON/CSV/Markdown/radar reports from saved results; never calls an agent."""
     try:
-        result = json.loads((run_dir / "results.json").read_text(encoding="utf-8"))
-        if result["schema_version"] != "1.1":
-            raise ValueError("unsupported result schema_version")
-        summary = {
-            "run_id": result["run_id"], "status": result["status"],
-            "synthetic": result["synthetic"],
-            "agents": [{"agent_id": item["agent_id"], "dimensions": item["dimensions"],
-                        "overall_score": item["overall_score"], "synthetic": item["synthetic"]}
-                       for item in result["agent_results"]],
-            "note": "JSON summary only. CSV, Markdown and radar reports are not implemented yet.",
-        }
+        result = load_results(run_dir)
+        out = build_report(run_dir)
     except (OSError, ValueError, KeyError, TypeError) as error:
         typer.echo(f"Report failed: {error}", err=True)
         raise typer.Exit(2) from error
-    typer.echo(json.dumps(summary, ensure_ascii=False, indent=2, allow_nan=False))
+    typer.echo(json.dumps(summary(result), ensure_ascii=False, indent=2, allow_nan=False))
+    typer.echo(f"Report files: {out}", err=True)
+
+
+@app.command()
+def rescore(run_dir: Path = typer.Argument(..., help="Existing run directory.")) -> None:
+    """Re-grade saved evidence with the current evaluator; never calls an agent."""
+    from memoryscope.rescore import rescore_run
+    try:
+        out, result = rescore_run(run_dir)
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        typer.echo(f"Rescore failed: {error}", err=True)
+        raise typer.Exit(2) from error
+    typer.echo(f"Rescored into {out}; {len(result['status_changes'])} status change(s).")
+    for change in result["status_changes"]:
+        typer.echo(f"  {change['agent_id']}/{change['case_id']}/{change['check_id']}: {change['old']} -> {change['new']}")

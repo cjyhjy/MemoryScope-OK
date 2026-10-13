@@ -13,7 +13,7 @@ from memoryscope.adapters.cli import API_KEY_ENV, CallResult, CliMemoryAgent
 
 BASE_URL_ENV = "MEMORYSCOPE_DEEPSEEK_BASE_URL"
 CODEX_BIN_ENV = "MEMORYSCOPE_CODEX_BIN"
-DEFAULT_MODEL = "deepseek-v4-flash"
+DEFAULT_MODEL = "deepseek-flash"  # DeepSeek-V4.1-Flash; deepseek-v4-flash is retired
 DEFAULT_BASE_URL = "https://api.deepseek.com"
 
 

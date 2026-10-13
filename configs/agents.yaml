@@ -4,7 +4,7 @@ output_dir: ../runs
 agents:
   - id: codex
     type: codex
-    model: deepseek-v4-flash
+    model: deepseek-flash
     timeout_seconds: 300
   - id: dsh
     type: dsh

@@ -49,11 +49,13 @@ class Probe(StrictModel):
 
 
 class Expected(StrictModel):
-    include: list[NonBlank] = Field(min_length=1)
+    include: list[NonBlank] = Field(default_factory=list)
     exclude: list[NonBlank] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def check_terms(self) -> "Expected":
+        if not self.include and not self.exclude:
+            raise ValueError("expected needs at least one include or exclude term")
         required = [term.casefold() for term in self.include]
         forbidden = [term.casefold() for term in self.exclude]
         if len(set(required)) != len(required) or len(set(forbidden)) != len(forbidden):
@@ -79,6 +81,7 @@ class Protocol(StrictModel):
 
 class CaseMetadata(StrictModel):
     difficulty: Literal["easy", "medium", "hard"]
+    subcategory: NonBlank | None = None
     tags: list[NonBlank] = Field(default_factory=list)
     requires: list[Capability] = Field(default_factory=list)
     review_status: Literal["draft", "reviewed"] = "draft"
@@ -105,7 +108,36 @@ class ProbeStep(StrictModel):
         return Probe(content=self.content)
 
 
-Step = Annotated[Union[MessageStep, NewSessionStep, ProbeStep], Field(discriminator="type")]
+class CheckMemoryStep(StrictModel):
+    """Inspect the agent's stored long-term memory (not its answer)."""
+
+    type: Literal["check_memory"]
+    id: Identifier
+    expected: Expected
+
+
+SafeRelativePath = Annotated[str, Field(min_length=1, max_length=200, pattern=r"^[A-Za-z0-9_.\-/]+$")]
+
+
+class CheckFileStep(StrictModel):
+    """Verify a file the agent was asked to create inside its sandbox workspace."""
+
+    type: Literal["check_file"]
+    id: Identifier
+    path: SafeRelativePath
+    expected: Expected
+
+    @field_validator("path")
+    @classmethod
+    def stays_in_workspace(cls, value: str) -> str:
+        if value.startswith("/") or ".." in value.split("/"):
+            raise ValueError("check_file path must be relative and stay inside the workspace")
+        return value
+
+
+Step = Annotated[Union[MessageStep, NewSessionStep, ProbeStep, CheckMemoryStep, CheckFileStep],
+                 Field(discriminator="type")]
+GradedStep = (ProbeStep, CheckMemoryStep, CheckFileStep)
 
 
 class BenchmarkCase(StrictModel):
@@ -123,8 +155,9 @@ class BenchmarkCase(StrictModel):
         probes = [step for step in self.steps if isinstance(step, ProbeStep)]
         if not probes:
             raise ValueError("a case needs at least one probe step")
-        if len({probe.id for probe in probes}) != len(probes):
-            raise ValueError("probe IDs must be unique within a case")
+        graded = [step for step in self.steps if isinstance(step, GradedStep)]
+        if len({step.id for step in graded}) != len(graded):
+            raise ValueError("probe/check IDs must be unique within a case")
         if not isinstance(self.steps[0], MessageStep):
             raise ValueError("the first step must be a message that writes information")
         first_probe = self.steps.index(probes[0])
@@ -137,6 +170,15 @@ class BenchmarkCase(StrictModel):
     @property
     def probes(self) -> list[ProbeStep]:
         return [step for step in self.steps if isinstance(step, ProbeStep)]
+
+    @property
+    def required_capabilities(self) -> set[Capability]:
+        required = {Capability.CROSS_SESSION, *self.metadata.requires}
+        if any(isinstance(step, CheckMemoryStep) for step in self.steps):
+            required.add(Capability.MEMORY_INSPECTION)
+        if any(isinstance(step, CheckFileStep) for step in self.steps):
+            required.add(Capability.WORKSPACE_FILES)
+        return required
 
 
 def upgrade_case(data: Any) -> Any:

@@ -222,3 +222,37 @@ def test_cli_failure_exit_codes(project, monkeypatch):
     result = runner.invoke(app, ["run", str(project / "configs/demo.yaml")])
     assert result.exit_code == 1
     assert "failed" in result.stdout
+
+
+def test_report_files_rebuild_offline_and_neutralise_formulas(project, monkeypatch):
+    class FormulaDemo(DemoAgent):
+        def execute_task(self, probe):
+            return "=HYPERLINK(\"x\")\n答案：5734"
+
+    monkeypatch.setitem(ADAPTERS, "demo", FormulaDemo)
+    run_dir, _ = run_benchmark(project / "configs/demo.yaml")
+    from memoryscope.reporting import build_report
+    out = build_report(run_dir)
+    assert {path.name for path in out.iterdir()} == {"report.json", "report.csv", "report.md", "radar.png"}
+    assert "'=HYPERLINK" in (out / "report.csv").read_text(encoding="utf-8")
+    assert "synthetic" in (out / "report.md").read_text(encoding="utf-8")
+    with pytest.raises(FileExistsError):
+        build_report(run_dir)
+
+
+def test_rescore_regrades_saved_evidence_without_agent(project, monkeypatch):
+    run_dir, _ = run_benchmark(project / "configs/demo.yaml")
+
+    class Exploding(DemoAgent):
+        def __init__(self, *args):
+            raise AssertionError("rescore must not create agents")
+
+    monkeypatch.setitem(ADAPTERS, "demo", Exploding)
+    from memoryscope.rescore import rescore_run
+    out, same = rescore_run(run_dir)
+    assert same["status_changes"] == [] and (out / "results.json").is_file()
+    import memoryscope.rescore as module
+    monkeypatch.setattr(module, "evaluate", lambda *args: {"status": "fail", "score": 0.0, "version": "test"})
+    _, changed = rescore_run(run_dir)
+    assert changed["status_changes"][0]["old"] == "pass" and changed["status_changes"][0]["new"] == "fail"
+    assert changed["agent_results"][0]["dimension_scores"]["retention"] == 0.0

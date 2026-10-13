@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 @pytest.fixture
 def case_data():
-    return json.loads((ROOT / "datasets/golden/retention.jsonl").read_text(encoding="utf-8"))
+    return json.loads((ROOT / "datasets/golden/retention.jsonl").read_text(encoding="utf-8").splitlines()[0])
 
 
 @pytest.fixture

@@ -1,0 +1,7 @@
+schema_version: "1.0"
+dataset: ../datasets/golden
+output_dir: ../runs
+agents:
+  - id: demo
+    type: demo
+seed: 0

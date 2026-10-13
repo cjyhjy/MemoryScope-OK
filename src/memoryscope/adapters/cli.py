@@ -163,6 +163,21 @@ class CliMemoryAgent(AgentAdapter):
     def execute_task(self, probe: Probe) -> str:
         return self._turn(probe.content)
 
+    def memory_text(self) -> str | None:
+        if self.case_dir is None:
+            return None
+        path = self.workspace / MEMORY_FILE
+        return path.read_text(encoding="utf-8", errors="replace") if path.is_file() else ""
+
+    def read_workspace_file(self, relative: str) -> str | None:
+        if self.case_dir is None:
+            return None
+        root = self.workspace.resolve()
+        path = (root / relative).resolve()
+        if not path.is_relative_to(root) or not path.is_file():
+            return None
+        return path.read_text(encoding="utf-8", errors="replace")
+
     def _memory_snapshot(self) -> dict[str, Any]:
         if self.case_dir is None:
             return {"exists": False}
