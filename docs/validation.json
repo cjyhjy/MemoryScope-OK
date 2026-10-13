@@ -1,0 +1,95 @@
+[
+  {
+    "command": [
+      "/Users/cjy/Documents/MemoryScope-OK/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q"
+    ],
+    "cwd": "/Users/cjy/Documents/MemoryScope-OK",
+    "exit_code": 0,
+    "output": "................................                                         [100%]\n32 passed in 0.75s\n"
+  },
+  {
+    "command": [
+      "/Users/cjy/Documents/MemoryScope-OK/.venv/bin/memoryscope",
+      "--help"
+    ],
+    "cwd": "/Users/cjy/Documents/MemoryScope-OK",
+    "exit_code": 0,
+    "output": "                                                                                \n Usage: memoryscope [OPTIONS] COMMAND [ARGS]...                                 \n                                                                                \n MemoryScope-OK: auditable long-term memory benchmark. Current adapter is       \n SYNTHETIC only.                                                                \n                                                                                \n╭─ Options ────────────────────────────────────────────────────────────────────╮\n│ --version                     Show package version.                          │\n│ --install-completion          Install completion for the current shell.      │\n│ --show-completion             Show completion for the current shell, to copy │\n│                               it or customize the installation.              │\n│ --help                        Show this message and exit.                    │\n╰──────────────────────────────────────────────────────────────────────────────╯\n╭─ Commands ───────────────────────────────────────────────────────────────────╮\n│ validate     Validate dataset schema and uniqueness; never execute an agent. │\n│ list-agents  List available adapters and their provenance.                   │\n│ run          Run the offline synthetic pipeline and write auditable JSON     │\n│              artifacts.                                                      │\n│ report       Print a JSON summary. CSV/Markdown/radar generation is planned  │\n│              for Phase 6.                                                    │\n╰──────────────────────────────────────────────────────────────────────────────╯\n\n"
+  },
+  {
+    "command": [
+      "/Users/cjy/Documents/MemoryScope-OK/.venv/bin/memoryscope",
+      "--version"
+    ],
+    "cwd": "/Users/cjy/Documents/MemoryScope-OK",
+    "exit_code": 0,
+    "output": "0.1.0\n"
+  },
+  {
+    "command": [
+      "/Users/cjy/Documents/MemoryScope-OK/.venv/bin/memoryscope",
+      "list-agents"
+    ],
+    "cwd": "/Users/cjy/Documents/MemoryScope-OK",
+    "exit_code": 0,
+    "output": "demo\tsynthetic=true\tDeterministic toy memory fixture; NOT a real AI Agent.\n"
+  },
+  {
+    "command": [
+      "/Users/cjy/Documents/MemoryScope-OK/.venv/bin/memoryscope",
+      "validate",
+      "datasets/golden"
+    ],
+    "cwd": "/Users/cjy/Documents/MemoryScope-OK",
+    "exit_code": 0,
+    "output": "Valid: 1 case(s), 1 file(s).\n"
+  },
+  {
+    "command": [
+      "/Users/cjy/Documents/MemoryScope-OK/.venv/bin/python",
+      "-m",
+      "memoryscope",
+      "--help"
+    ],
+    "cwd": "/Users/cjy/Documents/MemoryScope-OK",
+    "exit_code": 0,
+    "output": "                                                                                \n Usage: python -m memoryscope [OPTIONS] COMMAND [ARGS]...                       \n                                                                                \n MemoryScope-OK: auditable long-term memory benchmark. Current adapter is       \n SYNTHETIC only.                                                                \n                                                                                \n╭─ Options ────────────────────────────────────────────────────────────────────╮\n│ --version                     Show package version.                          │\n│ --install-completion          Install completion for the current shell.      │\n│ --show-completion             Show completion for the current shell, to copy │\n│                               it or customize the installation.              │\n│ --help                        Show this message and exit.                    │\n╰──────────────────────────────────────────────────────────────────────────────╯\n╭─ Commands ───────────────────────────────────────────────────────────────────╮\n│ validate     Validate dataset schema and uniqueness; never execute an agent. │\n│ list-agents  List available adapters and their provenance.                   │\n│ run          Run the offline synthetic pipeline and write auditable JSON     │\n│              artifacts.                                                      │\n│ report       Print a JSON summary. CSV/Markdown/radar generation is planned  │\n│              for Phase 6.                                                    │\n╰──────────────────────────────────────────────────────────────────────────────╯\n\n"
+  },
+  {
+    "command": [
+      "/Users/cjy/Documents/MemoryScope-OK/.venv/bin/memoryscope",
+      "run",
+      "configs/demo.yaml"
+    ],
+    "cwd": "/Users/cjy/Documents/MemoryScope-OK",
+    "exit_code": 0,
+    "output": "SYNTHETIC pipeline completed: /Users/cjy/Documents/MemoryScope-OK/runs/20261013T135407045749Z-3eb9536a2c1f\nThis is not a real Agent benchmark score. See results.json and events.jsonl.\n"
+  },
+  {
+    "command": [
+      "/Users/cjy/Documents/MemoryScope-OK/.venv/bin/memoryscope",
+      "report",
+      "/Users/cjy/Documents/MemoryScope-OK/runs/20261013T135407045749Z-3eb9536a2c1f"
+    ],
+    "cwd": "/Users/cjy/Documents/MemoryScope-OK",
+    "exit_code": 0,
+    "output": "{\n  \"run_id\": \"20261013T135407045749Z-3eb9536a2c1f\",\n  \"status\": \"completed\",\n  \"synthetic\": true,\n  \"agents\": [\n    {\n      \"agent_id\": \"demo\",\n      \"dimension_scores\": {\n        \"boundary\": null,\n        \"disambiguation\": null,\n        \"dynamic_update\": null,\n        \"retention\": 100.0,\n        \"retrieval\": null,\n        \"reuse\": null\n      },\n      \"overall_score\": null,\n      \"synthetic\": true\n    }\n  ],\n  \"note\": \"JSON summary only. CSV, Markdown and radar reports are not implemented yet.\"\n}\n"
+  },
+  {
+    "artifact_checks": "passed",
+    "run_dir": "/Users/cjy/Documents/MemoryScope-OK/runs/20261013T135407045749Z-3eb9536a2c1f",
+    "case_response": "你的 Python 项目使用 uv 管理依赖。",
+    "dimension_scores": {
+      "boundary": null,
+      "disambiguation": null,
+      "dynamic_update": null,
+      "retention": 100.0,
+      "retrieval": null,
+      "reuse": null
+    },
+    "event_count": 17
+  }
+]

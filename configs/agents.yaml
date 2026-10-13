@@ -1,0 +1,12 @@
+schema_version: "1.0"
+dataset: ../datasets/golden
+output_dir: ../runs
+agents:
+  - id: codex
+    type: codex
+    model: deepseek-v4-flash
+    timeout_seconds: 300
+  - id: dsh
+    type: dsh
+    timeout_seconds: 300
+seed: 0

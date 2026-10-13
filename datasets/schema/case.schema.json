@@ -1,0 +1,215 @@
+{
+  "$defs": {
+    "CaseMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "difficulty": {
+          "enum": [
+            "easy",
+            "medium",
+            "hard"
+          ],
+          "title": "Difficulty",
+          "type": "string"
+        },
+        "tags": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        }
+      },
+      "required": [
+        "difficulty"
+      ],
+      "title": "CaseMetadata",
+      "type": "object"
+    },
+    "Category": {
+      "enum": [
+        "retention",
+        "retrieval",
+        "dynamic_update",
+        "disambiguation",
+        "boundary",
+        "reuse"
+      ],
+      "title": "Category",
+      "type": "string"
+    },
+    "Evaluation": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "contains",
+          "default": "contains",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "title": "Evaluation",
+      "type": "object"
+    },
+    "Expected": {
+      "additionalProperties": false,
+      "properties": {
+        "include": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Include",
+          "type": "array"
+        },
+        "exclude": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Exclude",
+          "type": "array"
+        }
+      },
+      "required": [
+        "include"
+      ],
+      "title": "Expected",
+      "type": "object"
+    },
+    "Message": {
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "default": "user",
+          "enum": [
+            "user",
+            "assistant"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "content": {
+          "minLength": 1,
+          "title": "Content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "content"
+      ],
+      "title": "Message",
+      "type": "object"
+    },
+    "Probe": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "question",
+          "default": "question",
+          "title": "Type",
+          "type": "string"
+        },
+        "content": {
+          "minLength": 1,
+          "title": "Content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "content"
+      ],
+      "title": "Probe",
+      "type": "object"
+    },
+    "Protocol": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "const": "cross_session",
+          "default": "cross_session",
+          "title": "Mode",
+          "type": "string"
+        }
+      },
+      "title": "Protocol",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "id": {
+      "maxLength": 80,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "title": "Id",
+      "type": "string"
+    },
+    "category": {
+      "$ref": "#/$defs/Category"
+    },
+    "description": {
+      "minLength": 1,
+      "title": "Description",
+      "type": "string"
+    },
+    "setup": {
+      "items": {
+        "$ref": "#/$defs/Message"
+      },
+      "minItems": 1,
+      "title": "Setup",
+      "type": "array"
+    },
+    "updates": {
+      "items": {
+        "$ref": "#/$defs/Message"
+      },
+      "title": "Updates",
+      "type": "array"
+    },
+    "distractors": {
+      "items": {
+        "$ref": "#/$defs/Message"
+      },
+      "title": "Distractors",
+      "type": "array"
+    },
+    "probe": {
+      "$ref": "#/$defs/Probe"
+    },
+    "expected": {
+      "$ref": "#/$defs/Expected"
+    },
+    "evaluation": {
+      "$ref": "#/$defs/Evaluation"
+    },
+    "protocol": {
+      "$ref": "#/$defs/Protocol"
+    },
+    "metadata": {
+      "$ref": "#/$defs/CaseMetadata"
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "category",
+    "description",
+    "setup",
+    "probe",
+    "expected",
+    "evaluation",
+    "protocol",
+    "metadata"
+  ],
+  "title": "BenchmarkCase",
+  "type": "object"
+}
