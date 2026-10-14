@@ -212,6 +212,8 @@ def run_benchmark(config_path: Path) -> tuple[Path, dict[str, Any]]:
     with (run_dir / "dataset.snapshot.jsonl").open("xb") as stream:
         stream.write(dataset.snapshot)
     started_at = utc_now()
+    # Code identity is captured at start: the tree may change while a long run is in progress.
+    git_commit, source_digest = _git_commit(loaded.root), _source_digest()
     # Sandboxes live outside the project so agents cannot pick up project files such as AGENTS.md.
     sandbox_root = Path(tempfile.mkdtemp(prefix=f"memoryscope-{run_id}-"))
     writer = EvidenceWriter(run_dir / "events.jsonl", run_id)
@@ -302,9 +304,9 @@ def run_benchmark(config_path: Path) -> tuple[Path, dict[str, Any]]:
         "schema_version": "1.1", "run_id": run_id, "status": status,
         "started_at": started_at, "finished_at": utc_now(), "synthetic": synthetic_run,
         "purpose": results["purpose"], "package_version": __version__,
-        "source_sha256": _source_digest(), "python_version": sys.version,
+        "source_sha256": source_digest, "python_version": sys.version,
         "platform": platform.platform(), "os_release": _os_release(),
-        "git_commit": _git_commit(loaded.root), "dependencies": _versions(),
+        "git_commit": git_commit, "dependencies": _versions(),
         "evaluator": {"version": EVALUATOR_VERSION, "types": ["contains", "answer_line"], "case_sensitive": False,
                       "case_score_scale": [0, 1], "dimension_score_scale": [0, 100]},
         "seed": loaded.config.seed,
