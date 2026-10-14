@@ -231,6 +231,7 @@ def run_benchmark(config_path: Path) -> tuple[Path, dict[str, Any]]:
                 sandbox = sandbox_root / agent_config.id
                 sandbox.mkdir(mode=0o700)
                 agent.start(run_id, agent_config.id, sandbox)
+                description = agent.describe()
                 writer.emit("agent_started", agent_id=agent_config.id, adapter_type=agent_config.type,
                             describe=description, evidence=agent.collect_evidence())
                 for case in dataset.cases:

@@ -256,3 +256,16 @@ def test_rescore_regrades_saved_evidence_without_agent(project, monkeypatch):
     _, changed = rescore_run(run_dir)
     assert changed["status_changes"][0]["old"] == "pass" and changed["status_changes"][0]["new"] == "fail"
     assert changed["agent_results"][0]["dimension_scores"]["retention"] == 0.0
+
+
+@pytest.mark.parametrize("response, include, passed", [
+    ("答案：2026-10-14_OSC204_KJ.pdf", ["OSC204_KJ", ".pdf"], True),
+    ("答案：20261014_OSC204_KJ.pdf", ["OSC204_KJ"], True),
+    ("答案：星期三-20:15", ["周三", "20:15"], True),
+    ("答案：礼拜天", ["周日"], True),
+    ("答案：周四", ["周三"], False),
+])
+def test_evaluator_v12_separators_and_weekdays(response, include, passed):
+    from memoryscope.evaluator import evaluate
+    from memoryscope.models import Evaluation
+    assert evaluate(response, Expected(include=include), Evaluation(type="answer_line"))["passed"] is passed

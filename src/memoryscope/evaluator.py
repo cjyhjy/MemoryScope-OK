@@ -1,7 +1,9 @@
 """Explainable deterministic rule scoring; no LLM calls.
 
-Version 1.1 matches Latin/digit terms on token boundaries (``uv`` does not hit
-``uvicorn``; ``pip`` does not hit ``pipx``). CJK terms remain substring matches
+Version 1.2 matches Latin/digit terms on token boundaries (``uv`` does not hit
+``uvicorn``; ``pip`` does not hit ``pipx``); underscore counts as a separator
+(``OSC204_KJ`` hits ``20261014_OSC204_KJ.pdf``), and ``星期三``/``礼拜天`` are
+normalised to ``周三``/``周日`` before matching. CJK terms remain substring matches
 because Chinese text has no spaces. ``answer_line`` scores only the final
 ``答案:`` line so explanations that mention rejected options are not penalised.
 """
@@ -11,18 +13,23 @@ from typing import Any
 
 from memoryscope.models import Evaluation, Expected
 
-EVALUATOR_VERSION = "1.1"
+EVALUATOR_VERSION = "1.2"
 _WORDISH = re.compile(r"[A-Za-z0-9]")
+_WEEKDAY = re.compile(r"(?:星期|礼拜)([一二三四五六日天])")
 _ANSWER_LINE = re.compile(r"^\s*(?:\*\*)?(?:答案|最终答案|answer|final answer)(?:\*\*)?\s*[:：]\s*(.+?)\s*$", re.IGNORECASE | re.MULTILINE)
 
 
+def normalize(text: str) -> str:
+    return _WEEKDAY.sub(lambda match: "周" + ("日" if match.group(1) == "天" else match.group(1)), text.casefold()).replace("周天", "周日")
+
+
 def term_matches(term: str, text: str) -> bool:
-    folded_term, folded_text = term.casefold(), text.casefold()
+    folded_term, folded_text = normalize(term), normalize(text)
     if not _WORDISH.search(term):
         return folded_term in folded_text
     # Boundaries only apply on sides where the term itself starts/ends with a Latin/digit char.
-    left = r"(?<![a-z0-9_])" if _WORDISH.match(term[0]) else ""
-    right = r"(?![a-z0-9_])" if _WORDISH.match(term[-1]) else ""
+    left = r"(?<![a-z0-9])" if _WORDISH.match(term[0]) else ""
+    right = r"(?![a-z0-9])" if _WORDISH.match(term[-1]) else ""
     return re.search(left + re.escape(folded_term) + right, folded_text) is not None
 
 
