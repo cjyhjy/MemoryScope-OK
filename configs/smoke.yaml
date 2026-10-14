@@ -8,5 +8,6 @@ agents:
     timeout_seconds: 300
   - id: dsh
     type: dsh
+    model: deepseek-flash
     timeout_seconds: 300
 seed: 0

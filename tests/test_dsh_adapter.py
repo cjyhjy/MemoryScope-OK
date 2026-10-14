@@ -12,8 +12,14 @@ args = sys.argv[1:]
 if args == ["--version"]:
     print("0.0-fake"); sys.exit(0)
 home = pathlib.Path(os.environ["DSH_HOME"])
+assert args[:3] == ["--profile", "headless", "--patch"]
+patch = pathlib.Path(args[3]).read_text()
+if args[4:] == ["--dump-config"]:
+    print("- id: agent\n  name: x\n" + patch.replace("- id: agent-default-model\n", "- id: agent-default-model\n  name: y\n")
+          + "- id: jobs\n  name: z\n")
+    sys.exit(0)
 assert (home / "AGENTS.md").is_file()
-assert args[:3] == ["--profile", "headless", "--json"] and args[-1] == "-"
+assert args[4] == "--json" and args[-1] == "-"
 prompt = sys.stdin.read()
 session = args[args.index("--session-id") + 1] if "--session-id" in args else "session-" + str(uuid.uuid4())
 with (home / "calls.jsonl").open("a") as stream:
@@ -52,3 +58,26 @@ def test_dsh_sessions_memory_and_isolated_home(tmp_path, monkeypatch):
     evidence = agent.collect_evidence()
     assert evidence["memory_file"]["exists"]
     assert evidence["last_call"]["tool_events"] == [{"type": "tool_call", "name": "fs_write"}]
+
+
+def test_dsh_model_pin_is_verified(tmp_path, monkeypatch):
+    from memoryscope.adapters.dsh import effective_model
+    from memoryscope.models import AgentConfig
+
+    dump = ("- id: agent\n  name: a\n- id: agent-default-model\n  name: '@x/model'\n  config:\n"
+            "    provider: deepseek-official\n    model: deepseek-v4-pro\n- id: jobs\n  name: j\n    model: other\n")
+    assert effective_model(dump) == "deepseek-v4-pro"
+    assert effective_model("- id: agent\n  name: a\n") is None
+
+    script = tmp_path / "fake_dsh.py"
+    script.write_text(FAKE_DSH, encoding="utf-8")
+    launcher = tmp_path / "dsh"
+    launcher.write_text(f"#!/bin/sh\nexec {sys.executable} {script} \"$@\"\n", encoding="utf-8")
+    launcher.chmod(0o755)
+    monkeypatch.setenv("MEMORYSCOPE_DSH_BIN", str(launcher))
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "sk-test-secret")
+    agent = DshAgent(AgentConfig(id="dsh", type="dsh", model="deepseek-v4-pro"))
+    agent.start("run", "dsh", tmp_path / "sandbox")
+    assert agent.describe()["effective_model"] == "deepseek-v4-pro"
+    agent.reset_case("c1")
+    assert 'model: "deepseek-v4-pro"' in (agent.home / "memoryscope-model.patch.yml").read_text()

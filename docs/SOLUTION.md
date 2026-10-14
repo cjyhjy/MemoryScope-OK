@@ -41,7 +41,7 @@ configs/*.yaml ───────┘            └─► 证据：回答、�
 - **相同的记忆约定**：两个 Agent 拿到同一份用户级 `AGENTS.md`，声明工作区 `MEMORY.md` 是唯一的跨会话记忆，由 Agent 自行决定记什么、何时读写。所以本测试比较的是“Agent 能否按约定维护外部记忆”，不是各产品原生的记忆功能。
 - **会话边界**：新会话就是新线程，看不到历史；同一会话内续接同一线程（codex `exec resume`，dsh `--session-id`）。
 - **用例之间**：`reset_case` 换新目录，同一命名空间不能复用。Agent 之间各有自己的沙箱目录。
-- **模型**：codex 通过 DeepSeek OpenAI 兼容接口使用 `deepseek-flash`。dsh 使用其 headless profile 的默认模型，证据中未记录模型名（待核实）。
+- **相同模型**：两者都用 `deepseek-flash`（DeepSeek 接口目前提供的 Flash 模型名）。codex 在临时 `config.toml` 中指定该模型，走 DeepSeek OpenAI 兼容接口。dsh 用 `--patch` 覆盖层固定 `agent-default-model` 的模型，启动时再用 `dsh --dump-config` 读回实际生效的模型，记入 `describe.effective_model`；读回的值与配置不一致就拒绝运行。
 - **答案隔离**：expected 只交给评分器，Adapter 只能拿到 `Probe(content)`，测试会验证这一点。
 - **密钥**：只从环境变量或项目 `.env` 读入当前进程，不写入配置、事件或报告。manifest 里只记录加载了哪些变量名。
 
