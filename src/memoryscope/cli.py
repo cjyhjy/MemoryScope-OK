@@ -36,6 +36,7 @@ def list_agents() -> None:
     """List available adapters and their provenance."""
     typer.echo("demo\tsynthetic=true\tDeterministic toy memory fixture; NOT a real AI Agent.")
     typer.echo("codex\tsynthetic=false\tCodex CLI (codex exec) with a DeepSeek model; needs DEEPSEEK_API_KEY.")
+    typer.echo("dsh\tsynthetic=false\tDeepSeek Harness CLI (dsh --profile headless); needs DEEPSEEK_API_KEY.")
 
 
 @app.command()
