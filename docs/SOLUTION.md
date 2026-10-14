@@ -112,7 +112,31 @@ dsh 在 macOS 上运行在 DeepSeek Harness 桌面应用内部。它的 CLI 以 
 
 见 [results/report.md](results/report.md) 和 [results/radar.png](results/radar.png)。
 
-RESULTS_PLACEHOLDER
+环境：macOS 26.5.1（arm64）。codex-cli 0.162.0-alpha.17.2 与 dsh 0.2.0-rc.2，两者都用 deepseek-flash，评分器 1.2。
+
+**第一轮：24 条（六维各 4 条，easy/medium 为主）**，run `20261014T130907864234Z-42ff04345691`。两个 Agent 均为 24/24 pass，六维总分都是 100.0，完全没有区分度。
+
+**第二轮：36 条（每维新增 2 条 hard）**，run `20261014T134105387645Z-4d4bb8788e74`：
+
+| 维度 | codex | dsh |
+| --- | --- | --- |
+| retention 长期保持 | 100.0（6/6） | 100.0（6/6） |
+| retrieval 记忆调用 | 100.0（6/6） | 100.0（6/6） |
+| dynamic_update 动态更新 | 100.0（6/6） | 100.0（6/6） |
+| disambiguation 相近区分 | 100.0（6/6） | 100.0（6/6） |
+| boundary 边界识别 | 100.0（6/6） | 100.0（6/6） |
+| reuse 任务复用 | 83.3（5/6） | 100.0（6/6） |
+| **六维总分** | **97.2** | **100.0** |
+
+两者都没有 error、unknown 或 unsupported，覆盖率均为 100%。
+
+**唯一拉开差距的是 codex 的 `reuse-002`。** codex 写记忆时自己补了一个示例 `exp-01.md`，之后照着这个示例建出了 `notes/exp-07.md`，而规则要求的是 `notes/exp-7.md`。`check_file` 抓住了这个行为层面的偏差：口头回答看起来合理，但文件名不对。这体现了行为证据的价值。
+
+如实说明：
+
+- 新增的 12 条 hard 题两个 Agent 都通过了。在 `MEMORY.md` 外部记忆约定下，当前机制对这两个 Agent 都偏容易。
+- 单次运行只有 1 条差异，不足以得出“谁更好”的结论。
+- 后续需要更长的会话链、矛盾来源、记忆容量压力和多文件任务，并做重复运行。
 
 ## 9 局限
 
