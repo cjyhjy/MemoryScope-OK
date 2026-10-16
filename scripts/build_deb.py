@@ -31,8 +31,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 NAME = "memoryscope-ok"
 PLATFORMS = {
-    "arm64": ["manylinux_2_28_aarch64", "manylinux_2_17_aarch64", "manylinux2014_aarch64"],
-    "amd64": ["manylinux_2_28_x86_64", "manylinux_2_17_x86_64", "manylinux2014_x86_64"],
+    "arm64": [f"manylinux_2_{minor}_aarch64" for minor in (39, 34, 31, 28, 27, 26, 24, 17)] + ["manylinux2014_aarch64"],
+    "amd64": [f"manylinux_2_{minor}_x86_64" for minor in (39, 34, 31, 28, 27, 26, 24, 17)] + ["manylinux2014_x86_64"],
 }
 PAYLOAD = ["src", "configs", "datasets", "docs", "pyproject.toml", "README.md", "LICENSE", ".env.example"]
 
@@ -52,8 +52,8 @@ if [ "$1" = configure ]; then
     echo "python3 venv module unavailable; install python3-venv and retry: sudo dpkg --configure -a" >&2; exit 1; }}
   PIP_WHL=$(ls "$APP"/wheels/pip-*.whl | head -n 1)
   "$APP/.venv/bin/python" "$PIP_WHL/pip" install --quiet --no-index --no-cache-dir \\
-    --find-links "$APP/wheels" pip {name}
-  echo "MemoryScope-OK installed. Run: memoryscope-ok --help   or   memoryscope-ok all configs/demo-smoke.yaml"
+    --find-links "$APP/wheels" pip "{name}[gui]"
+  echo "MemoryScope-OK installed. GUI: memoryscope-ok gui   CLI: memoryscope-ok --help   One-click: memoryscope-ok all"
 fi
 """
 
@@ -65,9 +65,10 @@ rm -rf /opt/memoryscope-ok/.venv
 LAUNCHER = r"""#!/bin/sh
 # MemoryScope-OK launcher. Per-user workspace: ${MEMORYSCOPE_HOME:-~/memoryscope-ok}.
 #   memoryscope-ok <command> ...             same as `memoryscope`
+#   memoryscope-ok gui                       desktop GUI (results, new evaluation, progress, evidence)
 #   memoryscope-ok all [config]              validate + run + report + HTML view (default configs/agents.yaml)
 set -e
-APP=/opt/memoryscope-ok
+APP=${MEMORYSCOPE_APP:-/opt/memoryscope-ok}
 WS=${MEMORYSCOPE_HOME:-$HOME/memoryscope-ok}
 if [ ! -f "$WS/pyproject.toml" ]; then
   mkdir -p "$WS"
@@ -79,6 +80,10 @@ fi
 export PATH="$HOME/.local/bin:$PATH"
 MS="$APP/.venv/bin/memoryscope"
 cd "$WS"
+if [ "$1" = gui ]; then
+  shift
+  exec "$APP/.venv/bin/memoryscope-gui" "${1:-$WS}"
+fi
 if [ "$1" = all ]; then
   CONFIG=${2:-configs/agents.yaml}
   "$MS" validate datasets/golden
@@ -106,6 +111,18 @@ exec "$MS" "$@"
 """
 
 
+DESKTOP = """[Desktop Entry]
+Type=Application
+Name=MemoryScope-OK
+Name[zh_CN]=MemoryScope-OK 智能体记忆评测
+Comment=Long-term memory benchmark for AI agents
+Exec=memoryscope-ok gui
+Icon=utilities-system-monitor
+Terminal=false
+Categories=Development;
+"""
+
+
 def native_arch() -> str:
     machine = platform.machine().lower()
     return {"aarch64": "arm64", "arm64": "arm64", "x86_64": "amd64", "amd64": "amd64"}[machine]
@@ -122,7 +139,7 @@ def fetch_wheels(dest: Path, arch: str, pyver: str) -> None:
     abi = "cp" + pyver.replace(".", "")
     subprocess.run(pip + ["download", "--dest", str(dest), "--only-binary=:all:", *tags,
                           "--python-version", pyver, "--implementation", "cp", "--abi", abi, "--abi", "abi3",
-                          "--abi", "none", "pip", str(ROOT)], check=True)
+                          "--abi", "none", "pip", f"{ROOT}[gui]"], check=True)
     # pip download also stores the project itself as an sdist/wheel; keep our freshly built wheel only.
     for extra in dest.glob("memoryscope_ok-*.tar.gz"):
         extra.unlink()
@@ -182,10 +199,11 @@ def build(arch: str, pyver: str, out_dir: Path) -> Path:
         for wheel in sorted(wheels.glob("*.whl")):
             data[f"opt/{NAME}/wheels/{wheel.name}"] = (wheel.read_bytes(), 0o644)
         data[f"usr/bin/{NAME}"] = (LAUNCHER.encode(), 0o755)
+        data[f"usr/share/applications/{NAME}.desktop"] = (DESKTOP.encode(), 0o644)
 
         minor = int(pyver.split(".")[1])
         control = (f"Package: {NAME}\nVersion: {ver}\nSection: devel\nPriority: optional\nArchitecture: {arch}\n"
-                   f"Depends: python3 (>= {pyver}), python3 (<< 3.{minor + 1})\nRecommends: fonts-noto-cjk, xdg-utils\n"
+                   f"Depends: python3 (>= {pyver}), python3 (<< 3.{minor + 1})\nRecommends: fonts-noto-cjk, xdg-utils, libxcb-cursor0, libxkbcommon-x11-0, libegl1\n"
                    f"Installed-Size: {sum(len(c) for c, _ in data.values()) // 1024}\n"
                    "Maintainer: MemoryScope-OK <memoryscope-ok@users.noreply.local>\n"
                    "Description: Long-term memory benchmark for AI agents (MemoryScope-OK)\n"

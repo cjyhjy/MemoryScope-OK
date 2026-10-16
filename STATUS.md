@@ -165,3 +165,5 @@ CLI MVP、本地检查、openKylin 初验及两款真实 Agent 的 48×2 全量�
 - `docs/results/` 重组：`openkylin-48x2/`（report.md/csv/json、radar.png、view.html、results.json、metadata.json；results.json SHA-256 与 metadata 一致）和 `macos-36/`（历史）。
 - 录屏脚本按 .deb + 桌面 + HTML 结果页重写。
 - 测试：`.venv/bin/pytest -q` **90 passed**（Python 3.13.15，macOS）；uv 创建的 Python **3.10.21** 环境 `pytest -q` **90 passed**。`bash scripts/run_all.sh configs/demo-smoke.yaml` 成功（synthetic）。
+- 用户指出应按交接文档做 GUI，随即实现 PySide6 桌面 GUI（`src/memoryscope_gui/`，详见 `docs/CLI_GUI_HANDOFF.md` 顶部实现说明）。macOS 上 `.venv/bin/pytest -q` **104 passed**（新增 `tests/test_gui.py` 14 项，含 offscreen 窗口通过 CLI 端到端跑完 synthetic 评测并生成报告）；offscreen 截图核对了 48×2 run 的雷达图、六维表与 fail 用例详情。确认 PyPI 有 PySide6-Essentials 6.12.0 的 manylinux_2_39_aarch64 wheel（openKylin glibc 2.43）。
+- .deb 重新构建为含 GUI 版本：`memoryscope-ok_0.3.0_arm64.deb` 129,571,582 字节，sha256 `a124693667ff84e2bc3ec487a83fed63e53348bef38a02b576f07ed2323df537`；新增 `memoryscope-ok gui` 与 `/usr/share/applications/memoryscope-ok.desktop`。openKylin 桌面上的安装与 GUI 启动尚未验证（OSTree 下 dpkg 是否可写 /usr 未知，验收脚本带用户目录回退）。

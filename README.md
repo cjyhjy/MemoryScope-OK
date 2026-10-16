@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- | --- |
 | `retention` | `retrieval` | `dynamic_update` | `disambiguation` | `boundary` | `reuse` |
 
-当前目标为可扩展的 MVP：CLI 与 GUI 共用评测核心，Codex 负责 CLI，Claude 负责 GUI。CLI 版本 0.3.0，当前有 48 条候选用例（质量复核待完成）。2026-10-16 已在 openKylin 3.0 ARM64 / Python 3.12.2 上完成 Codex CLI 与 DeepSeek Harness 两个真实 Agent 的全量评测，共产生 96 条 case 结果；Codex 47/48、六维总分 97.9，dsh 48/48、总分 100.0，覆盖率均为 100%。详见 [STATUS.md](STATUS.md) 与 [openKylin 真实评测记录](docs/validation/openkylin-real-20261016.md)。图形化结果查看由 `memoryscope view` 生成的离线 HTML 页提供（雷达图、六维表、逐条评分理由与证据序号）；配置表单和运行进度界面未实现，运行进度用 `run --jsonl`。
+当前目标为可扩展的 MVP：CLI 与 GUI 共用评测核心，Codex 负责 CLI，Claude 负责 GUI。CLI 版本 0.3.0，当前有 48 条候选用例（质量复核待完成）。2026-10-16 已在 openKylin 3.0 ARM64 / Python 3.12.2 上完成 Codex CLI 与 DeepSeek Harness 两个真实 Agent 的全量评测，共产生 96 条 case 结果；Codex 47/48、六维总分 97.9，dsh 48/48、总分 100.0，覆盖率均为 100%。详见 [STATUS.md](STATUS.md) 与 [openKylin 真实评测记录](docs/validation/openkylin-real-20261016.md)。桌面 GUI（PySide6）提供结果浏览（雷达图、六维表、逐条评分理由、证据事件、报告与重评）和新建评测（配置、异步运行、进度），通过同一 CLI 执行；`memoryscope view` 另可生成离线 HTML 结果页。
 
 ## 快速开始
 
@@ -45,6 +45,7 @@ memoryscope-ok all                                     # 两个真实 Agent 完�
 | `memoryscope run configs/agents.yaml` | 运行评测，写入 `runs/<run_id>/`（含 events.jsonl 证据） |
 | `memoryscope report runs/<run_id>` | 生成 JSON / CSV / Markdown / 雷达图，不调用 Agent |
 | `memoryscope rescore runs/<run_id>` | 用当前评分器离线重评已保存证据 |
+| `memoryscope-gui`（需 `pip install -e '.[gui]'`；.deb 中为 `memoryscope-ok gui`） | 桌面 GUI：历史结果、新建评测与进度、证据查看 |
 | `memoryscope view runs/<run_id> [--open]` | 生成自包含 HTML 结果页 `view.html`（雷达图、得分、逐条评分理由），不联网、不调用 Agent |
 | `python scripts/dataset_table.py` | 输出数据集审阅表 |
 
@@ -58,7 +59,7 @@ GUI/脚本可给各命令加 `--json` 读取版本化结果；`run --jsonl` 实�
 
 ## 文档
 
-- [CLI 与图形界面分工和接口约定](docs/CLI_GUI_HANDOFF.md)：机器接口与 HTML 结果页的边界
+- [CLI 与图形界面接口约定及 GUI 实现说明](docs/CLI_GUI_HANDOFF.md)
 - [openKylin 桌面部署记录](docs/openkylin-deployment.md)：系统安装、启动兼容参数、资源与验证边界
 - [openKylin 48×2 真实评测记录](docs/validation/openkylin-real-20261016.md)：环境、隔离、结果、完整性与边界
 - [方案文档](docs/SOLUTION.md)：测试目标、架构、隔离、数据、评分、结果、局限、创新点

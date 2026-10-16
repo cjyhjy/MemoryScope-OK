@@ -1,6 +1,10 @@
 # CLI 与图形界面协作约定
 
-> 2026-10-16 收尾决定（截止当天）：图形界面只交付第一阶段“读取历史 run 的结果页”，实现为 `memoryscope view RUN_DIR [--open]` 生成的自包含 HTML（`RUN_DIR/view.html`：雷达图、六维与状态表、环境与 SHA-256、逐条检查的评分理由、回答/被检查内容和 events 序号，可按 Agent/状态/维度筛选）。它离线生成、不联网、不调用 Agent，不改 `report/` 契约；Agent 文本全部转义。PySide6 配置表单与异步进度页未实现，下文第 4 节保留为后续设计。
+> 2026-10-16 实现状态（Claude）：GUI 已按本文实现为 PySide6 桌面程序 `src/memoryscope_gui/`（入口 `memoryscope-gui [项目或运行目录]`，.deb 中为 `memoryscope-ok gui` 与开始菜单项；依赖在可选 extra `gui`，CLI 不依赖 Qt）。
+> - `model.py`：不依赖 Qt 的数据层，读取/校验 results（主版本 1，损坏、NaN、未知主版本拒绝）、metadata、events 增量读取（保留半行、坏行标记）、`configs/gui/<uuid>.yaml` 独占生成和 `runs/gui/<uuid>/` 独占输出父目录、CLI 1.0 行解析。
+> - 结果页：运行列表（含 GUI 请求与重评修订）、雷达图（缺维留缺口）、六维/覆盖率/状态分布表、synthetic 与未完成横幅、逐条用例筛选、检查的评分理由/必含/禁止项/回答或被检查内容、按 evidence 区间查看 events、经 CLI 调用 `report --json --reuse` 与 `rescore --json`。
+> - 新建评测页：数据集、Adapter（来自注册表）、模型、超时、种子；预检 `check-config --json`；`run --jsonl` 的 QProcess 异步执行与 case 完成比例；真实 Agent 需确认；停止/关窗提示不完整；进程退出且 results/metadata 齐全后才生成报告并跳转。只显示是否检测到 DEEPSEEK_API_KEY，不读取或显示其值。
+> - 测试 `tests/test_gui.py` 覆盖第 6 节验收清单（有效 run、缺维、synthetic、fail 但 completed、Agent error、损坏/不支持 schema、半行事件、无结果中断、已有 report）及 offscreen 窗口端到端 synthetic 运行。另有 `memoryscope view` 离线 HTML 页用于无 Qt 环境。
 
 更新时间：2026-10-15。本文是用户确认的分工及接口约定，供 Codex 与 Claude 接续开发。除“现有接口”外，待实现项均不表示已完成。实现现状以源码与 STATUS.md 为准。
 

@@ -164,7 +164,7 @@ Codex 的 `dynamic_update-007` 最终回答用了正确新值“致远楼 571”
 - 每个 Agent 只跑了 1 次，没有重复采样和方差。
 - 只用确定性规则评分，开放式语义判断有限；LLM Judge 尚未实现（设计上默认关闭，且不能覆盖事实检查）。
 - 当前 48 条均为 draft，尚未经过独立人工复核；数量达标不等于质量验收完成。
-- openKylin 已完成两个真实 Agent 的 48 条全量实测；Python 3.10 下 90 项测试通过。图形化部分只有离线 HTML 结果页（`memoryscope view`），没有配置表单和运行进度界面。没有重复运行。
+- openKylin 已完成两个真实 Agent 的 48 条全量实测；Python 3.10 下 90 项测试通过。PySide6 GUI 已在 macOS 上测试（offscreen 端到端），openKylin 桌面实机验收待完成。没有重复运行。
 
 ## 10 创新点
 

@@ -10,8 +10,8 @@
 - [x] Codex CLI 本地实现：0.3.0 机器接口、进度、可复用报告、自包含离线重评；85 项测试及 synthetic 一键脚本通过，见 STATUS。
 - [x] Codex CLI MVP Goal：补齐稳定的机器可读命令、运行定位/进度、报告与重评、错误处理和扩展接口，完成测试及 openKylin 的项目初验；保留现有真实结果，不以 48 条或 Judge 作为 MVP 门槛。
 - [x] openKylin 真实全量评测：48 条 draft cases × Codex CLI/dsh，共 96 条 case 结果；报告、雷达图、事件与快照已安全带回宿主项目。
-- [x] Claude：历史结果页以 `memoryscope view` 离线 HTML 交付（2026-10-16）。
-- [ ] （截止后）PySide6 配置表单、异步进程与进度页；当前用 `run --jsonl` 代替。
+- [x] Claude：PySide6 GUI（结果页、新建评测、异步进度、证据、报告/重评）与 `memoryscope view` HTML 页，macOS 测试通过（2026-10-16）。
+- [ ] openKylin 桌面实机启动 GUI 并联调（`check.sh`）。
 - [ ] 双方：在 openKylin 桌面联调 CLI/GUI、检查证据与图表来源，再录屏。
 
 ## 已完成
