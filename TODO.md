@@ -8,11 +8,12 @@
 - [x] 公共回答、旧值非使用和指定存储删除独立；保留 `dynamic_update-007` 删除失败，未升级历史评分器。
 - [x] 真实 Adapter 配对默认 unsupported；缺失隔离证据 unknown；不信任 command 的 `MEMORYSCOPE_AGENT_HOME`。
 - [x] 故障、残留状态、缺失状态面、评分答案泄漏、预算、旧格式边界与历史失败回归；云端完整测试 114 passed / 1 GUI module skipped。
+- [x] 补齐项目声明的 GUI extra 后完整离线回归：129 passed / 0 skipped（含 15 项 GUI 测试）；未发现回归。GitHub CI 无 checks/runs/status contexts，本次为手动云端验证。
 - [ ] 证明真实 Adapter 的全状态边界后再接入配对；不得以关闭 MEMORY.md 提示词或换 thread ID 代替隔离。在线实验需后续单独任务，本轮不执行。
 - [ ] 文件复用协议：预声明保留清单，两组相同文件与摘要，独立于纯记忆归因；P0 禁止保留文件。
 - [ ] 配对结果的离线重评/GUI 支持、重复采样与顺序平衡、语义失效判断、指定存储删除操作审计。
 - [ ] 人工复核新困难草案与原 48 条，验证真实模型难度；本轮 synthetic 差值不能证明实际区分度。
-- [ ] 配对实现的 openKylin 实机验证与可选 GUI 回归；当前 Debian 云端结果不能替代。
+- [ ] 配对实现的 openKylin 实机验证；既有 GUI 的 Debian 云端离屏回归已通过，不能替代 openKylin 桌面验收或新增配对 GUI 支持。
 
 更新时间：2026-10-16（America/New_York）。已完成事项与证据见 STATUS.md；未勾选项均未完成。
 

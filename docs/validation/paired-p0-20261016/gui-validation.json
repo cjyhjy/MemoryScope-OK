@@ -1,0 +1,44 @@
+{
+  "recorded_at": "2026-10-16T18:53:24.734771+00:00",
+  "tested_commit": "cee40ad5b0b7033a6c125ebbfcac8e7b220c2f1b",
+  "source_sha256": "544bb5eb409f69b52cf525706606bde655acf2f5d507c5ab0d3e73865434078d",
+  "python_executable": "/workspace/MemoryScope-OK/.venv/bin/python",
+  "python_version": "3.12.14",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "dependencies": {
+    "PySide6-Essentials": "6.12.0",
+    "shiboken6": "6.12.0",
+    "pytest": "9.1.1"
+  },
+  "dependency_install_command": "env -u PIP_INDEX_URL -u PIP_EXTRA_INDEX_URL -u PIP_FIND_LINKS PIP_CONFIG_FILE=/dev/null .venv/bin/python -m pip install --index-url https://pypi.org/simple --only-binary=:all: 'PySide6-Essentials>=6.7,<7'",
+  "test_command": "QT_QPA_PLATFORM=offscreen XDG_CACHE_HOME=/tmp/memoryscope-p0-gui-cache MPLCONFIGDIR=/tmp/memoryscope-p0-gui-cache/matplotlib .venv/bin/pytest -q",
+  "test_result": {
+    "passed": 129,
+    "failed": 0,
+    "skipped": 0,
+    "duration_seconds": 4.87,
+    "exit_code": 0
+  },
+  "pip_check": "No broken requirements found.",
+  "ci": {
+    "checked_commit": "cee40ad5b0b7033a6c125ebbfcac8e7b220c2f1b",
+    "tracked_github_workflows": [],
+    "workflow_runs": 0,
+    "check_runs": 0,
+    "status_contexts": 0,
+    "combined_state": "pending",
+    "interpretation": "No CI checks reported. Pending with zero status contexts is not evidence of running tests or CI success.",
+    "sources": [
+      "https://api.github.com/repos/cjyhjy/MemoryScope-OK/actions/runs?head_sha=cee40ad5b0b7033a6c125ebbfcac8e7b220c2f1b",
+      "https://api.github.com/repos/cjyhjy/MemoryScope-OK/commits/cee40ad5b0b7033a6c125ebbfcac8e7b220c2f1b/check-runs",
+      "https://api.github.com/repos/cjyhjy/MemoryScope-OK/commits/cee40ad5b0b7033a6c125ebbfcac8e7b220c2f1b/status"
+    ],
+    "access_method": "Read-only GitHub connector; unfiltered REST endpoints."
+  },
+  "limitations": [
+    "Debian cloud offscreen tests only; no openKylin desktop acceptance.",
+    "Existing GUI tested; paired-1.0 GUI integration remains unsupported."
+  ],
+  "source_or_test_changes": false,
+  "real_agent_or_paid_api_calls": false
+}

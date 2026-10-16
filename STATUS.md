@@ -1,5 +1,15 @@
 # 项目状态
 
+## 2026-10-16 云端 P0 补充：GUI 完整离线回归
+
+针对已交付 `cee40ad5b0b7033a6c125ebbfcac8e7b220c2f1b` 补齐此前缺失的 GUI 验证。确认使用项目 `/workspace/MemoryScope-OK/.venv/bin/python`（Python 3.12.14）；仅在该虚拟环境安装项目已声明的 `PySide6-Essentials>=6.7,<7`，官方 PyPI 解析为 PySide6-Essentials / shiboken6 / Qt 6.12.0。安装显式指定 `https://pypi.org/simple`，禁用 pip 配置及其他 index/find-links 环境变量；没有系统级安装。`.venv/bin/python -m pip check` 返回 `No broken requirements found.`。
+
+实际完整命令：`QT_QPA_PLATFORM=offscreen XDG_CACHE_HOME=/tmp/memoryscope-p0-gui-cache MPLCONFIGDIR=/tmp/memoryscope-p0-gui-cache/matplotlib .venv/bin/pytest -q`。结果 **129 passed in 4.87s，0 failed / 0 skipped，退出码 0**，含原先因 Qt 缺失而跳过的 15 项 GUI 数据层/离屏窗口测试。日志 [pytest-gui.log](docs/validation/paired-p0-20261016/pytest-gui.log)，环境、完整安装命令和 CI 证据 [gui-validation.json](docs/validation/paired-p0-20261016/gui-validation.json)。源码摘要仍为 `544bb5eb409f69b52cf525706606bde655acf2f5d507c5ab0d3e73865434078d`；未发现本轮回归，无需修改实现或测试。
+
+远端 CI：对该提交通过只读 GitHub 连接器查询未加 PR 事件过滤的 REST endpoints，Actions workflow runs = 0、check runs = 0、status contexts = 0；combined status 返回 pending 且 total_count = 0，表示没有上报检查，不能解释为测试排队或 CI 成功。该提交无已跟踪 `.github/workflows`。适用 CI 状态为**无可用检查记录 / N/A**，本次通过证据为云端手动离线测试。未配置 CI、创建 PR 或合并分支。
+
+本轮仅新增验证记录与日志，不增加功能、不调用真实 Agent/付费 API、不操作系统包。无验证阻塞；仍不代表 openKylin 桌面交互验收，`paired-1.0` GUI 集成仍未实现。
+
 ## 2026-10-16 云端 P0：可审计配对基础设施
 
 本节为当前云端任务记录；下文 Mac/openKylin 内容保留为历史。云端目录 `/workspace/MemoryScope-OK`，Debian GNU/Linux 13 x86_64，Python 3.12.14；不是 openKylin 实机验证。初始工作区干净，HEAD 与远端 main 均为 `b8b89a98e32f56726351635eef1d154c9299bf1d`，远端检查时不存在 `dot/memoryscope-p0`，本轮新建该分支。用户最新授权允许测试通过后提交并推送该分支，禁止强推、合并 main、创建 PR。
