@@ -1,5 +1,7 @@
 # MemoryScope-OK 架构评审与规划建议
 
+> 已被 [docs/architecture-review-20261016.md](docs/architecture-review-20261016.md) 取代，本文仅作历史记录。
+
 记录日期：2026-10-13（America/New_York）。来源：本项目对话中的架构评审意见；用户要求将其保留在项目 Markdown 中。
 
 本文记录六点开发建议及建议执行顺序，供后续实施时参考。建议尚未落实，不代表对应代码、真实 Agent 接入或 openKylin 验证已经完成。当前实现事实见 [STATUS.md](STATUS.md)，基础需求见 [PROJECT_SPEC.md](PROJECT_SPEC.md)，原九阶段验收标准见 [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)。

@@ -7,7 +7,9 @@
 - 版本 **0.3.0**，评分器 **1.2**，数据 schema 1.1。
 - 数据集 `datasets/golden`：**48 条候选**（六维各 8 条），均为 draft。2026-10-16 已在 openKylin 用两个真实 Agent 全量执行，共 96 条 case 结果；这不替代逐条人工质量复核，不能仅凭数量称为最终 golden。
 - openKylin 主结果：run `20261016T064413939014Z-0d5dfa7e5bd8`；Codex CLI 47/48、总分 97.9，DeepSeek Harness 48/48、总分 100.0，覆盖率均 100%。旧 macOS 36 条结果保留为历史对照，不冒充本次 Linux 结果。
-- 已写好安装、一键运行、.deb 打包脚本及方案/演示文档；2026-10-15 已在 openKylin 手动完成 CLI 安装、85 项测试及 synthetic 报告验证，脚本整体和 .deb 仍待该环境验收。
+- 2026-10-16 新增 PySide6 GUI 与 `memoryscope view` HTML 页；.deb 改为可交叉构建、离线安装并包含 GUI（130 MB）。macOS 上 104 项测试通过（Python 3.10/3.13）。openKylin 上 .deb 安装与 GUI 启动尚未验收（`check.sh` 待运行）。
+- 官方要求（2026-10-16 核对）：开源中国报道写 10 月 16 日 24 点前提交代码仓库链接、作品介绍文档、演示视频链接，10/21 公布决赛名单，10/29 决赛；openKylin 赛题页仍写 10 月 11 日截止，以报名页为准。
+- 架构评价与后续规划：`docs/architecture-review-20261016.md`（取代 2026-10-13 的 ARCHITECTURE_REVIEW.md）。
 
 ## 已实现
 

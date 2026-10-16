@@ -34,6 +34,8 @@ configs/*.yaml ───────┘            └─► 证据：回答、�
 - **Adapter**（`adapters/`）：统一接口 `start / reset_case / reset_session / send_message / execute_task / collect_evidence / shutdown`。目前有三个实现：Demo（标为 synthetic，只用于测框架）、Codex CLI、DeepSeek Harness。新增 Agent 只需实现一个 Adapter。
 - **评分器**（`evaluator.py`）：确定性规则，不调用 LLM。
 - **报告**（`reporting.py`）与**重评**（`rescore.py`）都只读已保存的文件，不会再调用 Agent。
+- **CLI**（`cli.py`）：`validate / list-agents / check-config / run / report / rescore / view`，`--json` / `--jsonl` 输出版本化的机器接口。
+- **GUI**（`src/memoryscope_gui/`，PySide6）：结果页（雷达图、六维与覆盖率、逐条评分理由、证据事件、报告/重评）与新建评测页（配置、异步运行、进度）。GUI 只通过 CLI 子进程执行，不自行评分，不读取密钥值。
 
 ## 3 隔离与公平性
 
@@ -102,11 +104,13 @@ Schema 1.0（固定 setup/updates/distractors/probe）由 `upgrade_case` 显式�
 bash scripts/setup_openkylin.sh   # apt 依赖、.venv、用户级 Node 24、codex 与 dsh（npm）
 vi .env                           # 填入 DEEPSEEK_API_KEY
 bash scripts/run_all.sh           # 校验 → pytest → 评测 → 报告与雷达图
-bash scripts/build_deb.sh         # 可选：生成 dist/memoryscope-ok_<版本>_<架构>.deb
-sudo apt install ./dist/memoryscope-ok_*.deb && memoryscope-ok all
+bash scripts/build_deb.sh         # 生成 dist/memoryscope-ok_<版本>_<架构>.deb（依赖与 GUI 离线打包）
+sudo dpkg -i dist/memoryscope-ok_*.deb
+memoryscope-ok all                # 一键：校验 → 两个真实 Agent 评测 → 报告与雷达图
+memoryscope-ok gui                # 桌面 GUI（也可从开始菜单打开）
 ```
 
-dsh 在 macOS 上运行在 DeepSeek Harness 桌面应用内部。它的 CLI 以 `@deepseek-ai/dsh` 发布在 npm 上（MIT，与 Mac 上的版本相同，提供 Linux x64/arm64 的沙箱组件），Linux 上用 npm 安装。2026-10-16 已在 openKylin ARM64 客体内验证项目、Codex CLI 和 dsh 的真实全量运行；`setup_openkylin.sh` 整体自动化和 `.deb` 安装仍未单独验收。
+dsh 在 macOS 上运行在 DeepSeek Harness 桌面应用内部。它的 CLI 以 `@deepseek-ai/dsh` 发布在 npm 上（MIT，与 Mac 上的版本相同，提供 Linux x64/arm64 的沙箱组件），Linux 上用 npm 安装。2026-10-16 已在 openKylin ARM64 客体内验证项目、Codex CLI 和 dsh 的真实全量运行；`setup_openkylin.sh` 整体自动化、`.deb` 安装与 GUI 启动在 openKylin 上的验收见 STATUS。
 
 ## 8 实测结果
 

@@ -1,5 +1,7 @@
 # MemoryScope-OK 执行计划
 
+> 最新评价与剩余规划见 [docs/architecture-review-20261016.md](docs/architecture-review-20261016.md)。
+>
 > 架构评审补充（2026-10-13）：见 [ARCHITECTURE_REVIEW.md](ARCHITECTURE_REVIEW.md)。其中保存了提前接入真实 Agent、对照实验、步骤化用例、行为评分与离线重评、能力与观测范围、openKylin 初验六点建议，以及建议执行顺序。原 Phase 编号和验收标准保留；建议的落实情况由 STATUS/TODO 记录。
 
 本文件是开发顺序与验收清单；需求定义以 `PROJECT_SPEC.md` 为准，实际完成情况与验证证据写入 `STATUS.md`，未完成工作写入 `TODO.md`。计划中的命令、文件及通过标准不表示已经实现或通过。
