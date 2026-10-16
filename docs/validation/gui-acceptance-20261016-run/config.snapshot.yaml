@@ -1,0 +1,7 @@
+schema_version: '1.0'
+dataset: ../../datasets/smoke
+output_dir: ../../runs/gui/34d5b634-f029-415d-afc2-537c449dfa77
+agents:
+- id: demo
+  type: demo
+seed: 0

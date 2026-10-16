@@ -10,6 +10,14 @@
 
 ## 快速开始
 
+作品材料：
+
+- [作品介绍 PDF](docs/submission/MemoryScope-OK-作品介绍.pdf)
+- [演示视频下载（GitHub Release）](https://github.com/cjyhjy/MemoryScope-OK/releases/download/v0.3.0-demo/memoryscope-ok-demo.mp4)
+- [视频剪辑工程](video/README.md)
+
+视频中的现场单例使用 synthetic Demo，仅展示框架运行与实时进度；48×2 雷达图和逐条评分来自事先完成的 openKylin 真实 Agent 评测。视频成片作为 Release 附件分发，不纳入 Git 历史。
+
 openKylin / Debian / Ubuntu：
 
 ```bash

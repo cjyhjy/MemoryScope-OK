@@ -1,0 +1,72 @@
+
+===== [05:08:36] 系统 =====
+NAME="openKylin"
+FULL_NAME="openKylin"
+VERSION="3.0 (huanghe)"
+VERSION_US="3.0 (huanghe)"
+Linux 7.0.0-3-generic aarch64
+Python 3.12.2
+ldd (Ubuntu GLIBC 2.43-ok2) 2.43
+DISPLAY=:0 WAYLAND=wayland-0 XDG_SESSION_TYPE=wayland
+
+===== [05:08:36] 安装 .deb（需要 sudo 密码） =====
+sudo: 3 次错误密码尝试
+DPKG_EXIT=1
+
+===== [05:10:24] dpkg 不可用，改为用户目录安装（同一个 .deb 内容） =====
+USER_INSTALL=/home/openkylin/.local/memoryscope-ok-root/opt/memoryscope-ok
+
+===== [05:10:32] CLI 自检 =====
+已创建工作目录 /home/openkylin/memoryscope-ok；真实 Agent 评测前请在 /home/openkylin/memoryscope-ok/.env 中填入 DEEPSEEK_API_KEY
+0.3.0
+VERSION_EXIT=0
+demo	synthetic=true	DemoAgent
+codex	synthetic=false	codex-cli
+dsh	synthetic=false	deepseek-harness
+Demo is synthetic; it is NOT a real AI Agent. Real adapters require their configured credentials.
+Valid: 48 case(s), 6 file(s).
+VALIDATE_EXIT=0
+
+===== [05:10:32] 一键流程（synthetic，不调用 API） =====
+Valid: 48 case(s), 6 file(s).
+Config valid: /home/openkylin/memoryscope-ok/configs/demo-smoke.yaml; 1 case(s), 1 agent(s).
+Output parent: /home/openkylin/memoryscope-ok/runs
+Report files: /home/openkylin/memoryscope-ok/runs/20261016T121032656194Z-8d724513a404/report
+## 六维得分
+
+| 维度 | demo |
+| --- | --- |
+| 长期保持 `retention` | 100.0（1/1，覆盖 100.0%） |
+| 记忆调用 `retrieval` | null（0/0，覆盖 null） |
+| 动态更新 `dynamic_update` | null（0/0，覆盖 null） |
+| 相近区分 `disambiguation` | null（0/0，覆盖 null） |
+| 边界识别 `boundary` | null（0/0，覆盖 null） |
+| 任务复用 `reuse` | null（0/0，覆盖 null） |
+| **六维总分** | null |
+
+## 状态分布
+
+| Agent | pass | fail | unknown | error | unsupported |
+| --- | --- | --- | --- | --- | --- |
+| demo | 1 | 0 | 0 | 0 | 0 |
+
+## Agent 信息
+运行目录：/home/openkylin/memoryscope-ok/runs/20261016T121032656194Z-8d724513a404
+雷达图：/home/openkylin/memoryscope-ok/runs/20261016T121032656194Z-8d724513a404/report/radar.png
+HTML 结果页：/home/openkylin/memoryscope-ok/runs/20261016T121032656194Z-8d724513a404/view.html
+ALL_EXIT=0
+
+===== [05:10:33] 导入 openKylin 48x2 真实评测结果 =====
+{"schema_version": "1.0", "command": "report", "ok": true, "data": {"run_id": "20261016T064413939014Z-0d5dfa7e5bd8", "status": "completed", "synthetic": false, "agents": [{"agent_id": "codex", "synthetic": false, "describe": {"agent": "codex-cli", "api_key_env": "DEEPSEEK_API_KEY", "binary": "/home/openkylin/.local/bin/codex", "capabilities": ["cross_session", "memory_inspection", "workspace_files"], "class": "CodexAgent", "memory_mechanism": "workspace MEMORY.md declared via per-case CODEX_HOME/AGENTS.md", "model": "deepseek-flash", "provider_base_url": "https://api.deepseek.com", "session_mechanism": "new agent thread per session; resume the thread within a session", "synthetic": false, "version": "codex-cli 0.162.1"}, "status": "completed", "dimensions": {"boundary": {"error": 0, "fail": 0, "pass": 8, "planned": 8, "scorable": 8, "scorable_coverage": 100.0, "score": 100.0, "unknown": 0, "unsupported": 0}, "disambiguation": {"error": 0, "fail": 0, "pass": 8, "planned": 8, "scorable": 8, "scorable_coverage": 100.0, "score": 100.0, "unknown": 0, "unsupported": 0}, "dynamic_update": {"error": 0, "fail": 1, "pass": 7, "planned": 8, "scorable": 8, "scorable_coverage": 100.0, "score": 87.5, "unknown": 0, "unsupported": 0}, "retention": {"error": 0, "fail": 0, "pass": 8, "planned": 8, "scorable": 8, "scorable_coverage": 100.0, "score": 100.0, "unknown": 0, "unsupported": 0}, "retrieval": {"error": 0, "fail": 0, "pass": 8, "planned": 8, "scorable": 8, "scorable_coverage": 100.0, "score": 100.0, "unknown": 0, "unsupported": 0}, "reuse": {"error": 0, "fail": 0, "pass": 8, "planned": 8, "scorable": 8, "scorable_coverage": 100.0, "score": 100.0, "unknown": 0, "unsupported": 0}}, "overall_score": 97.91666666666667}, {"agent_id": "dsh", "synthetic": false, "describe": {"agent": "deepseek-harness", "api_key_env": "DEEPSEEK_API_KEY", "binary": "/home/openkylin/.local/bin/dsh", "capabilities": ["cross_session", "memory_inspection", "workspace_files"], "class": "DshAgent", "effective_model": "deepseek-flash", "memory_mechanism": "workspace MEMORY.md declared via per-case DSH_HOME/AGENTS.md", "model": "deepseek-flash", "model_pin": "--patch memoryscope-model.patch.yml on agent-default-model", "provider": "deepseek-official", "session_mechanism": "new agent thread per session; resume the thread within a session", "synthetic": false, "version": "0.2.0-rc.2"}, "status": "completed", "dimensions": {"boundary": {"error": 0, "fail": 0, "pass": 8, "planned": 8, "scorable": 8, "scorable_coverage": 100.0, "score": 100.0, "unknown": 0, "unsupported": 0}, "disambiguation": {"error": 0, "fail": 0, "pass": 8, "planned": 8, "scorable": 8, "scorable_coverage": 100.0, "score": 100.0, "unknown": 0, "unsupported": 0}, "dynamic_update": {"error": 0, "fail": 0, "pass": 8, "planned": 8, "scorable": 8, "scorable_coverage": 100.0, "score": 100.0, "unknown": 0, "unsupported": 0}, "retention": {"error": 0, "fail": 0, "pass": 8, "planned": 8, "scorable": 8, "scorable_coverage": 100.0, "score": 100.0, "unknown": 0, "unsupported": 0}, "retrieval": {"error": 0, "fail": 0, "pass": 8, "planned": 8, "scorable": 8, "scorable_coverage": 100.0, "score": 100.0, "unknown": 0, "unsupported": 0}, "reuse": {"error": 0, "fail": 0, "pass": 8, "planned": 8, "scorable": 8, "scorable_coverage": 100.0, "score": 100.0, "unknown": 0, "unsupported": 0}}, "overall_score": 100.0}], "report_dir": "/home/openkylin/memoryscope-ok/runs/20261016T064413939014Z-0d5dfa7e5bd8/report"}, "error": null}
+REUSE_EXIT=0
+
+===== [05:10:33] GUI 依赖检查 =====
+xcb plugin: /home/openkylin/.local/memoryscope-ok-root/opt/memoryscope-ok/.venv/lib/python3.12/site-packages/PySide6/Qt/plugins/platforms/libqxcb.so
+xcb 插件依赖齐全
+GUI_OFFSCREEN_OK Run 20261016T064413939014Z-0d5dfa7e5bd8 · completed · 48 条用例 × 2 个 Agent 2
+GUI_OFFSCREEN_EXIT=0
+
+===== [05:10:33] 启动 GUI 窗口 =====
+GUI_RUNNING=yes
+
+===== [05:10:41] ALL DONE =====

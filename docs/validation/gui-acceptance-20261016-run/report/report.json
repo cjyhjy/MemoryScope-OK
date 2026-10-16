@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "run_id": "20261016T122728161616Z-339acc5fa99a",
+  "status": "completed",
+  "synthetic": true,
+  "agents": [
+    {
+      "agent_id": "demo",
+      "synthetic": true,
+      "describe": {
+        "capabilities": [
+          "cross_session",
+          "memory_inspection"
+        ],
+        "class": "DemoAgent",
+        "synthetic": true
+      },
+      "status": "completed",
+      "dimensions": {
+        "boundary": {
+          "error": 0,
+          "fail": 0,
+          "pass": 0,
+          "planned": 0,
+          "scorable": 0,
+          "scorable_coverage": null,
+          "score": null,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "disambiguation": {
+          "error": 0,
+          "fail": 0,
+          "pass": 0,
+          "planned": 0,
+          "scorable": 0,
+          "scorable_coverage": null,
+          "score": null,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "dynamic_update": {
+          "error": 0,
+          "fail": 0,
+          "pass": 0,
+          "planned": 0,
+          "scorable": 0,
+          "scorable_coverage": null,
+          "score": null,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "retention": {
+          "error": 0,
+          "fail": 0,
+          "pass": 1,
+          "planned": 1,
+          "scorable": 1,
+          "scorable_coverage": 100.0,
+          "score": 100.0,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "retrieval": {
+          "error": 0,
+          "fail": 0,
+          "pass": 0,
+          "planned": 0,
+          "scorable": 0,
+          "scorable_coverage": null,
+          "score": null,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "reuse": {
+          "error": 0,
+          "fail": 0,
+          "pass": 0,
+          "planned": 0,
+          "scorable": 0,
+          "scorable_coverage": null,
+          "score": null,
+          "unknown": 0,
+          "unsupported": 0
+        }
+      },
+      "overall_score": null
+    }
+  ],
+  "source_results_sha256": "7ec82d566d62263de0d0e22377bb11cd67d63d0d1662c5a1c897feddbf8940ff"
+}

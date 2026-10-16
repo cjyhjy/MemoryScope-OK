@@ -169,3 +169,79 @@ CLI MVP、本地检查、openKylin 初验及两款真实 Agent 的 48×2 全量�
 - 测试：`.venv/bin/pytest -q` **90 passed**（Python 3.13.15，macOS）；uv 创建的 Python **3.10.21** 环境 `pytest -q` **90 passed**。`bash scripts/run_all.sh configs/demo-smoke.yaml` 成功（synthetic）。
 - 用户指出应按交接文档做 GUI，随即实现 PySide6 桌面 GUI（`src/memoryscope_gui/`，详见 `docs/CLI_GUI_HANDOFF.md` 顶部实现说明）。macOS 上 `.venv/bin/pytest -q` **104 passed**（新增 `tests/test_gui.py` 14 项，含 offscreen 窗口通过 CLI 端到端跑完 synthetic 评测并生成报告）；offscreen 截图核对了 48×2 run 的雷达图、六维表与 fail 用例详情。确认 PyPI 有 PySide6-Essentials 6.12.0 的 manylinux_2_39_aarch64 wheel（openKylin glibc 2.43）。
 - .deb 重新构建为含 GUI 版本：`memoryscope-ok_0.3.0_arm64.deb` 129,571,582 字节，sha256 `a124693667ff84e2bc3ec487a83fed63e53348bef38a02b576f07ed2323df537`；新增 `memoryscope-ok gui` 与 `/usr/share/applications/memoryscope-ok.desktop`。openKylin 桌面上的安装与 GUI 启动尚未验证（OSTree 下 dpkg 是否可写 /usr 未知，验收脚本带用户目录回退）。
+
+## 2026-10-16 Codex 接续 GUI 验收（等待客体解锁）
+
+基于本地提交 ce515f5，开始时工作区干净；未覆盖 Claude 的实现、旧 run 或构建包。macOS arm64 / 项目 `.venv` Python 3.13.15 实际执行：
+
+- `.venv/bin/python -m pip install -e '.[dev]' --no-build-isolation`：退出 0。
+- `.venv/bin/memoryscope --help`、`validate datasets/golden`：退出 0，48 条 / 6 文件；仅 schema 验证。
+- `.venv/bin/pytest -q`：104 passed in 11.68s，含 GUI offscreen CLI 端到端测试。
+- `.venv/bin/memoryscope run configs/demo.yaml --json`：退出 0，run `20261016T113922611977Z-643ecdd792b3`；synthetic，retention 8 条为 3 pass / 5 fail，其他维度及 Overall 为 null。执行完成不代表 case 全通过。
+- `bash scripts/run_all.sh configs/demo-smoke.yaml`：退出 0，104 passed in 13.55s；run `20261016T113950657024Z-d68c9997a119`，synthetic 单例 pass；JSON/CSV/Markdown/PNG 与 HTML 生成成功。Matplotlib/Fontconfig 报宿主缓存目录不可写，但最终报告成功。完整日志：`docs/validation/gui-acceptance-20261016-host.log`。
+- 既有 openKylin 真实 run `20261016T064413939014Z-0d5dfa7e5bd8` 的 `report --reuse --json`：退出 0，Codex 97.9167、dsh 100；未重新调用真实 Agent。
+- `dist/` 与 Claude 已有共享目录 `MemoryScope-OK-vmshare/okcheck/` 中的 arm64 deb SHA-256 均为 `a124693667ff84e2bc3ec487a83fed63e53348bef38a02b576f07ed2323df537`。
+- 审阅共享目录 `check.sh`：它尝试 sudo dpkg，失败则回退用户目录安装，且最终 ALL DONE 不能代表每项成功；后续须逐项读取 DPKG_EXIT / ALL_EXIT / REUSE_EXIT / GUI_OFFSCREEN_EXIT 并核对可见窗口。
+
+已启动现有 openKylin Desktop 虚拟机并观察到 UKUI 桌面与终端，随后客体进入密码锁屏。尚未取得客体命令输出，未执行 dpkg 安装，未启动项目 GUI；等待用户在虚拟机内自行解锁。没有收集或尝试猜测密码。openKylin GUI、deb 实装与桌面联调仍未验收通过；录屏、发布也未执行。
+
+### 客体解锁后的连接检查
+
+用户已解锁，已目视确认 openKylin 终端。当前 CUA 的点击可见，但多种键盘输入（typeText/paste/逐键/延长按键）未在客体终端产生可确认文本或命令输出，因此没有将按键发送记为执行成功。`vmrun getGuestIPAddress` 返回 `172.16.63.130`；SSH 22 端口连接被拒绝（不是认证失败）。已通过 `vmrun enableSharedFolders ... runtime` 启用预先配置的 msok 专用验收共享，退出 0；未增加新的共享目录。需要用户在客体终端启动已审阅的 `check.sh`，之后可从宿主共享目录读取各项日志继续验收；sudo 密码仅由用户在客体输入。
+
+### 连接恢复进一步诊断
+
+用户要求自行恢复连接后，再次确认 vmrun 列出目标虚拟机正在运行。尝试 VMware Tools 的 `listProcessesInGuest`（仅指定 openkylin 用户，不提供/猜测密码），明确返回 `Command requires valid user name and password for the guest OS`。重建 CUA 会话并重新绑定 Fusion 后，窗口树仍能返回，但坐标输入多次返回 `Computer Use server error -10005: noWindowsAvailable`；当前不能依赖其截图判断实时客体状态。尚未建立可执行客体命令的通道，安装与 GUI 验收保持待完成。未重置密码、关闭认证或开放远程服务。
+
+### 已恢复客体命令输入，安装等待 sudo（2026-10-16）
+
+更正此前推断：Mac 锁屏没有证据，虚拟机窗口可见。CUA 输入存在延迟和输入法预编辑/标点丢失；逐步核对后已实际执行 `pwd`（/home/openkylin）与 `ls /mnt/hgfs/msok`。创建已有共享 check.sh 的同内容、无标点入口 checkrun（保留原文件），成功执行 `bash /mnt/hgfs/msok/checkrun`。宿主已收到 `check-20261016-050836.log`，记录 openKylin 3.0、aarch64、Python 3.12.2、glibc 2.43、Wayland。当前脚本停在 sudo 密码提示，尚未运行 dpkg；需要用户仅在该提示中输入密码，然后继续读取日志验收。
+
+### 用户目录安装与客体验收结果（2026-10-16）
+
+已读取完整 `check-20261016-050836.log`，归档到 `docs/validation/gui-acceptance-20261016-openkylin.log`。sudo 三次密码错误，`DPKG_EXIT=1`，dpkg 实际未获授权执行；这不能证明 OSTree 或软件包不兼容，也不能算系统安装通过。
+
+- 同一 arm64 .deb 解包到 `/home/openkylin/.local/memoryscope-ok-root/opt/memoryscope-ok`，随包 wheels 离线用户安装成功；工作目录 `/home/openkylin/memoryscope-ok`。
+- `VERSION_EXIT=0`（0.3.0）、`VALIDATE_EXIT=0`（48 cases / 6 files）。
+- `memoryscope-ok all configs/demo-smoke.yaml`：`ALL_EXIT=0`；run `20261016T121032656194Z-8d724513a404`，synthetic 单例 retention-001 pass，缺失五维与 Overall 均 null；报告及 HTML 已生成。
+- 已有真实 run 的导入与 `report --reuse --json`：`REUSE_EXIT=0`；未调用真实 Agent。
+- xcb 插件依赖齐全；GUI offscreen 成功加载真实 48×2 run，列表 2 项，`GUI_OFFSCREEN_EXIT=0`；启动后 `GUI_RUNNING=yes`，gui-stderr.log 为空。
+- 当前实际看到 Firefox 打开的新 synthetic run HTML 页面，openKylin/Python 版本、用例 pass 和事件索引正常显示。桌面 PySide6 主窗口仍未目视验收：尝试切换时 CUA 坐标动作反复报 `noWindowsAvailable`，窗口截图可读，不能据此推断 Mac 锁屏或 GUI 故障。
+
+当前通过的是用户安装、客体 CLI 一键流程和 GUI 离屏加载；系统 dpkg 安装、桌面 GUI 交互流程与录屏仍待完成。保留既有程序与数据，未推送远端。
+
+### openKylin 桌面 GUI 实际交互验收（2026-10-16，Codex）
+
+用户明确暂不验收系统级安装；本轮使用已有用户目录安装，通过 Fusion 内的真实 UKUI 桌面操作 PySide6 窗口。核心 GUI 流程通过，外部 PNG 查看器唤起仍未确认；不宣称所有桌面集成均通过。未修改 GUI 源码，未重新调用真实 Agent。
+
+- 原生启动、中文布局、运行列表及重启后历史恢复正常。
+- 加载既有真实 run `20261016T064413939014Z-0d5dfa7e5bd8`：48×2、Codex 97.9 / dsh 100、动态更新 87.5 / 100，内嵌六维雷达图与表格一致。运行环境页显示 openKylin 3.0 / Linux aarch64。
+- 状态筛选 fail 仅剩 Codex `dynamic_update-007`；详情和证据弹窗显示事件 303–317，能查看 reset、记忆快照和评分证据。
+- 新建评测仅勾选 demo，选择 datasets/smoke；预检成功，开始后显示异步进度、1/1 pass、报告生成并自动跳转结果页。run `20261016T122728161616Z-339acc5fa99a`，客体路径 `runs/gui/34d5b634-f029-415d-afc2-537c449dfa77/` 下。
+- 新 run 明确显示 SYNTHETIC；retention 100，其余五维与 Overall 不可评分，没有伪造完整雷达多边形。
+- GUI 报告复用成功；离线重评生成独立 `rescore-20261016T122803748366Z-9aa20e6d`，0 状态变化，原 run 保留。
+- 空 Agent 预检弹出“配置无效 / 至少选择一个 Agent”，没有启动运行；缺少 DEEPSEEK_API_KEY 的提示可见，未填写密钥。
+- “打开运行目录”成功打开客体文件管理器；report 中 JSON/CSV/Markdown/PNG 存在，PNG 缩略图可见。“打开 radar.png”及文件管理器双击未观察到外部图片查看器窗口，故此项保留待排查，不据此判定图表生成失败。
+- 通过既有共享目录取回本次 synthetic 原始结果及重评，共 14 文件，保存到 `docs/validation/gui-acceptance-20261016-run/`；原 run 与重评各 4 个 artifacts SHA-256 均与 metadata 一致。
+
+本轮完成 GUI 核心流程的客体可见交互验收；录屏尚未执行，系统级 dpkg 安装按用户要求暂缓。停止/取消运行及全部文件类型的外部默认程序打开未专项验收。前文连接失败和未验收描述为历史状态，以本节为当前结论。
+
+## 2026-10-16 自定义命令行 Agent（Claude）
+
+- 用户要求开放更多 Agent：新增 `type: command`（`adapters/command.py`，AgentConfig 增加 `command` / `name`，要求含 `{prompt}`，非 command 类型禁止 `command`）。复用 CliMemoryAgent 的每例独立 home/工作区与 MEMORY.md 约定；记忆约定附在每条提示词前，stdout 为回答，无会话续接。GUI 自动列出 `configs/custom-agents.yaml` 中的条目（示例 `configs/custom-agents.example.yaml`）。
+- 测试：macOS `.venv/bin/pytest -q` **108 passed**（新增假命令行 Agent 端到端 pass、缺失命令记为 Agent 错误、配置校验、GUI 列出并写入请求）。已验收的 48×2 结果与 openKylin 安装未改动；含此功能的 .deb 尚未重建，openKylin 上未验证 command 类型。
+- 已重建 `dist/memoryscope-ok_0.3.0_arm64.deb`（含 command 类型）：129,686,842 字节，sha256 `f13e7f8ef8af7e9bd3c838237ce1312446c74bc99f29bbd92e91127656500448`。共享目录 `okcheck/` 中保留的是已在 openKylin 验收的旧包 `a1246936…`，未覆盖。
+
+## 录屏归档与初剪（2026-10-16，America/New_York）
+
+- 桌面原片 `录屏2026-10-16 上午9.18.47.mov` 已复制为 `video/public/rec/demo-raw.mov`，桌面原文件保留。
+- 初剪 `video/public/rec/demo.mov`：ffprobe 实测 237.000 秒（3:57），2784×1900，H.264，30 fps，无音轨；原片 1050.602 秒。
+- 删除锁屏、输入调试、过程长等待和结尾等待；保留原顺序与原速，GUI 单例进度、既有真实 48×2 结果/证据/环境/重评，以及 CLI 演示。现场单例是 synthetic Demo，不能称为现场双真实 Agent 或全量运行。
+- 剪点记录：`video/public/rec/demo-edit.json`。用 ffmpeg 解码并按 5 秒间隔抽帧核对，抽查未见 .env 内容或密钥，锁屏和文件管理器调试片段已去除。后续按配音精剪并完成最终逐帧隐私复核。
+
+## GitHub 提交准备（2026-10-16）
+
+- 纳入作品介绍 PDF、HTML 与配图，GUI 验收记录及视频剪辑源码。视频原片、成片、音频与 node_modules 继续排除在 Git 外；正式成片计划作为 Release 附件分发。
+- 本轮 macOS 项目虚拟环境验证：`.venv/bin/pytest -q`，108 passed in 13.73s；`git diff --check` 通过。
+- 正式成片 `video/out/memoryscope-ok-demo.mp4` 经 ffprobe 确认 249.472 秒、61,982,058 字节。作品介绍本地路径 `docs/submission/MemoryScope-OK-作品介绍.pdf`。
+- 提交准备时远端尚未创建，未将计划推送写为已完成。

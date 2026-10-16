@@ -11,8 +11,11 @@
 - [x] Codex CLI MVP Goal：补齐稳定的机器可读命令、运行定位/进度、报告与重评、错误处理和扩展接口，完成测试及 openKylin 的项目初验；保留现有真实结果，不以 48 条或 Judge 作为 MVP 门槛。
 - [x] openKylin 真实全量评测：48 条 draft cases × Codex CLI/dsh，共 96 条 case 结果；报告、雷达图、事件与快照已安全带回宿主项目。
 - [x] Claude：PySide6 GUI（结果页、新建评测、异步进度、证据、报告/重评）与 `memoryscope view` HTML 页，macOS 测试通过（2026-10-16）。
-- [ ] openKylin 桌面实机启动 GUI 并联调（`check.sh`）。
-- [ ] 双方：在 openKylin 桌面联调 CLI/GUI、检查证据与图表来源，再录屏。
+- [x] openKylin 桌面 GUI 核心验收：真实 48×2 展示、fail 筛选与证据、新建 synthetic 单例/进度/报告、离线重评、历史恢复、空 Agent 校验；详见 STATUS 及 docs/validation/gui-acceptance-20261016-run/。
+- [ ] 外部 PNG 查看器唤起待排查：内嵌雷达图、PNG 文件和缩略图正常，但打开按钮未观察到查看器窗口。
+- [x] 录屏归档与初剪：`video/public/rec/demo.mov`，3:57；原片和剪点 JSON 已保留。现场单例为 synthetic，48×2 为既有真实结果。
+- [ ] 视频精剪：按配音调整时序/定格，完成字幕及最终逐帧隐私复核。
+- [ ] 系统级 dpkg 安装：按用户最新要求暂缓；用户安装已通过，不作为当前 GUI 验收阻塞项。
 
 ## 已完成
 
@@ -51,9 +54,9 @@
 
 - [x] openKylin 上：CLI 安装、85 项 pytest、validate、synthetic 单例、报告与雷达图文件；记录环境和日志。
 - [x] openKylin 上：两个真实 Agent 完整 48 条 run，生成 JSON/CSV/Markdown/雷达图并目视核对；run `20261016T064413939014Z-0d5dfa7e5bd8`。
-- [ ] openKylin 桌面录屏中展示完整报告和雷达图；GUI 联调仍待 Claude 完成。
+- [ ] openKylin 桌面录屏中展示完整报告和雷达图；GUI 核心桌面联调已通过，录屏未执行。
 - [x] Python 3.10 解释器完整测试（macOS，uv 3.10.21，90 passed）。
 - [x] .deb 交叉构建（macOS → arm64 / Python 3.12），见 STATUS。
-- [ ] 在 openKylin 上 `sudo dpkg -i` 安装并运行 `memoryscope-ok all configs/demo-smoke.yaml`（脚本 `/mnt/hgfs/msok/check.sh`，等用户在虚拟机内执行）。
+- [ ] 在 openKylin 上 `sudo dpkg -i` 安装并运行 `memoryscope-ok all configs/demo-smoke.yaml`（用户要求暂缓，当前使用已验收的用户目录安装）。
 - [x] 把 SOLUTION.md 第 7、8 节、STATUS、README、演示和验证文档更新为 openKylin 实机结果。
 - [ ] 从官方来源核实赛题、截止时间（项目目标写的是 2026-10-16）、提交要求。

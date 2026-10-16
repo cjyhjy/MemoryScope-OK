@@ -1,0 +1,107 @@
+{
+  "artifacts": {
+    "config.snapshot.yaml": {
+      "sha256": "af6d7c664b232c25843ff89508fd2284ba6fcaaabb412e556bb608e10b57757e"
+    },
+    "dataset.snapshot.jsonl": {
+      "sha256": "b4e51c3e42c13df59a8a970c26352dbd015a6c6ab8caa8f6dc67bc90d3660447"
+    },
+    "events.jsonl": {
+      "sha256": "3f5a3c697d437373803bdcee82372b4f4aed14c484091bf58d166d863643c60f"
+    },
+    "results.json": {
+      "sha256": "4f927c54b50afbd964e0c343e2ee419913494144cca5c52c9df61257aba970ff"
+    }
+  },
+  "config_path": "configs/gui/34d5b634-f029-415d-afc2-537c449dfa77.yaml",
+  "dataset_sources": [
+    {
+      "path": "datasets/smoke/retention-001.jsonl",
+      "sha256": "a897f66d422fbfe1f4abcf516ee79f444a50c6f7ea85033abcb51555344159bf"
+    }
+  ],
+  "dependencies": {
+    "PyYAML": "6.0.3",
+    "httpx": "0.28.1",
+    "matplotlib": "3.11.2",
+    "pydantic": "2.14.1",
+    "typer": "0.27.3"
+  },
+  "env_file_variables_loaded": [],
+  "evaluator": {
+    "case_score_scale": [
+      0,
+      1
+    ],
+    "case_sensitive": false,
+    "dimension_score_scale": [
+      0,
+      100
+    ],
+    "types": [
+      "contains",
+      "answer_line"
+    ],
+    "version": "1.2"
+  },
+  "event_count": 18,
+  "finished_at": "2026-10-16T12:27:28.162892+00:00",
+  "git_commit": null,
+  "input_config_sha256": "af6d7c664b232c25843ff89508fd2284ba6fcaaabb412e556bb608e10b57757e",
+  "limitations": [
+    "rule scoring only (no LLM judge)",
+    "environment evidence applies to this run only; see platform and os_release"
+  ],
+  "os_release": {
+    "FULL_NAME": "openKylin",
+    "HOME_URL": "https://www.openkylin.top/",
+    "ID": "openkylin",
+    "NAME": "openKylin",
+    "PRETTY_NAME": "openKylin 3.0",
+    "PRODUCT_FEATURES": "3",
+    "VERSION": "3.0 (huanghe)",
+    "VERSION_CODENAME": "huanghe",
+    "VERSION_ID": "3.0",
+    "VERSION_US": "3.0 (huanghe)"
+  },
+  "package_version": "0.3.0",
+  "platform": "Linux-7.0.0-3-generic-aarch64-with-glibc2.43",
+  "purpose": "synthetic_pipeline_validation",
+  "python_version": "3.12.2 (main, Apr 13 2026, 07:40:29) [GCC 12.3.0]",
+  "rescore": {
+    "evaluator_version": "1.2",
+    "source_artifacts": {
+      "config.snapshot.yaml": "af6d7c664b232c25843ff89508fd2284ba6fcaaabb412e556bb608e10b57757e",
+      "dataset.snapshot.jsonl": "b4e51c3e42c13df59a8a970c26352dbd015a6c6ab8caa8f6dc67bc90d3660447",
+      "events.jsonl": "3f5a3c697d437373803bdcee82372b4f4aed14c484091bf58d166d863643c60f",
+      "metadata.json": "254d32923a499932700212b7037b4eb4d8cf7c9bb0033d505ae4a501d7c4544f",
+      "results.json": "aba23561640fd847b2eef55bc13dfe7520b2d92842efd8d41a5e5522ef358801"
+    },
+    "source_evaluator": {
+      "case_score_scale": [
+        0,
+        1
+      ],
+      "case_sensitive": false,
+      "dimension_score_scale": [
+        0,
+        100
+      ],
+      "types": [
+        "contains",
+        "answer_line"
+      ],
+      "version": "1.2"
+    },
+    "source_run_id": "20261016T122728161616Z-339acc5fa99a",
+    "timestamp": "20261016T122803748366Z"
+  },
+  "run_id": "20261016T122728161616Z-339acc5fa99a",
+  "sandbox_root": "/tmp/memoryscope-20261016T122728161616Z-339acc5fa99a-4r1fq9zu",
+  "schema_version": "1.1",
+  "seed": 0,
+  "source_sha256": "dd97ca4d619c5742b9c5a25026f53590dba1de2c47ae68b92360f1056b3fa7c8",
+  "started_at": "2026-10-16T12:27:28.161702+00:00",
+  "status": "completed",
+  "synthetic": true
+}

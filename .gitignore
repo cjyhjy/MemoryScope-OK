@@ -13,3 +13,10 @@ configs/gui/
 .env.*
 !.env.example
 .DS_Store
+
+# 演示视频素材与中间文件（video/ 剪辑工程）
+video/node_modules/
+video/out/
+video/public/rec/
+video/public/audio/
+video/public/timeline.json

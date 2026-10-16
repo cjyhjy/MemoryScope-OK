@@ -1,0 +1,46 @@
+
+[1;34m==> 数据集校验[0m
+Valid: 48 case(s), 6 file(s).
+
+[1;34m==> 单元与集成测试[0m
+........................................................................ [ 69%]
+................................                                         [100%]
+104 passed in 13.55s
+
+[1;34m==> 评测：configs/demo-smoke.yaml[0m
+{"schema_version": "1.0", "command": "run", "ok": true, "data": {"run_id": "20261016T113950657024Z-d68c9997a119", "status": "completed", "synthetic": true, "agents": [{"agent_id": "demo", "synthetic": true, "describe": {"class": "DemoAgent", "synthetic": true, "capabilities": ["cross_session", "memory_inspection"]}, "status": "completed", "dimensions": {"retention": {"planned": 1, "pass": 1, "fail": 0, "unknown": 0, "error": 0, "unsupported": 0, "scorable": 1, "score": 100.0, "scorable_coverage": 100.0}, "retrieval": {"planned": 0, "pass": 0, "fail": 0, "unknown": 0, "error": 0, "unsupported": 0, "scorable": 0, "score": null, "scorable_coverage": null}, "dynamic_update": {"planned": 0, "pass": 0, "fail": 0, "unknown": 0, "error": 0, "unsupported": 0, "scorable": 0, "score": null, "scorable_coverage": null}, "disambiguation": {"planned": 0, "pass": 0, "fail": 0, "unknown": 0, "error": 0, "unsupported": 0, "scorable": 0, "score": null, "scorable_coverage": null}, "boundary": {"planned": 0, "pass": 0, "fail": 0, "unknown": 0, "error": 0, "unsupported": 0, "scorable": 0, "score": null, "scorable_coverage": null}, "reuse": {"planned": 0, "pass": 0, "fail": 0, "unknown": 0, "error": 0, "unsupported": 0, "scorable": 0, "score": null, "scorable_coverage": null}}, "overall_score": null}], "run_dir": "/Users/cjy/Documents/MemoryScope-OK/runs/20261016T113950657024Z-d68c9997a119", "results_path": "/Users/cjy/Documents/MemoryScope-OK/runs/20261016T113950657024Z-d68c9997a119/results.json", "events_path": "/Users/cjy/Documents/MemoryScope-OK/runs/20261016T113950657024Z-d68c9997a119/events.jsonl", "metadata_path": "/Users/cjy/Documents/MemoryScope-OK/runs/20261016T113950657024Z-d68c9997a119/metadata.json"}, "error": null}
+
+[1;34m==> 生成报告[0m
+/Users/cjy/.matplotlib is not a writable directory
+Matplotlib created a temporary cache directory at /var/folders/sm/v6v7286s07j8z7x50805469c0000gn/T/matplotlib-gkdopqiz because there was an issue with the default path (/Users/cjy/.matplotlib); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+
+Fontconfig error: No writable cache directories
+	/opt/homebrew/var/cache/fontconfig
+	/Users/cjy/.cache/fontconfig
+	/Users/cjy/.fontconfig
+Matplotlib is building the font cache; this may take a moment.
+{"schema_version": "1.0", "command": "report", "ok": true, "data": {"run_id": "20261016T113950657024Z-d68c9997a119", "status": "completed", "synthetic": true, "agents": [{"agent_id": "demo", "synthetic": true, "describe": {"capabilities": ["cross_session", "memory_inspection"], "class": "DemoAgent", "synthetic": true}, "status": "completed", "dimensions": {"boundary": {"error": 0, "fail": 0, "pass": 0, "planned": 0, "scorable": 0, "scorable_coverage": null, "score": null, "unknown": 0, "unsupported": 0}, "disambiguation": {"error": 0, "fail": 0, "pass": 0, "planned": 0, "scorable": 0, "scorable_coverage": null, "score": null, "unknown": 0, "unsupported": 0}, "dynamic_update": {"error": 0, "fail": 0, "pass": 0, "planned": 0, "scorable": 0, "scorable_coverage": null, "score": null, "unknown": 0, "unsupported": 0}, "retention": {"error": 0, "fail": 0, "pass": 1, "planned": 1, "scorable": 1, "scorable_coverage": 100.0, "score": 100.0, "unknown": 0, "unsupported": 0}, "retrieval": {"error": 0, "fail": 0, "pass": 0, "planned": 0, "scorable": 0, "scorable_coverage": null, "score": null, "unknown": 0, "unsupported": 0}, "reuse": {"error": 0, "fail": 0, "pass": 0, "planned": 0, "scorable": 0, "scorable_coverage": null, "score": null, "unknown": 0, "unsupported": 0}}, "overall_score": null}], "report_dir": "/Users/cjy/Documents/MemoryScope-OK/runs/20261016T113950657024Z-d68c9997a119/report"}, "error": null}
+运行目录：/Users/cjy/Documents/MemoryScope-OK/runs/20261016T113950657024Z-d68c9997a119
+Markdown 报告：/Users/cjy/Documents/MemoryScope-OK/runs/20261016T113950657024Z-d68c9997a119/report/report.md
+雷达图：/Users/cjy/Documents/MemoryScope-OK/runs/20261016T113950657024Z-d68c9997a119/report/radar.png
+CSV / JSON：/Users/cjy/Documents/MemoryScope-OK/runs/20261016T113950657024Z-d68c9997a119/report/report.csv  /Users/cjy/Documents/MemoryScope-OK/runs/20261016T113950657024Z-d68c9997a119/report/report.json
+HTML 结果页（雷达图 + 逐条评分理由）：/Users/cjy/Documents/MemoryScope-OK/runs/20261016T113950657024Z-d68c9997a119/view.html
+## 六维得分
+
+| 维度 | demo |
+| --- | --- |
+| 长期保持 `retention` | 100.0（1/1，覆盖 100.0%） |
+| 记忆调用 `retrieval` | null（0/0，覆盖 null） |
+| 动态更新 `dynamic_update` | null（0/0，覆盖 null） |
+| 相近区分 `disambiguation` | null（0/0，覆盖 null） |
+| 边界识别 `boundary` | null（0/0，覆盖 null） |
+| 任务复用 `reuse` | null（0/0，覆盖 null） |
+| **六维总分** | null |
+
+## 状态分布
+
+| Agent | pass | fail | unknown | error | unsupported |
+| --- | --- | --- | --- | --- | --- |
+| demo | 1 | 0 | 0 | 0 | 0 |
+
+## Agent 信息

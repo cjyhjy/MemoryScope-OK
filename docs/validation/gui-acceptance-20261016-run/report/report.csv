@@ -1,0 +1,3 @@
+agent_id,synthetic,case_id,category,case_status,check_id,check_kind,check_status,explanation,response,evaluation_event,error
+demo,True,retention-001,retention,pass,port,probe,pass,All required terms found; no forbidden terms found.,"根据记忆：记住：我们课程项目“青檀”的测试数据库端口固定用 5734，不用默认端口。
+答案：记住：我们课程项目“青檀”的测试数据库端口固定用 5734，不用默认端口。",15,

@@ -1,0 +1,156 @@
+{
+  "agent_results": [
+    {
+      "adapter_type": "demo",
+      "agent_id": "demo",
+      "cases": [
+        {
+          "case_id": "retention-001",
+          "category": "retention",
+          "duration_seconds": 0.00024933800068538403,
+          "evidence": {
+            "file": "events.jsonl",
+            "first_sequence": 3,
+            "last_sequence": 16
+          },
+          "namespace": "20261016T122728161616Z-339acc5fa99a/demo/retention-001",
+          "original_status": "pass",
+          "probes": [
+            {
+              "evaluation": {
+                "explanation": "All required terms found; no forbidden terms found.",
+                "forbidden_hits": [],
+                "forbidden_terms": [
+                  "5432",
+                  "3306"
+                ],
+                "missing_terms": [],
+                "passed": true,
+                "required_terms": [
+                  "5734"
+                ],
+                "scope": "answer_line",
+                "score": 1.0,
+                "scored_text": "记住：我们课程项目“青檀”的测试数据库端口固定用 5734，不用默认端口。",
+                "status": "pass",
+                "type": "answer_line",
+                "version": "1.2"
+              },
+              "evaluation_event": 15,
+              "kind": "probe",
+              "original_status": "pass",
+              "probe_id": "port",
+              "response": "根据记忆：记住：我们课程项目“青檀”的测试数据库端口固定用 5734，不用默认端口。\n答案：记住：我们课程项目“青檀”的测试数据库端口固定用 5734，不用默认端口。",
+              "session_id": "s2",
+              "status": "pass"
+            }
+          ],
+          "protocol": {
+            "mode": "cross_session"
+          },
+          "score": 1.0,
+          "status": "pass",
+          "synthetic": true
+        }
+      ],
+      "describe": {
+        "capabilities": [
+          "cross_session",
+          "memory_inspection"
+        ],
+        "class": "DemoAgent",
+        "synthetic": true
+      },
+      "dimension_scores": {
+        "boundary": null,
+        "disambiguation": null,
+        "dynamic_update": null,
+        "retention": 100.0,
+        "retrieval": null,
+        "reuse": null
+      },
+      "dimensions": {
+        "boundary": {
+          "error": 0,
+          "fail": 0,
+          "pass": 0,
+          "planned": 0,
+          "scorable": 0,
+          "scorable_coverage": null,
+          "score": null,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "disambiguation": {
+          "error": 0,
+          "fail": 0,
+          "pass": 0,
+          "planned": 0,
+          "scorable": 0,
+          "scorable_coverage": null,
+          "score": null,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "dynamic_update": {
+          "error": 0,
+          "fail": 0,
+          "pass": 0,
+          "planned": 0,
+          "scorable": 0,
+          "scorable_coverage": null,
+          "score": null,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "retention": {
+          "error": 0,
+          "fail": 0,
+          "pass": 1,
+          "planned": 1,
+          "scorable": 1,
+          "scorable_coverage": 100.0,
+          "score": 100.0,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "retrieval": {
+          "error": 0,
+          "fail": 0,
+          "pass": 0,
+          "planned": 0,
+          "scorable": 0,
+          "scorable_coverage": null,
+          "score": null,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "reuse": {
+          "error": 0,
+          "fail": 0,
+          "pass": 0,
+          "planned": 0,
+          "scorable": 0,
+          "scorable_coverage": null,
+          "score": null,
+          "unknown": 0,
+          "unsupported": 0
+        }
+      },
+      "errors": [],
+      "overall_score": null,
+      "status": "completed",
+      "synthetic": true
+    }
+  ],
+  "dataset_case_count": 1,
+  "evaluator_version": "1.2",
+  "purpose": "synthetic_pipeline_validation",
+  "rescored_from": "20261016T122728161616Z-339acc5fa99a",
+  "run_id": "20261016T122728161616Z-339acc5fa99a",
+  "schema_version": "1.1",
+  "scoring_note": "Dimension score = 100*pass/(pass+fail); unknown/error/unsupported are counted separately and lower coverage. Overall is the mean of six dimensions and null if any is null.",
+  "status": "completed",
+  "status_changes": [],
+  "synthetic": true
+}
