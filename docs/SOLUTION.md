@@ -59,6 +59,8 @@ Schema 1.1 用一个有序的 `steps` 列表描述用例：
 | `check_memory` | 检查 Agent 存下的长期记忆内容（存储层证据） |
 | `check_file` | 检查 Agent 在工作区中实际创建的文件（行为证据，路径不能越出工作区） |
 
+扩展方式：用户直接编辑或追加 JSONL 行即可改提示词、加用例，`memoryscope validate` 校验后在配置中指向该数据集运行；步骤见 README“修改或新增用例”。
+
 Schema 1.0（固定 setup/updates/distractors/probe）由 `upgrade_case` 显式转换为 1.1，并保留 `source_schema_version`。
 
 设计原则：

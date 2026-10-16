@@ -57,6 +57,14 @@ GUI/脚本可给各命令加 `--json` 读取版本化结果；`run --jsonl` 实�
 
 若系统依赖已具备，或使用 OSTree 桌面而不进行系统包变更，可用 `SKIP_SYSTEM=1 SKIP_AGENTS=1 bash scripts/setup_openkylin.sh` 仅在项目虚拟环境安装 Python 部分。它不会自动启用系统开发模式；缺失的 Python/venv 依赖仍需明确解决，不能跳过后声称验证通过。
 
+## 修改或新增用例
+
+用例在 `datasets/<目录>/*.jsonl`，一行一条，格式见 `datasets/schema/case.schema.json` 与[方案文档第 4 节](docs/SOLUTION.md)。
+
+1. 复制一行改 `id`（同一数据集内唯一，如 `retention-009`）、`category` 和 `steps`：`message` 的 `content` 就是发给 Agent 的提示词，`new_session` 切换会话，`probe` 提问并按 `expected.include / exclude` 评分，`check_memory` / `check_file` 检查记忆内容和工作区文件。第一个 probe 之前必须有 `new_session`，保证测的是跨会话记忆。
+2. `memoryscope validate datasets/<目录>` 检查格式与 ID 唯一性。
+3. 复制 `configs/agents.yaml`，把 `dataset` 指向该目录，然后 `memoryscope run <配置>`；GUI 的“新建评测”页也可以直接选择该目录。
+
 ## 文档
 
 - [CLI 与图形界面接口约定及 GUI 实现说明](docs/CLI_GUI_HANDOFF.md)
