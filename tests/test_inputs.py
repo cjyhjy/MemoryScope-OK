@@ -14,6 +14,15 @@ def test_seed_and_directory_loading(project):
     assert [probe.id for probe in case.probes] == ["port"]
 
 
+def test_directory_loading_ignores_macos_appledouble_sidecars(project):
+    sidecar = project / "datasets/golden/._retention.jsonl"
+    sidecar.write_bytes(b"\x00\x05\x16\x07not-jsonl")
+    loaded = load_dataset(project / "datasets/golden")
+    assert [case.id for case in loaded.cases] == ["retention-001"]
+    assert all(not source["path"].split("/")[-1].startswith("._")
+               for source in loaded.sources)
+
+
 def probe_step(data):
     return next(step for step in data["steps"] if step["type"] == "probe")
 

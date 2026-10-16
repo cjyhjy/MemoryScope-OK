@@ -16,6 +16,7 @@ class AgentAdapter(ABC):
 
     synthetic: bool = True
     capabilities: frozenset[Capability] = frozenset()
+    required_environment: tuple[str, ...] = ()
 
     def describe(self) -> dict[str, Any]:
         return {"class": type(self).__name__, "synthetic": self.synthetic,

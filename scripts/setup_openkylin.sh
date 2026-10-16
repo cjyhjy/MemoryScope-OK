@@ -3,6 +3,7 @@
 #
 #   bash scripts/setup_openkylin.sh            # everything
 #   SKIP_AGENTS=1 bash scripts/setup_openkylin.sh   # Python side only
+#   SKIP_SYSTEM=1 SKIP_AGENTS=1 bash scripts/setup_openkylin.sh  # use existing system dependencies
 #
 # What it does (nothing outside the project, ~/.local and apt packages):
 #   1. apt: python3, venv, pip, git, curl, xz-utils, CJK fonts
@@ -27,8 +28,11 @@ say "系统信息"
 cat /etc/os-release 2>/dev/null | grep -E '^(NAME|VERSION)=' || true
 uname -m
 
-say "安装系统依赖（需要 sudo）"
-if command -v apt-get >/dev/null; then
+say "检查系统依赖"
+if [ "${SKIP_SYSTEM:-0}" = 1 ]; then
+  warn "SKIP_SYSTEM=1，使用已有系统依赖；不调用 sudo/apt。Python/venv 缺失时会明确失败。"
+elif command -v apt-get >/dev/null; then
+  say "安装系统依赖（需要 sudo）"
   sudo apt-get update
   sudo apt-get install -y python3 python3-venv python3-pip git curl xz-utils fonts-noto-cjk
 else
@@ -124,6 +128,19 @@ write_wrapper codex
 # @deepseek-ai/dsh (MIT, bin "dsh"), with Linux x64/arm64 sandbox addons. Install that.
 say "安装 DeepSeek Harness CLI（@deepseek-ai/dsh）"
 if npm install --prefix "$AGENTS_DIR" --registry "$NPM_REGISTRY" @deepseek-ai/dsh; then
+  # npm 11 may omit a transitive optional native package even though the parent
+  # package declares the current Linux architecture.  dsh then starts far
+  # enough for --version but fails on the first real request with
+  # MODULE_NOT_FOUND.  Install the exact version declared by the parent rather
+  # than guessing a version or silently accepting a partially working CLI.
+  DSH_ADDON="node-addon-require-builtin-linux-$NODE_ARCH-gnu"
+  DSH_ADDON_VERSION=$(node -p \
+    "require('$AGENTS_DIR/node_modules/node-addon-require-builtin/package.json').optionalDependencies['$DSH_ADDON'] || ''" \
+    2>/dev/null || true)
+  if [ -n "$DSH_ADDON_VERSION" ] && [ ! -d "$AGENTS_DIR/node_modules/$DSH_ADDON" ]; then
+    warn "dsh 缺少当前架构原生依赖 $DSH_ADDON@$DSH_ADDON_VERSION，正在补装"
+    npm install --prefix "$AGENTS_DIR" --registry "$NPM_REGISTRY" "$DSH_ADDON@$DSH_ADDON_VERSION"
+  fi
   write_wrapper dsh
   "$BIN_DIR/dsh" --version || warn "dsh --version 失败，请查看上方输出"
 else

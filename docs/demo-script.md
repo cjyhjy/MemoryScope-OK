@@ -1,26 +1,31 @@
-# 演示录屏脚本（3–5 分钟，openKylin 3.0 文字控制台）
+# 演示录屏脚本（3–5 分钟，openKylin 桌面）
 
-**录制方式**：在 Mac 上用 macOS 自带录屏（Shift+Command+5，选“录制所选部分”）框住 VMware Fusion 的 openKylin 窗口。控制台无法粘贴，命令需要手打，所以都尽量简短。雷达图在 Mac 上打开展示（虚拟机里没有图形界面也不影响）。
+状态：演示方案，尚未录制；不得把本脚本的准备步骤当作已完成验证。
 
-**录前准备**（不录）：
-- 完整评测已经在虚拟机里跑完（`bash /mnt/msok/vm_run.sh`），结果目录已复制到共享文件夹 `vm-results/`；
-- 在虚拟机里执行 `cd ~/MemoryScope-OK && export PATH=$HOME/.local/bin:$PATH && . .venv/bin/activate`，再执行 `clear`；
-- 记下完整评测的运行目录名，下文用 `<RUN>` 表示；可以先执行 `R=runs/<RUN>`，录制时直接用 `$R`；
-- 确认屏幕上不会出现 `.env` 的内容。
+依据：[openKylin 官方赛题交付段](https://www.openkylin.top/news/4094-cn.html)，2026-10-15 核验：在 openKylin 桌面环境演示至少两款智能体评测、多维对比雷达图及 3–5 分钟完整录屏。
 
-| 时间 | 画面 | 输入 | 旁白要点 |
-| --- | --- | --- | --- |
-| 0:00–0:20 | 虚拟机 | `head -4 /etc/os-release; uname -m` | 运行环境是 openKylin 3.0（huanghe），aarch64 |
-| 0:20–0:45 | 虚拟机 | `memoryscope --help`，然后 `memoryscope list-agents` | 一键 CLI；demo 标为 synthetic，codex 和 dsh 是真实 Agent，两者都用 deepseek-flash |
-| 0:45–1:30 | 虚拟机 | `python scripts/dataset_table.py \| less -S`，翻到 `dynamic_update-007` 和 `boundary-008`，按 q 退出 | 用例由多个步骤组成：先写入，再更正或要求删除，换新会话后检查；`check_memory` 直接看存储里旧值和密码有没有被删掉 |
-| 1:30–2:30 | 虚拟机 | `memoryscope validate datasets/golden`；`pytest -q`；`memoryscope run configs/smoke.yaml` | 48 条数据通过校验，64 项测试通过；现场让两个 Agent 跨会话作答，约 1 分钟 |
-| 2:30–3:10 | 虚拟机 | `grep -c session_reset runs/*/events.jsonl \| tail -1`；`grep evaluation runs/<smoke>/events.jsonl \| head -1 \| cut -c1-400` | 证据：会话确实被重置过；每条评分都带逐词理由和证据序号 |
-| 3:10–4:00 | 虚拟机 | `less $R/report/report.md` | 完整 48 条的六维得分、状态分布、未通过项及理由 |
-| 4:00–4:20 | Mac | 在访达打开共享文件夹 `MemoryScope-OK-vmshare/vm-results/<RUN>/report/radar.png` | 两个 Agent 的雷达图；这张图是在 openKylin 上生成的 |
-| 4:20–4:50 | 虚拟机 | `memoryscope rescore $R` | 评分规则升级后，离线重评已保存的证据，不需要重跑 Agent |
-| 4:50–5:00 | 虚拟机 | — | 结束语：数据集可扩展，评分可解释，隔离不改动用户环境，在 openKylin 上一键运行 |
+录制 VMware 中的 openKylin 桌面，在其中的终端运行 CLI，在其中打开报告与雷达图。GUI 完成并验证后，由 Claude 补入界面操作；CLI 与 GUI 读取同一份实际结果，不预设展示分数。
 
-**注意**：
-- 不要执行 `cat .env`、`env`、`printenv`，也不要 `echo $DEEPSEEK_API_KEY`。
-- 现场评测只跑 `configs/smoke.yaml`；完整 48 条的结果用事先跑好的运行目录展示。
-- 打错命令不必重录，旁白继续即可。
+## 录前准备
+
+- 已完成同环境全量运行：`runs/20261016T064413939014Z-0d5dfa7e5bd8`，48 条 draft cases × 2 个真实 Agent，共 96 条结果。不要改用旧 macOS 36 条报告或 synthetic 结果。
+- 设 `R=runs/20261016T064413939014Z-0d5dfa7e5bd8`，查看 metadata 中的 OS、数据摘要和评分器。不要用全局 `runs/*` 或“最新文件”混合不同运行。
+- 已有完整报告可用 `memoryscope report "$R" --reuse` 核对；旧格式报告若不支持 --reuse，保留原产物，选用新生成的可追踪运行。
+- `configs/smoke.yaml` 对两个真实 Agent 各运行一条，用于现场短演示；它只有单维数据，不用于展示完整六维成绩。`configs/demo-smoke.yaml` 是 synthetic 自检，必须明确标识，不能替代真实 Agent 演示。
+- 不预先承诺真实 API 响应时长。若采用“现场短运行 + 展示事先完成的全量结果”，画面和旁白明确区分两个 run；赛事方是否接受该安排仍需核实，不能为凑时长把缓存产物说成现场刚跑完。
+- 进入项目虚拟环境，确认屏幕不会显示密钥、私人文件或账户信息。录屏工具可在 Mac 上捕获虚拟机窗口，作品的运行和结果展示均在 openKylin 内。
+
+## 建议画面顺序
+
+| 时间 | openKylin 中的画面与操作 | 说明 |
+| --- | --- | --- |
+| 0:00–0:25 | 桌面、系统版本；终端执行 `head -4 /etc/os-release`、`uname -m` | 展示真实系统与架构 |
+| 0:25–0:55 | `memoryscope --help`、`memoryscope list-agents --json` | CLI 入口、可扩展 Adapter、synthetic 标识 |
+| 0:55–1:20 | `memoryscope check-config configs/smoke.yaml --json`，查看一条用例的步骤 | 配置预检不调用 API；解释跨 session 协议和证据 |
+| 1:20–2:30 | `memoryscope run configs/smoke.yaml --jsonl` | 现场执行两个 Agent，观察进度及最终产物目录；时间以实际响应为准 |
+| 2:30–3:10 | 查看本次短 run 的结果、session_reset 与具体评分理由 | 解释 pass/fail/unknown/error/unsupported，不把完成等同通过 |
+| 3:10–4:15 | 打开同环境全量报告、`xdg-open "$R/report/radar.png"` | 明示 RUN_ID、48×2 结果、100% 覆盖率，以及 Codex 97.9 / dsh 100.0；图表在 openKylin 内显示 |
+| 4:15–4:45 | `memoryscope rescore "$R" --json` | 离线重评保存为新修订，原证据与原结果保留，不重调 Agent |
+| 4:45–5:00 | 展示运行目录与复现入口 | 明确已验证范围和后续扩展点 |
+
+GUI 就绪后，可用其配置页、运行进度、对比图和证据详情替换相应画面，但数据来源及边界不变。脚本仍未录制；若现场短 run 得分变化，应明确它与上述已保存全量 run 是两次不同执行。

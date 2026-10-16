@@ -7,6 +7,7 @@ import sys
 import tempfile
 import time
 import uuid
+from collections.abc import Callable
 from datetime import datetime, timezone
 from importlib import metadata
 from pathlib import Path
@@ -25,10 +26,14 @@ def utc_now() -> str:
 
 
 class EvidenceWriter:
-    def __init__(self, path: Path, run_id: str) -> None:
+    def __init__(self, path: Path, run_id: str,
+                 progress: Callable[[dict[str, Any]], None] | None = None) -> None:
         self.stream = path.open("x", encoding="utf-8")
         self.sequence = 0
         self.run_id = run_id
+        self.run_dir = path.parent
+        self.progress = progress
+        self.completed_cases = 0
 
     def emit(self, event: str, agent_id: str | None = None, case_id: str | None = None,
              session_id: str | None = None, **payload: Any) -> int:
@@ -40,6 +45,22 @@ class EvidenceWriter:
         }
         self.stream.write(json.dumps(item, ensure_ascii=False, sort_keys=True, allow_nan=False) + "\n")
         self.stream.flush()
+        # The UI observer receives only scalar lifecycle data, never prompts,
+        # memory snapshots, answers, credentials or mutable adapter inputs.
+        if event == "case_finished":
+            self.completed_cases += 1
+        if self.progress and event in {"run_started", "agent_started", "case_reset", "session_reset",
+                                      "message_started", "probe_started", "case_finished", "run_finished"}:
+            try:
+                self.progress({"event": event, "sequence": self.sequence, "timestamp": item["timestamp"],
+                               "run_id": self.run_id, "run_dir": str(self.run_dir),
+                               "agent_id": agent_id, "case_id": case_id,
+                               "completed_cases": self.completed_cases,
+                               **{key: payload[key] for key in ("planned_cases", "status", "synthetic") if key in payload}})
+            except Exception as error:
+                # A detached display must not become a measured Agent failure.
+                self.progress = None
+                self.emit("progress_observer_error", error_type=type(error).__name__)
         return self.sequence
 
     def close(self) -> None:
@@ -197,7 +218,8 @@ def _run_case(agent: AgentAdapter, agent_id: str, case: BenchmarkCase, writer: E
     return {"status": _case_status(probe_results), "probes": probe_results}
 
 
-def run_benchmark(config_path: Path) -> tuple[Path, dict[str, Any]]:
+def run_benchmark(config_path: Path, *,
+                  progress: Callable[[dict[str, Any]], None] | None = None) -> tuple[Path, dict[str, Any]]:
     loaded = load_config(config_path)
     dataset = load_dataset(loaded.dataset, loaded.root)
     env_names = load_env_file(loaded.root)
@@ -216,9 +238,10 @@ def run_benchmark(config_path: Path) -> tuple[Path, dict[str, Any]]:
     git_commit, source_digest = _git_commit(loaded.root), _source_digest()
     # Sandboxes live outside the project so agents cannot pick up project files such as AGENTS.md.
     sandbox_root = Path(tempfile.mkdtemp(prefix=f"memoryscope-{run_id}-"))
-    writer = EvidenceWriter(run_dir / "events.jsonl", run_id)
+    writer = EvidenceWriter(run_dir / "events.jsonl", run_id, progress)
     agent_results: list[dict[str, Any]] = []
-    writer.emit("run_started", sandbox_root=str(sandbox_root))
+    writer.emit("run_started", sandbox_root=str(sandbox_root),
+                planned_cases=len(dataset.cases) * len(loaded.config.agents))
     try:
         for agent_config in loaded.config.agents:
             agent: AgentAdapter | None = None
@@ -254,6 +277,7 @@ def run_benchmark(config_path: Path) -> tuple[Path, dict[str, Any]]:
                     status = result["status"]
                     result["score"] = 1.0 if status == "pass" else 0.0 if status == "fail" else None
                     result["duration_seconds"] = time.perf_counter() - began
+                    writer.emit("case_finished", agent_id=agent_config.id, case_id=case.id, status=status)
                     result["evidence"] = {"file": "events.jsonl", "first_sequence": begin, "last_sequence": writer.sequence}
                     case_results.append(result)
             except Exception as error:
@@ -263,6 +287,7 @@ def run_benchmark(config_path: Path) -> tuple[Path, dict[str, Any]]:
                 done = {case["case_id"] for case in case_results}
                 for case in dataset.cases:
                     if case.id not in done:
+                        writer.emit("case_finished", agent_id=agent_config.id, case_id=case.id, status="error")
                         case_results.append({"case_id": case.id, "category": case.category.value,
                                              "synthetic": synthetic, "status": "error", "score": None,
                                              "probes": [], "error": detail})
@@ -314,6 +339,7 @@ def run_benchmark(config_path: Path) -> tuple[Path, dict[str, Any]]:
         "input_config_sha256": sha256_bytes(loaded.raw), "dataset_sources": dataset.sources,
         "sandbox_root": str(sandbox_root), "env_file_variables_loaded": env_names,
         "artifacts": files, "event_count": writer.sequence,
-        "limitations": ["rule scoring only (no LLM judge)", "not validated on openKylin"],
+        "limitations": ["rule scoring only (no LLM judge)",
+                        "environment evidence applies to this run only; see platform and os_release"],
     })
     return run_dir, results

@@ -7,10 +7,13 @@ never as 0 or 100.
 
 import csv
 import json
+import shutil
+import tempfile
 from pathlib import Path
 from typing import Any
 
 from memoryscope.models import Category
+from memoryscope.io import sha256_bytes, unique_object
 
 LABELS = {
     "retention": "Retention", "retrieval": "Retrieval", "dynamic_update": "Update",
@@ -24,8 +27,12 @@ COLORS = ["#2563eb", "#dc2626", "#059669", "#d97706", "#7c3aed", "#0891b2"]
 
 
 def load_results(run_dir: Path) -> dict[str, Any]:
-    result = json.loads((run_dir / "results.json").read_text(encoding="utf-8"))
-    if result.get("schema_version") != "1.1":
+    def reject_constant(value: str) -> None:
+        raise ValueError(f"non-finite JSON number: {value}")
+
+    result = json.loads((run_dir / "results.json").read_text(encoding="utf-8"),
+                        object_pairs_hook=unique_object, parse_constant=reject_constant)
+    if not isinstance(result, dict) or result.get("schema_version") != "1.1":
         raise ValueError("unsupported result schema_version")
     return result
 
@@ -85,7 +92,8 @@ def write_markdown(result: dict[str, Any], path: Path) -> None:
         cells = []
         for agent in agents:
             item = agent["dimensions"][category.value]
-            cells.append(f"{_fmt(item['score'])}（{item['pass']}/{item['scorable']}，覆盖 {_fmt(item['scorable_coverage'])}%）")
+            coverage = 'null' if item['scorable_coverage'] is None else f"{item['scorable_coverage']:.1f}%"
+            cells.append(f"{_fmt(item['score'])}（{item['pass']}/{item['scorable']}，覆盖 {coverage}）")
         lines.append(f"| {LABELS_ZH[category.value]} `{category.value}` | " + " | ".join(cells) + " |")
     lines.append("| **六维总分** | " + " | ".join(_fmt(agent["overall_score"]) for agent in agents) + " |")
     lines += ["", "## 状态分布", "", "| Agent | pass | fail | unknown | error | unsupported |", "| --- | --- | --- | --- | --- | --- |"]
@@ -147,21 +155,49 @@ def write_radar(result: dict[str, Any], path: Path) -> None:
             axis.plot([], [], color=color, linestyle="--", label=label + " (incomplete)")
         measured = [(angle, score) for angle, score in zip(angles, scores) if score is not None]
         axis.scatter([a for a, _ in measured], [s for _, s in measured], color=color, zorder=3)
-    axis.legend(loc="upper right", bbox_to_anchor=(1.25, 1.12))
+    handles, labels = axis.get_legend_handles_labels()
+    figure.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.01), fontsize=9)
     title = "MemoryScope-OK" + (" — SYNTHETIC pipeline check" if result["synthetic"] else "")
     axis.set_title(f"{title}\nrun {result['run_id']}", pad=28, fontsize=10)
-    figure.tight_layout()
+    figure.tight_layout(rect=(0, 0.08 + 0.025 * len(labels), 1, 1))
     figure.savefig(path, dpi=150)
     plt.close(figure)
 
 
-def build_report(run_dir: Path) -> Path:
+def build_report(run_dir: Path, *, reuse: bool = False) -> Path:
     result = load_results(run_dir)
     out = run_dir / "report"
-    out.mkdir(exist_ok=False)
-    (out / "report.json").write_text(json.dumps(summary(result), ensure_ascii=False, indent=2, allow_nan=False) + "\n",
-                                     encoding="utf-8")
-    write_csv(result, out / "report.csv")
-    write_markdown(result, out / "report.md")
-    write_radar(result, out / "radar.png")
+    report_summary = {"schema_version": "1.0", **summary(result), "source_results_sha256": sha256_bytes(
+        json.dumps(result, ensure_ascii=False, sort_keys=True, allow_nan=False).encode("utf-8"))}
+    if out.exists() or out.is_symlink():
+        if not reuse:
+            raise FileExistsError(f"report already exists: {out}; use --reuse to read a complete matching report")
+        expected = ("report.json", "report.csv", "report.md", "radar.png")
+        if (out.is_symlink()
+                or not all((out / name).is_file() and not (out / name).is_symlink()
+                           and (out / name).stat().st_size > 0 for name in expected)
+                or json.loads((out / "report.json").read_text(encoding="utf-8")) != report_summary):
+            raise ValueError("existing report is incomplete or differs from results; move it aside before rebuilding")
+        return out
+    staged = Path(tempfile.mkdtemp(prefix=".report-", dir=run_dir))
+    try:
+        (staged / "report.json").write_text(json.dumps(report_summary, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
+                                           encoding="utf-8")
+        write_csv(result, staged / "report.csv")
+        write_markdown(result, staged / "report.md")
+        write_radar(result, staged / "radar.png")
+        # Cooperating publishers serialize the final rename; readers see a
+        # complete directory. The lock is ours only after exclusive creation.
+        lock = run_dir / ".report.lock"
+        with lock.open("x"):
+            pass
+        try:
+            if out.exists() or out.is_symlink():
+                raise FileExistsError(f"report already exists: {out}")
+            staged.rename(out)
+        finally:
+            lock.unlink()
+    finally:
+        if staged.exists():
+            shutil.rmtree(staged)
     return out

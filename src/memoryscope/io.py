@@ -95,7 +95,14 @@ def load_dataset(path: Path, root: Path | None = None) -> LoadedDataset:
     path = path.resolve(strict=True)
     if root:
         contained_path(path, root)
-    files = sorted(path.rglob("*.jsonl")) if path.is_dir() else [path]
+    if path.is_dir():
+        files = [
+            filename
+            for filename in sorted(path.rglob("*.jsonl"))
+            if not filename.name.startswith("._")
+        ]
+    else:
+        files = [path]
     if not files:
         raise InputError(f"no JSONL files found: {path}")
     cases: list[BenchmarkCase] = []

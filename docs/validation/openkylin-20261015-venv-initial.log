@@ -1,0 +1,30 @@
+NAME="openKylin"
+FULL_NAME="openKylin"
+VERSION="3.0 (huanghe)"
+VERSION_US="3.0 (huanghe)"
+ID=openkylin
+PRETTY_NAME="openKylin 3.0"
+VERSION_ID="3.0"
+HOME_URL="https://www.openkylin.top/"
+VERSION_CODENAME=huanghe
+PRODUCT_FEATURES=3
+Linux openkylin-desktop 7.0.0-3-generic #0ok1-KYLINOS SMP PREEMPT_DYNAMIC Thu Sep 17 02:47:18 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux
+BOOT_IMAGE=/ostree/openkylin-e1ce39a3231700ef94238b785a769b6ffd1ad8c59b0db1be82dc353ce0b0ca5d/vmlinuz-7.0.0-3-generic root=UUID=74550099-2ef1-4450-8a78-61452c99b0fc rw ostree=/ostree/boot.0/openkylin/e1ce39a3231700ef94238b785a769b6ffd1ad8c59b0db1be82dc353ce0b0ca5d/0 quiet splash loglevel=0 systemd.unified_cgroup_hierarchy=1 psi=1 resume=UUID=94e787e8-a9e0-4532-bab1-62934485ecd4 initcall_blacklist=i8042_init console=ttyS0,115200 console=tty0
+Python 3.12.2
+  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+  0      0   0      0   0      0      0      0                              0100  58792 100  58792   0      0 19.65M      0                              0100  58792 100  58792   0      0 19.42M      0                              0100  58792 100  58792   0      0 19.20M      0                              0
+e38515acbec0a74430f0b5c94899fed72d6c279060e410c62f2d1dd517274991  /home/openkylin/msok-validation-20261015-1840/source.tar.gz
+The virtual environment was not created successfully because ensurepip is not
+available.  On Debian/Ubuntu systems, you need to install the python3-venv
+package using the following command.
+
+    apt install python3.12-venv
+
+You may need to use sudo with that command.  After installing the python3-venv
+package, recreate your virtual environment.
+
+Failing command: /home/openkylin/msok-validation-20261015-1840/MemoryScope-OK/.venv/bin/python3
+
+
+VALIDATION_EXIT=1

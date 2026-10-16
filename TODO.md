@@ -1,6 +1,17 @@
 # TODO
 
-更新时间：2026-10-14（UTC）。已完成事项与证据见 STATUS.md；未勾选项均未完成。
+更新时间：2026-10-16（America/New_York）。已完成事项与证据见 STATUS.md；未勾选项均未完成。
+
+## 当前协作任务（2026-10-16）
+
+- [x] 核验官网交付段，确认 openKylin 桌面、两款智能体、多维雷达图、3–5 分钟录屏要求；完整规则仍需核对。
+- [x] 写入 `docs/CLI_GUI_HANDOFF.md`：Codex 负责核心/CLI，Claude 负责 GUI；约定现有命令、独占请求目录、结果与事件 schema、错误和缺维展示。
+- [x] Codex：按用户要求将 Server 安装替换为 ARM64 桌面版，校验官方 ISO，完成安装、桌面与两次硬盘启动验证；见 `docs/openkylin-deployment.md`。
+- [x] Codex CLI 本地实现：0.3.0 机器接口、进度、可复用报告、自包含离线重评；85 项测试及 synthetic 一键脚本通过，见 STATUS。
+- [x] Codex CLI MVP Goal：补齐稳定的机器可读命令、运行定位/进度、报告与重评、错误处理和扩展接口，完成测试及 openKylin 的项目初验；保留现有真实结果，不以 48 条或 Judge 作为 MVP 门槛。
+- [x] openKylin 真实全量评测：48 条 draft cases × Codex CLI/dsh，共 96 条 case 结果；报告、雷达图、事件与快照已安全带回宿主项目。
+- [ ] Claude：按交接文档实现 GUI 历史结果页，再接入配置、异步进程与进度页；GUI 目前尚未实现。
+- [ ] 双方：在 openKylin 桌面联调 CLI/GUI、检查证据与图表来源，再录屏。
 
 ## 已完成
 
@@ -11,23 +22,23 @@
 - [x] 24 条用例（六维各 4）上两个真实 Agent 完整评测（macOS），两者均 100。
 - [x] 新增 12 条 hard 用例（共 36 条），完整评测：codex 97.2，dsh 100.0，结果在 docs/results/。
 - [x] dsh 模型通过 `--patch` 固定为 deepseek-flash，并用 `--dump-config` 读回验证。
-- [x] 脚本：setup_openkylin.sh、run_all.sh、build_deb.sh、dataset_table.py（openKylin 上未实测）。
+- [x] 脚本：setup_openkylin.sh、run_all.sh、build_deb.sh、dataset_table.py（macOS 一键脚本已验证；openKylin 本轮手动执行等价的 Python 安装/测试/CLI/报告流程，未声称脚本整体或 .deb 通过）。
 - [x] 文档：SOLUTION.md、dataset-review.md、demo-script.md，README 已重写。
-- [x] 创建 openKylin ARM64 虚拟机（未装系统）。
+- [x] 创建 openKylin ARM64 虚拟机并完成 Server 写盘；2026-10-15 观察到登录界面，现按用户要求替换桌面版。
 
 ## 用户需亲自操作
 
 - [x] 下载官方 openKylin 3.0 ARM64 ISO，核对 MD5 `29e1ba9b3d2f8fa088f308ea4d83b6ea`。
-- [ ] 在重新启动的 VMware 安装器中自行设置 openKylin 登录密码（此前已设置过一次，但未写盘并因输入故障重启；当前停在 Hostname）。
-- [ ] 确认改接 SATA 后安装器能列出 80 GB 虚拟盘；此前 NVMe 接口未列出磁盘。
-- [ ] 完成虚拟磁盘安装、重启及首次登录；将内核启动绕过参数持久化，并验证系统可再次启动。
-- [ ] 在 openKylin 内安装项目、codex、dsh，运行完整评测（可由 Claude 远程指导或代为执行命令）。
+- [x] 在 Server 安装器中自行设置用户与 root 密码；Server 已写盘，桌面版需另行设置。
+- [x] 确认改接 SATA 后安装器能列出 80 GB 虚拟盘；此前 NVMe 接口未列出磁盘。
+- [x] 完成桌面版安装、桌面及重启验证；记录 i8042 启动参数修复与 OSTree 维护限制。
+- [x] 在 openKylin 内安装项目、codex、dsh，并运行两个真实 Agent 的 48×2 完整评测。
 - [ ] 录制 3–5 分钟演示视频。
 
 ## 数据集（优先）
 
-- [ ] 区分度仍然很低：36 条中只有 codex reuse-002 一条未通过。需要更难的机制，例如更长的会话链（10 次以上切换）、冲突来源（两个人给出矛盾信息）、需要推理的组合、多文件任务、记忆容量压力（大量相似事实）。
-- [ ] 扩到六维各 8 条共 48 条，逐条人工复核，`review_status` 从 draft 改为 reviewed。
+- [ ] 区分度仍然很低：openKylin 48×2 单次运行中仅 codex `dynamic_update-007` 未通过，dsh 全部通过。需要更长会话链、冲突来源、组合推理、多文件任务和记忆容量压力，并做重复运行。
+- [ ] 逐条复核现有 48 条候选（六维各 8 条，提交 661e339）；数量已齐，质量验收仍未完成，复核后才将 `review_status` 从 draft 改为 reviewed。此项不阻塞 MVP CLI 接口交付。
 - [ ] 加入无记忆基线（例如关闭 MEMORY.md 约定），证明题目确实依赖跨会话记忆。
 
 ## 评测与报告
@@ -37,8 +48,10 @@
 
 ## openKylin 与交付
 
-- [ ] openKylin 上：安装、pytest、validate、demo、两个真实 Agent 完整 run、报告与雷达图，记录发行版/架构/Python 版本。
+- [x] openKylin 上：CLI 安装、85 项 pytest、validate、synthetic 单例、报告与雷达图文件；记录环境和日志。
+- [x] openKylin 上：两个真实 Agent 完整 48 条 run，生成 JSON/CSV/Markdown/雷达图并目视核对；run `20261016T064413939014Z-0d5dfa7e5bd8`。
+- [ ] openKylin 桌面录屏中展示完整报告和雷达图；GUI 联调仍待 Claude 完成。
 - [ ] Python 3.10 解释器完整测试。
 - [ ] 在 openKylin 上执行 build_deb.sh，并实测安装与 `memoryscope-ok all`。
-- [ ] openKylin 实测后，把 SOLUTION.md 第 7、8 节与 STATUS 更新为实机结果。
+- [x] 把 SOLUTION.md 第 7、8 节、STATUS、README、演示和验证文档更新为 openKylin 实机结果。
 - [ ] 从官方来源核实赛题、截止时间（项目目标写的是 2026-10-16）、提交要求。

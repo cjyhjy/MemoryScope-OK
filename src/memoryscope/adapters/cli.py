@@ -51,6 +51,7 @@ class CallResult:
 
 class CliMemoryAgent(AgentAdapter):
     synthetic = False
+    required_environment = (API_KEY_ENV,)
     capabilities = frozenset({Capability.CROSS_SESSION, Capability.WORKSPACE_FILES, Capability.MEMORY_INSPECTION})
     name = "cli-agent"
     home_env = ""

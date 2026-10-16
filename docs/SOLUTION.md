@@ -1,6 +1,6 @@
 # MemoryScope-OK 方案文档
 
-面向 openKylin 的 AI Agent 长期记忆自动化评测 Benchmark。版本 0.2.0，评分器 1.2，数据 schema 1.1。
+面向 openKylin 的 AI Agent 长期记忆自动化评测 Benchmark。版本 0.3.0，评分器 1.2，数据 schema 1.1。
 
 ## 1 测试目标
 
@@ -64,7 +64,7 @@ Schema 1.0（固定 setup/updates/distractors/probe）由 `upgrade_case` 显式�
 - 所有值都是虚构且无法凭常识猜中的，例如端口 5734、机柜 R7-C14-U31、`bk-tern-04.lab.internal`。
 - 难度来自机制而不是措辞：更多干扰、更多会话切换、多条约定组合、撤销修改、近似实体、部分敏感信息。
 - 用 `exclude` 词捕捉典型错误：旧值、相近实体、泄露的敏感值、默认值。
-- 目前 36 条，六维各 6 条（每维 2 条 hard），均为 `review_status: draft`。审阅表见 [dataset-review.md](dataset-review.md)，可用 `python scripts/dataset_table.py` 重新生成。
+- 目前 48 条，六维各 8 条，均为 `review_status: draft`。数量已经达到扩展目标，但尚未完成独立人工质量复核，不能称为最终 golden。审阅表见 [dataset-review.md](dataset-review.md)，可用 `python scripts/dataset_table.py` 重新生成。
 
 ## 5 自动评分
 
@@ -106,11 +106,31 @@ bash scripts/build_deb.sh         # 可选：生成 dist/memoryscope-ok_<版本>
 sudo apt install ./dist/memoryscope-ok_*.deb && memoryscope-ok all
 ```
 
-dsh 在 macOS 上运行在 DeepSeek Harness 桌面应用内部。它的 CLI 以 `@deepseek-ai/dsh` 发布在 npm 上（MIT，与 Mac 上的版本相同，提供 Linux x64/arm64 的沙箱组件），Linux 上用 npm 安装。**上述脚本尚未在 openKylin 实机上验证。**
+dsh 在 macOS 上运行在 DeepSeek Harness 桌面应用内部。它的 CLI 以 `@deepseek-ai/dsh` 发布在 npm 上（MIT，与 Mac 上的版本相同，提供 Linux x64/arm64 的沙箱组件），Linux 上用 npm 安装。2026-10-16 已在 openKylin ARM64 客体内验证项目、Codex CLI 和 dsh 的真实全量运行；`setup_openkylin.sh` 整体自动化和 `.deb` 安装仍未单独验收。
 
 ## 8 实测结果
 
-见 [results/report.md](results/report.md) 和 [results/radar.png](results/radar.png)。
+### openKylin 48 条真实全量评测（当前主要结果）
+
+环境：openKylin 3.0 (huanghe)，aarch64，Linux 7.0.0-3-generic，Python 3.12.2。codex-cli 0.162.1 与 dsh 0.2.0-rc.2 均使用 deepseek-flash，评分器 1.2。
+
+Run `20261016T064413939014Z-0d5dfa7e5bd8`：48 条 draft cases × 2 个真实 Agent，共 96 条 case 结果，状态 completed、synthetic=false，覆盖率均为 100%。[报告](../runs/20261016T064413939014Z-0d5dfa7e5bd8/report/report.md)、[雷达图](../runs/20261016T064413939014Z-0d5dfa7e5bd8/report/radar.png) 与[验证记录](validation/openkylin-real-20261016.md)均可追踪到同一运行。
+
+| 维度 | codex | dsh |
+| --- | --- | --- |
+| retention 长期保持 | 100.0（8/8） | 100.0（8/8） |
+| retrieval 记忆调用 | 100.0（8/8） | 100.0（8/8） |
+| dynamic_update 动态更新 | 87.5（7/8） | 100.0（8/8） |
+| disambiguation 相近区分 | 100.0（8/8） | 100.0（8/8） |
+| boundary 边界识别 | 100.0（8/8） | 100.0（8/8） |
+| reuse 任务复用 | 100.0（8/8） | 100.0（8/8） |
+| **六维总分** | **97.9** | **100.0** |
+
+Codex 的 `dynamic_update-007` 最终回答用了正确新值“致远楼 571”，但存储证据仍含旧值 517，因而按 `check_memory` 规则失败。dsh 48/48 通过。仅此一次运行的单条差异不足以判断产品优劣。
+
+### macOS 历史结果
+
+[results/report.md](results/report.md) 和 [results/radar.png](results/radar.png)保留 2026-10-14 的 36 条历史结果，不是当前 openKylin 48 条运行。
 
 环境：macOS 26.5.1（arm64）。codex-cli 0.162.0-alpha.17.2 与 dsh 0.2.0-rc.2，两者都用 deepseek-flash，评分器 1.2。
 
@@ -132,7 +152,7 @@ dsh 在 macOS 上运行在 DeepSeek Harness 桌面应用内部。它的 CLI 以 
 
 **唯一拉开差距的是 codex 的 `reuse-002`。** codex 写记忆时自己补了一个示例 `exp-01.md`，之后照着这个示例建出了 `notes/exp-07.md`，而规则要求的是 `notes/exp-7.md`。`check_file` 抓住了这个行为层面的偏差：口头回答看起来合理，但文件名不对。这体现了行为证据的价值。
 
-如实说明：
+历史结果的解读：
 
 - 新增的 12 条 hard 题两个 Agent 都通过了。在 `MEMORY.md` 外部记忆约定下，当前机制对这两个 Agent 都偏容易。
 - 单次运行只有 1 条差异，不足以得出“谁更好”的结论。
@@ -143,8 +163,8 @@ dsh 在 macOS 上运行在 DeepSeek Harness 桌面应用内部。它的 CLI 以 
 - 记忆机制是评测框架统一声明的 `MEMORY.md` 约定，不是各产品原生的记忆功能。
 - 每个 Agent 只跑了 1 次，没有重复采样和方差。
 - 只用确定性规则评分，开放式语义判断有限；LLM Judge 尚未实现（设计上默认关闭，且不能覆盖事实检查）。
-- 36 条均为 draft，尚未经过独立人工复核；目标是 48 条。
-- 目前只在 macOS 上实测过；openKylin 实机验证和 .deb 安装待完成。
+- 当前 48 条均为 draft，尚未经过独立人工复核；数量达标不等于质量验收完成。
+- openKylin 已完成两个真实 Agent 的 48 条全量实测；GUI、.deb、Python 3.10、重复运行和录屏仍待完成。
 
 ## 10 创新点
 

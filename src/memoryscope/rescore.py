@@ -7,26 +7,39 @@ the recomputed results and every status change.
 """
 
 import json
+import shutil
+import tempfile
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from memoryscope.evaluator import EVALUATOR_VERSION, evaluate
-from memoryscope.io import write_json
+from memoryscope.io import sha256_bytes, write_json
 from memoryscope.models import BenchmarkCase, CheckFileStep, CheckMemoryStep, Evaluation, ProbeStep
 from memoryscope.runner import _case_status, dimension_summary, overall_score
+from memoryscope.reporting import load_results
 
 
 def rescore_run(run_dir: Path) -> tuple[Path, dict[str, Any]]:
-    original = json.loads((run_dir / "results.json").read_text(encoding="utf-8"))
+    original = load_results(run_dir)
+    sources = {}
+    for name in ("results.json", "dataset.snapshot.jsonl", "events.jsonl", "config.snapshot.yaml", "metadata.json"):
+        path = run_dir / name
+        if path.is_file():
+            sources[name] = path.read_bytes()
+    source_hashes = {name: sha256_bytes(raw) for name, raw in sources.items()}
     cases = {}
-    for line in (run_dir / "dataset.snapshot.jsonl").read_text(encoding="utf-8").splitlines():
+    for line in sources["dataset.snapshot.jsonl"].decode("utf-8").splitlines():
         case = BenchmarkCase.model_validate(json.loads(line))
         cases[case.id] = case
     responses: dict[tuple[str, str, str], str] = {}
     captured: dict[tuple[str, str, str], str | None] = {}
-    for line in (run_dir / "events.jsonl").read_text(encoding="utf-8").splitlines():
+    for sequence, line in enumerate(sources["events.jsonl"].decode("utf-8").splitlines(), 1):
         event = json.loads(line)
+        if (event.get("schema_version") != "1.0" or event.get("run_id") != original["run_id"]
+                or event.get("sequence") != sequence):
+            raise ValueError("invalid evidence version, run ID or event sequence")
         payload = event["payload"]
         key = (event["agent_id"], event["case_id"], payload.get("probe_id"))
         if event["event"] == "probe":
@@ -68,9 +81,29 @@ def rescore_run(run_dir: Path) -> tuple[Path, dict[str, Any]]:
                            dimension_scores={name: item["score"] for name, item in summary.items()},
                            overall_score=overall_score(summary)))
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-    out = run_dir / f"rescore-{stamp}"
-    out.mkdir()
+    out = run_dir / f"rescore-{stamp}-{uuid.uuid4().hex[:8]}"
     result = dict(original, agent_results=agents, rescored_from=original["run_id"],
                   evaluator_version=EVALUATOR_VERSION, status_changes=changes)
-    write_json(out / "results.json", result)
+    staged = Path(tempfile.mkdtemp(prefix=".rescore-", dir=run_dir))
+    try:
+        # Keep evidence references local and make re-scoring the revision work
+        # without agents or implicit access to a parent directory.
+        for name in ("dataset.snapshot.jsonl", "events.jsonl", "config.snapshot.yaml"):
+            if name in sources:
+                (staged / name).write_bytes(sources[name])
+        write_json(staged / "results.json", result)
+        original_metadata = json.loads(sources["metadata.json"]) if "metadata.json" in sources else {}
+        metadata = dict(original_metadata, schema_version="1.1", run_id=result["run_id"],
+                        status=result["status"], synthetic=result["synthetic"],
+                        rescore={"timestamp": stamp, "evaluator_version": EVALUATOR_VERSION,
+                                 "source_run_id": original["run_id"], "source_artifacts": source_hashes,
+                                 "source_evaluator": original_metadata.get("evaluator")})
+        metadata["evaluator"] = {**original_metadata.get("evaluator", {}), "version": EVALUATOR_VERSION}
+        metadata["artifacts"] = {path.name: {"sha256": sha256_bytes(path.read_bytes())}
+                                 for path in staged.iterdir()}
+        write_json(staged / "metadata.json", metadata)
+        staged.rename(out)
+    finally:
+        if staged.exists():
+            shutil.rmtree(staged)
     return out, result

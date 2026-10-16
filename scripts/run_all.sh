@@ -23,12 +23,27 @@ step "单元与集成测试"
 
 step "评测：$CONFIG"
 LOG=$(mktemp)
+trap 'rm -f "$LOG"' EXIT
 set +e
-"$MS" run "$CONFIG" 2>&1 | tee "$LOG"
+"$MS" run "$CONFIG" --json | tee "$LOG"
 STATUS=${PIPESTATUS[0]}
 set -e
-RUN_DIR=$(grep -Eo '(/[^ ]*)?runs/[0-9TZ]+-[0-9a-f]+' "$LOG" | tail -1)
-rm -f "$LOG"
+RUN_DIR=$(.venv/bin/python - "$LOG" <<'PY'
+import json
+import sys
+from pathlib import Path
+try:
+    message = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+    data = message.get("data") or {}
+    path = data.get("run_dir")
+    if message.get("schema_version") != "1.0" or not isinstance(path, str):
+        raise ValueError("no run directory in CLI result")
+    print(path)
+except (OSError, ValueError, TypeError, AttributeError) as error:
+    print(f"无法读取评测结果：{error}", file=sys.stderr)
+    sys.exit(1)
+PY
+) || exit 1
 if [ -z "$RUN_DIR" ] || [ ! -f "$RUN_DIR/results.json" ]; then
   echo "评测没有生成结果（退出码 $STATUS）" >&2
   exit 1
@@ -36,7 +51,10 @@ fi
 [ "$STATUS" = 0 ] || echo "注意：评测退出码 $STATUS（有 error 等非通过状态），仍生成报告" >&2
 
 step "生成报告"
-"$MS" report "$RUN_DIR" >/dev/null || true
+if ! "$MS" report "$RUN_DIR" --reuse --json; then
+  echo "报告生成失败；原始结果保留在 $RUN_DIR" >&2
+  exit 1
+fi
 REPORT="$RUN_DIR/report"
 echo "运行目录：$RUN_DIR"
 echo "Markdown 报告：$REPORT/report.md"

@@ -1,0 +1,189 @@
+NAME="openKylin"
+FULL_NAME="openKylin"
+VERSION="3.0 (huanghe)"
+VERSION_US="3.0 (huanghe)"
+ID=openkylin
+PRETTY_NAME="openKylin 3.0"
+VERSION_ID="3.0"
+HOME_URL="https://www.openkylin.top/"
+VERSION_CODENAME=huanghe
+PRODUCT_FEATURES=3
+Linux openkylin-desktop 7.0.0-3-generic #0ok1-KYLINOS SMP PREEMPT_DYNAMIC Thu Sep 17 02:47:18 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux
+BOOT_IMAGE=/ostree/openkylin-e1ce39a3231700ef94238b785a769b6ffd1ad8c59b0db1be82dc353ce0b0ca5d/vmlinuz-7.0.0-3-generic root=UUID=74550099-2ef1-4450-8a78-61452c99b0fc rw ostree=/ostree/boot.0/openkylin/e1ce39a3231700ef94238b785a769b6ffd1ad8c59b0db1be82dc353ce0b0ca5d/0 quiet splash loglevel=0 systemd.unified_cgroup_hierarchy=1 psi=1 resume=UUID=94e787e8-a9e0-4532-bab1-62934485ecd4 initcall_blacklist=i8042_init console=ttyS0,115200 console=tty0
+Python 3.12.2
+  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+  0      0   0      0   0      0      0      0                              0100 11.10M 100 11.10M   0      0 103.9M      0                              0100 11.10M 100 11.10M   0      0 103.8M      0                              0100 11.10M 100 11.10M   0      0 103.8M      0                              0
+created virtual environment CPython3.12.2.final.0-64-arm64 in 128ms
+  creator CPython3Posix(dest=/home/openkylin/msok-validation-20261015-1840/MemoryScope-OK/.venv, clear=False, no_vcs_ignore=False, venv_redirect=None, global=False)
+  seeder FromAppData(download=False, pip=bundle, via=copy, app_data_dir=/home/openkylin/.cache/virtualenv)
+    added seed packages: pip==26.2.1
+  activators BashActivator,CShellActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator,XonshActivator
+Obtaining file:///home/openkylin/msok-validation-20261015-1840/MemoryScope-OK
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting typer<1,>=0.12 (from memoryscope-ok==0.3.0)
+  Downloading typer-0.27.3-py3-none-any.whl.metadata (16 kB)
+Collecting pydantic<3,>=2.7 (from memoryscope-ok==0.3.0)
+  Downloading pydantic-2.14.1-py3-none-any.whl.metadata (133 kB)
+Collecting PyYAML<7,>=6 (from memoryscope-ok==0.3.0)
+  Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (2.4 kB)
+Collecting httpx<1,>=0.27 (from memoryscope-ok==0.3.0)
+  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Collecting matplotlib<4,>=3.8 (from memoryscope-ok==0.3.0)
+  Downloading matplotlib-3.11.2-cp312-cp312-manylinux_2_26_aarch64.manylinux_2_28_aarch64.whl.metadata (80 kB)
+Collecting pytest<10,>=8 (from memoryscope-ok==0.3.0)
+  Downloading pytest-9.1.1-py3-none-any.whl.metadata (7.6 kB)
+Collecting anyio (from httpx<1,>=0.27->memoryscope-ok==0.3.0)
+  Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+Collecting certifi (from httpx<1,>=0.27->memoryscope-ok==0.3.0)
+  Downloading certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
+Collecting httpcore==1.* (from httpx<1,>=0.27->memoryscope-ok==0.3.0)
+  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting idna (from httpx<1,>=0.27->memoryscope-ok==0.3.0)
+  Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting h11>=0.16 (from httpcore==1.*->httpx<1,>=0.27->memoryscope-ok==0.3.0)
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting contourpy>=1.0.1 (from matplotlib<4,>=3.8->memoryscope-ok==0.3.0)
+  Downloading contourpy-1.4.0-cp312-cp312-manylinux_2_26_aarch64.manylinux_2_28_aarch64.whl.metadata (3.8 kB)
+Collecting cycler>=0.10 (from matplotlib<4,>=3.8->memoryscope-ok==0.3.0)
+  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools>=4.28.2 (from matplotlib<4,>=3.8->memoryscope-ok==0.3.0)
+  Downloading fonttools-4.67.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (137 kB)
+Collecting kiwisolver>=1.3.1 (from matplotlib<4,>=3.8->memoryscope-ok==0.3.0)
+  Downloading kiwisolver-1.5.1-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl.metadata (5.2 kB)
+Collecting numpy>=1.25 (from matplotlib<4,>=3.8->memoryscope-ok==0.3.0)
+  Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl.metadata (6.6 kB)
+Collecting packaging>=20.0 (from matplotlib<4,>=3.8->memoryscope-ok==0.3.0)
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pillow>=9 (from matplotlib<4,>=3.8->memoryscope-ok==0.3.0)
+  Downloading pillow-12.3.0-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl.metadata (9.1 kB)
+Collecting pyparsing>=3 (from matplotlib<4,>=3.8->memoryscope-ok==0.3.0)
+  Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+Collecting python-dateutil>=2.7 (from matplotlib<4,>=3.8->memoryscope-ok==0.3.0)
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+Collecting annotated-types>=0.6.0 (from pydantic<3,>=2.7->memoryscope-ok==0.3.0)
+  Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.50.1 (from pydantic<3,>=2.7->memoryscope-ok==0.3.0)
+  Downloading pydantic_core-2.50.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl.metadata (6.5 kB)
+Collecting typing-extensions>=4.16.0 (from pydantic<3,>=2.7->memoryscope-ok==0.3.0)
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting typing-inspection>=0.4.4 (from pydantic<3,>=2.7->memoryscope-ok==0.3.0)
+  Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+Collecting iniconfig>=1.0.1 (from pytest<10,>=8->memoryscope-ok==0.3.0)
+  Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+Collecting pluggy<2,>=1.5 (from pytest<10,>=8->memoryscope-ok==0.3.0)
+  Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+Collecting pygments>=2.7.2 (from pytest<10,>=8->memoryscope-ok==0.3.0)
+  Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting shellingham>=1.3.0 (from typer<1,>=0.12->memoryscope-ok==0.3.0)
+  Downloading shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
+Collecting rich>=13.8.0 (from typer<1,>=0.12->memoryscope-ok==0.3.0)
+  Downloading rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+Collecting annotated-doc>=0.0.2 (from typer<1,>=0.12->memoryscope-ok==0.3.0)
+  Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+Collecting six>=1.5 (from python-dateutil>=2.7->matplotlib<4,>=3.8->memoryscope-ok==0.3.0)
+  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting markdown-it-py>=2.2.0 (from rich>=13.8.0->typer<1,>=0.12->memoryscope-ok==0.3.0)
+  Downloading markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=13.8.0->typer<1,>=0.12->memoryscope-ok==0.3.0)
+  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+Downloading matplotlib-3.11.2-cp312-cp312-manylinux_2_26_aarch64.manylinux_2_28_aarch64.whl (10.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.7/10.7 MB 11.1 MB/s  0:00:01
+Downloading pydantic-2.14.1-py3-none-any.whl (488 kB)
+Downloading pydantic_core-2.50.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (2.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 17.7 MB/s  0:00:00
+Downloading pytest-9.1.1-py3-none-any.whl (386 kB)
+Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (775 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 775.1/775.1 kB 22.8 MB/s  0:00:00
+Downloading typer-0.27.3-py3-none-any.whl (123 kB)
+Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Downloading contourpy-1.4.0-cp312-cp312-manylinux_2_26_aarch64.manylinux_2_28_aarch64.whl (356 kB)
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.67.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (5.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 26.5 MB/s  0:00:00
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Downloading kiwisolver-1.5.1-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl (1.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 26.1 MB/s  0:00:00
+Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl (15.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.7/15.7 MB 27.4 MB/s  0:00:00
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Downloading pillow-12.3.0-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl (6.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 27.2 MB/s  0:00:00
+Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 24.3 MB/s  0:00:00
+Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+Downloading idna-3.20-py3-none-any.whl (69 kB)
+Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+Building wheels for collected packages: memoryscope-ok
+  Building editable for memoryscope-ok (pyproject.toml): started
+  Building editable for memoryscope-ok (pyproject.toml): finished with status 'done'
+  Created wheel for memoryscope-ok: filename=memoryscope_ok-0.3.0-0.editable-py3-none-any.whl size=2609 sha256=754d47433b98cf8a9f12e482ec0540681016c6917e309e9ec1306819c7d0e94a
+  Stored in directory: /var/tmp/pip-ephem-wheel-cache-zm5e9z4c/wheels/10/de/c7/01011f83b24b7864c8918c9a42c8c0462e75d5d2f066949f89
+Successfully built memoryscope-ok
+Installing collected packages: typing-extensions, six, shellingham, PyYAML, pyparsing, pygments, pluggy, pillow, packaging, numpy, mdurl, kiwisolver, iniconfig, idna, h11, fonttools, cycler, certifi, annotated-types, annotated-doc, typing-inspection, python-dateutil, pytest, pydantic-core, markdown-it-py, httpcore, contourpy, anyio, rich, pydantic, matplotlib, httpx, typer, memoryscope-ok
+
+Successfully installed PyYAML-6.0.3 annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.15.1 certifi-2026.7.22 contourpy-1.4.0 cycler-0.12.1 fonttools-4.67.0 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 idna-3.20 iniconfig-2.3.1 kiwisolver-1.5.1 markdown-it-py-4.2.0 matplotlib-3.11.2 mdurl-0.1.2 memoryscope-ok-0.3.0 numpy-2.5.4 packaging-26.3 pillow-12.3.0 pluggy-1.7.0 pydantic-2.14.1 pydantic-core-2.50.1 pygments-2.21.0 pyparsing-3.3.3 pytest-9.1.1 python-dateutil-2.9.0.post0 rich-15.0.0 shellingham-1.5.4 six-1.17.0 typer-0.27.3 typing-extensions-4.16.0 typing-inspection-0.4.4
+0.3.0
+                                                                                
+ Usage: memoryscope [OPTIONS] COMMAND [ARGS]...                                 
+                                                                                
+ MemoryScope-OK: auditable long-term memory benchmark for AI agents.            
+                                                                                
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│ --version                     Show package version.                          │
+│ --install-completion          Install completion for the current shell.      │
+│ --show-completion             Show completion for the current shell, to copy │
+│                               it or customize the installation.              │
+│ --help                        Show this message and exit.                    │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ───────────────────────────────────────────────────────────────────╮
+│ validate      Validate dataset schema and uniqueness; never execute an       │
+│               agent.                                                         │
+│ list-agents   List adapter types without creating agents or making network   │
+│               calls.                                                         │
+│ check-config  Check config, paths and data offline; creates no output or     │
+│               agent.                                                         │
+│ run           Run a benchmark and write evidence; completed does not imply   │
+│               all cases pass.                                                │
+│ report        Build JSON/CSV/Markdown/radar reports offline; never calls an  │
+│               agent.                                                         │
+│ rescore       Re-grade saved evidence with the current evaluator; never      │
+│               calls an agent.                                                │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+Valid: 48 case(s), 6 file(s).
+{"schema_version": "1.0", "command": "check-config", "ok": true, "data": {"config_path": "/home/openkylin/msok-validation-20261015-1840/MemoryScope-OK/configs/demo-smoke.yaml", "dataset": "/home/openkylin/msok-validation-20261015-1840/MemoryScope-OK/datasets/smoke", "output_dir": "/home/openkylin/msok-validation-20261015-1840/MemoryScope-OK/runs", "config": {"schema_version": "1.0", "dataset": "../datasets/smoke", "output_dir": "../runs", "agents": [{"id": "demo", "type": "demo", "model": null, "timeout_seconds": 300}], "seed": 0}, "dataset_info": {"case_count": 1, "file_count": 1, "categories": {"retention": 1}, "sources": [{"path": "datasets/smoke/retention-001.jsonl", "sha256": "a897f66d422fbfe1f4abcf516ee79f444a50c6f7ea85033abcb51555344159bf"}]}}, "error": null}
+........................................................................ [ 84%]
+.............                                                            [100%]
+85 passed in 1.28s
+{"schema_version": "1.0", "command": "run", "ok": true, "data": {"run_id": "20261015T184021223058Z-8ea846f47945", "status": "completed", "synthetic": true, "agents": [{"agent_id": "demo", "synthetic": true, "describe": {"class": "DemoAgent", "synthetic": true, "capabilities": ["cross_session", "memory_inspection"]}, "status": "completed", "dimensions": {"retention": {"planned": 1, "pass": 1, "fail": 0, "unknown": 0, "error": 0, "unsupported": 0, "scorable": 1, "score": 100.0, "scorable_coverage": 100.0}, "retrieval": {"planned": 0, "pass": 0, "fail": 0, "unknown": 0, "error": 0, "unsupported": 0, "scorable": 0, "score": null, "scorable_coverage": null}, "dynamic_update": {"planned": 0, "pass": 0, "fail": 0, "unknown": 0, "error": 0, "unsupported": 0, "scorable": 0, "score": null, "scorable_coverage": null}, "disambiguation": {"planned": 0, "pass": 0, "fail": 0, "unknown": 0, "error": 0, "unsupported": 0, "scorable": 0, "score": null, "scorable_coverage": null}, "boundary": {"planned": 0, "pass": 0, "fail": 0, "unknown": 0, "error": 0, "unsupported": 0, "scorable": 0, "score": null, "scorable_coverage": null}, "reuse": {"planned": 0, "pass": 0, "fail": 0, "unknown": 0, "error": 0, "unsupported": 0, "scorable": 0, "score": null, "scorable_coverage": null}}, "overall_score": null}], "run_dir": "/home/openkylin/msok-validation-20261015-1840/MemoryScope-OK/runs/20261015T184021223058Z-8ea846f47945", "results_path": "/home/openkylin/msok-validation-20261015-1840/MemoryScope-OK/runs/20261015T184021223058Z-8ea846f47945/results.json", "events_path": "/home/openkylin/msok-validation-20261015-1840/MemoryScope-OK/runs/20261015T184021223058Z-8ea846f47945/events.jsonl", "metadata_path": "/home/openkylin/msok-validation-20261015-1840/MemoryScope-OK/runs/20261015T184021223058Z-8ea846f47945/metadata.json"}, "error": null}
+{"schema_version": "1.0", "command": "report", "ok": true, "data": {"run_id": "20261015T184021223058Z-8ea846f47945", "status": "completed", "synthetic": true, "agents": [{"agent_id": "demo", "synthetic": true, "describe": {"capabilities": ["cross_session", "memory_inspection"], "class": "DemoAgent", "synthetic": true}, "status": "completed", "dimensions": {"boundary": {"error": 0, "fail": 0, "pass": 0, "planned": 0, "scorable": 0, "scorable_coverage": null, "score": null, "unknown": 0, "unsupported": 0}, "disambiguation": {"error": 0, "fail": 0, "pass": 0, "planned": 0, "scorable": 0, "scorable_coverage": null, "score": null, "unknown": 0, "unsupported": 0}, "dynamic_update": {"error": 0, "fail": 0, "pass": 0, "planned": 0, "scorable": 0, "scorable_coverage": null, "score": null, "unknown": 0, "unsupported": 0}, "retention": {"error": 0, "fail": 0, "pass": 1, "planned": 1, "scorable": 1, "scorable_coverage": 100.0, "score": 100.0, "unknown": 0, "unsupported": 0}, "retrieval": {"error": 0, "fail": 0, "pass": 0, "planned": 0, "scorable": 0, "scorable_coverage": null, "score": null, "unknown": 0, "unsupported": 0}, "reuse": {"error": 0, "fail": 0, "pass": 0, "planned": 0, "scorable": 0, "scorable_coverage": null, "score": null, "unknown": 0, "unsupported": 0}}, "overall_score": null}], "report_dir": "/home/openkylin/msok-validation-20261015-1840/MemoryScope-OK/runs/20261015T184021223058Z-8ea846f47945/report"}, "error": null}
+{"schema_version": "1.0", "command": "report", "ok": true, "data": {"run_id": "20261015T184021223058Z-8ea846f47945", "status": "completed", "synthetic": true, "agents": [{"agent_id": "demo", "synthetic": true, "describe": {"capabilities": ["cross_session", "memory_inspection"], "class": "DemoAgent", "synthetic": true}, "status": "completed", "dimensions": {"boundary": {"error": 0, "fail": 0, "pass": 0, "planned": 0, "scorable": 0, "scorable_coverage": null, "score": null, "unknown": 0, "unsupported": 0}, "disambiguation": {"error": 0, "fail": 0, "pass": 0, "planned": 0, "scorable": 0, "scorable_coverage": null, "score": null, "unknown": 0, "unsupported": 0}, "dynamic_update": {"error": 0, "fail": 0, "pass": 0, "planned": 0, "scorable": 0, "scorable_coverage": null, "score": null, "unknown": 0, "unsupported": 0}, "retention": {"error": 0, "fail": 0, "pass": 1, "planned": 1, "scorable": 1, "scorable_coverage": 100.0, "score": 100.0, "unknown": 0, "unsupported": 0}, "retrieval": {"error": 0, "fail": 0, "pass": 0, "planned": 0, "scorable": 0, "scorable_coverage": null, "score": null, "unknown": 0, "unsupported": 0}, "reuse": {"error": 0, "fail": 0, "pass": 0, "planned": 0, "scorable": 0, "scorable_coverage": null, "score": null, "unknown": 0, "unsupported": 0}}, "overall_score": null}], "report_dir": "/home/openkylin/msok-validation-20261015-1840/MemoryScope-OK/runs/20261015T184021223058Z-8ea846f47945/report"}, "error": null}
+report.json 2137
+report.csv 468
+report.md 1189
+radar.png 136729
+OPENKYLIN_SYNTHETIC_REPORT_OK /home/openkylin/msok-validation-20261015-1840/MemoryScope-OK/runs/20261015T184021223058Z-8ea846f47945
+
+VALIDATION_EXIT=0

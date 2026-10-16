@@ -8,6 +8,7 @@ htmlcov/
 build/
 dist/
 runs/
+configs/gui/
 .env
 .env.*
 !.env.example
