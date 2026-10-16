@@ -245,3 +245,9 @@ CLI MVP、本地检查、openKylin 初验及两款真实 Agent 的 48×2 全量�
 - 本轮 macOS 项目虚拟环境验证：`.venv/bin/pytest -q`，108 passed in 13.73s；`git diff --check` 通过。
 - 正式成片 `video/out/memoryscope-ok-demo.mp4` 经 ffprobe 确认 249.472 秒、61,982,058 字节。作品介绍本地路径 `docs/submission/MemoryScope-OK-作品介绍.pdf`。
 - 提交准备时远端尚未创建，未将计划推送写为已完成。
+
+## GitHub 已发布（2026-10-16）
+
+- 用户确认公开后，已创建并推送 https://github.com/cjyhjy/MemoryScope-OK ，提交 `2856ed2` 包含作品介绍 PDF、GUI 验收记录与剪辑源码。
+- Release：https://github.com/cjyhjy/MemoryScope-OK/releases/tag/v0.3.0-demo 。正式视频 61,982,058 字节、作品介绍 PDF 4,842,582 字节均由 GitHub API 确认为 uploaded，Release 非草稿。
+- README 视频链接指向 Release 附件。PDF 在仓库保留中文原名，Release 使用 `memoryscope-ok-introduction.pdf`。原片和视频输出未纳入 Git 历史。

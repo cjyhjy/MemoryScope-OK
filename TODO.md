@@ -60,3 +60,8 @@
 - [ ] 在 openKylin 上 `sudo dpkg -i` 安装并运行 `memoryscope-ok all configs/demo-smoke.yaml`（用户要求暂缓，当前使用已验收的用户目录安装）。
 - [x] 把 SOLUTION.md 第 7、8 节、STATUS、README、演示和验证文档更新为 openKylin 实机结果。
 - [ ] 从官方来源核实赛题、截止时间（项目目标写的是 2026-10-16）、提交要求。
+
+## GitHub 交付（2026-10-16）
+
+- [x] 创建公开仓库 cjyhjy/MemoryScope-OK 并推送本地代码与作品材料。
+- [x] 发布 v0.3.0-demo Release，上传最终演示视频与作品介绍 PDF，README 提供下载入口。
