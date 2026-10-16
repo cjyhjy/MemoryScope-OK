@@ -30,7 +30,7 @@ from PySide6.QtWidgets import (
 
 from memoryscope_gui.model import (
     DIMENSIONS, LABELS_ZH, STATUSES, EventTail, RunLoadError, RunView, cli_command, discover_runs,
-    find_project, fmt_score, load_run, parse_cli_line, read_events, status_label, write_request_config,
+    find_project, load_custom_agents, fmt_score, load_run, parse_cli_line, read_events, status_label, write_request_config,
 )
 
 COLORS = ["#2563eb", "#dc2626", "#059669", "#d97706", "#7c3aed", "#0891b2"]
@@ -563,7 +563,7 @@ class RunPage(QWidget):
         self.final: dict[str, Any] | None = None
         self.stdout_buffer = b""
         self.tail: EventTail | None = None
-        self.agent_rows: dict[str, tuple[QCheckBox, QLineEdit, QSpinBox, bool]] = {}
+        self.agent_rows: dict[str, tuple[QCheckBox, QLineEdit, QSpinBox, bool, dict[str, Any]]] = {}
 
         self.dataset = QComboBox()
         browse = QPushButton("选择…")
@@ -638,26 +638,36 @@ class RunPage(QWidget):
         self.agent_rows.clear()
         for col, title in enumerate(["启用", "Adapter", "模型", "超时(秒)"]):
             self.agent_grid.addWidget(QLabel(f"<b>{title}</b>"), 0, col)
-        for row, item in enumerate(adapter_catalog(), start=1):
+        rows = [(item, {"id": item["id"], "type": item["id"]}) for item in adapter_catalog() if item["id"] != "command"]
+        custom, custom_error = load_custom_agents(project) if project else ([], None)
+        for entry in custom:
+            if entry["id"] in {item["id"] for item, _ in rows}:
+                custom_error = f"自定义 Agent id 与已有 Agent 重复：{entry['id']}"
+                continue
+            label = entry.get("name") or " ".join(entry.get("command") or [entry["type"]])
+            rows.append(({"id": entry["id"], "name": f"自定义 · {label}", "synthetic": False}, entry))
+        for row, (item, base) in enumerate(rows, start=1):
             enabled = QCheckBox(item["id"])
             enabled.setChecked(not item["synthetic"])
             name = item["name"] + ("（synthetic，仅测框架，不计成绩）" if item["synthetic"] else "（真实 Agent，调用 API）")
             model = QLineEdit(DEFAULT_MODELS.get(item["id"], ""))
             model.setPlaceholderText("默认")
-            model.setEnabled(not item["synthetic"])
+            model.setEnabled(not item["synthetic"] and base["type"] != "command")
             timeout = QSpinBox()
             timeout.setRange(10, 3600)
-            timeout.setValue(300)
+            timeout.setValue(int(base.get("timeout_seconds", 300)))
             self.agent_grid.addWidget(enabled, row, 0)
             self.agent_grid.addWidget(QLabel(name), row, 1)
             self.agent_grid.addWidget(model, row, 2)
             self.agent_grid.addWidget(timeout, row, 3)
-            self.agent_rows[item["id"]] = (enabled, model, timeout, item["synthetic"])
+            self.agent_rows[item["id"]] = (enabled, model, timeout, item["synthetic"], base)
         present = bool(project) and api_key_present(project)
         self.key_label.setText(
             ("已检测到 DEEPSEEK_API_KEY（来自环境变量或项目 .env；界面不显示其值）。" if present else
              "未检测到 DEEPSEEK_API_KEY：真实 Agent 会因缺少凭据报 error。请在项目 .env 中填写，界面不会读取或保存密钥。")
-            + "真实 Agent 每条用例都会调用 DeepSeek API。")
+            + "真实 Agent 每条用例都会调用 DeepSeek API。"
+            + "要加入其他命令行 Agent，在 configs/custom-agents.yaml 中声明（见 README）。"
+            + (f"\n{custom_error}" if custom_error else ""))
 
     def _browse_dataset(self) -> None:
         start = str(self.window.project / "datasets") if self.window.project else ""
@@ -668,11 +678,11 @@ class RunPage(QWidget):
 
     def _agents(self) -> list[dict[str, Any]]:
         agents = []
-        for agent_id, (enabled, model, timeout, synthetic) in self.agent_rows.items():
+        for agent_id, (enabled, model, timeout, synthetic, base) in self.agent_rows.items():
             if enabled.isChecked():
-                entry: dict[str, Any] = {"id": agent_id, "type": agent_id}
+                entry: dict[str, Any] = dict(base)
                 if not synthetic:
-                    if model.text().strip():
+                    if model.isEnabled() and model.text().strip():
                         entry["model"] = model.text().strip()
                     entry["timeout_seconds"] = timeout.value()
                 agents.append(entry)
@@ -732,7 +742,7 @@ class RunPage(QWidget):
             answer = QMessageBox.question(
                 self, "确认调用真实 Agent",
                 f"将用真实 Agent（{', '.join(real)}）执行 {self.dataset.currentText()} 中的全部用例，"
-                "每条用例都会调用 DeepSeek API 并产生费用。完整 48 条约需 1 小时。继续吗？")
+                "每条用例都会调用模型 API，可能产生费用。完整 48 条约需 1 小时。继续吗？")
             if answer != QMessageBox.Yes:
                 return
         try:

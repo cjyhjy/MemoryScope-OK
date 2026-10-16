@@ -31,7 +31,7 @@ configs/*.yaml ───────┘            └─► 证据：回答、�
 ```
 
 - **Runner**（`runner.py`）：按 steps 顺序驱动用例，处理 `reset_case` / `reset_session`，把每一步写入 `events.jsonl`。
-- **Adapter**（`adapters/`）：统一接口 `start / reset_case / reset_session / send_message / execute_task / collect_evidence / shutdown`。目前有三个实现：Demo（标为 synthetic，只用于测框架）、Codex CLI、DeepSeek Harness。新增 Agent 只需实现一个 Adapter。
+- **Adapter**（`adapters/`）：统一接口 `start / reset_case / reset_session / send_message / execute_task / collect_evidence / shutdown`。目前有四个实现：Demo（标为 synthetic，只用于测框架）、Codex CLI、DeepSeek Harness，以及通用命令行 Agent（`type: command`，在配置里声明命令即可接入其他 Agent，GUI 读取 `configs/custom-agents.yaml` 供勾选）。需要深度集成时再实现专用 Adapter。
 - **评分器**（`evaluator.py`）：确定性规则，不调用 LLM。
 - **报告**（`reporting.py`）与**重评**（`rescore.py`）都只读已保存的文件，不会再调用 Agent。
 - **CLI**（`cli.py`）：`validate / list-agents / check-config / run / report / rescore / view`，`--json` / `--jsonl` 输出版本化的机器接口。

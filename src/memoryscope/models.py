@@ -230,9 +230,21 @@ class LegacyCase(StrictModel):
 
 class AgentConfig(StrictModel):
     id: Identifier
-    type: Literal["demo", "codex", "dsh"]
+    type: Literal["demo", "codex", "dsh", "command"]
     model: NonBlank | None = None
     timeout_seconds: int = Field(default=300, ge=10, le=3600)
+    # type "command" only: argv template for one turn; "{prompt}" is replaced by the message (no shell).
+    command: list[NonBlank] | None = None
+    name: NonBlank | None = None
+
+    @model_validator(mode="after")
+    def command_fields(self) -> "AgentConfig":
+        if self.type == "command":
+            if not self.command or not any("{prompt}" in part for part in self.command):
+                raise ValueError("type 'command' needs a command list containing the {prompt} placeholder")
+        elif self.command is not None:
+            raise ValueError("'command' is only valid for type 'command'")
+        return self
 
 
 class RunConfig(StrictModel):

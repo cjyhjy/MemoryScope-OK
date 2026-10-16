@@ -1,0 +1,13 @@
+# 自定义命令行 Agent 示例。复制为 configs/custom-agents.yaml 后，GUI“新建评测”页会自动列出这些 Agent；
+# 也可以把同样的条目写进任何运行配置（如 configs/agents.yaml）的 agents 列表，用 CLI 运行。
+#
+# 约定：每轮对话执行一次 command（参数列表，不经过 shell），其中 "{prompt}" 会被替换为本轮消息
+# （前面附带统一的 MEMORY.md 长期记忆约定）；工作目录是该用例的独立工作区，stdout 作为回答。
+# Agent 需要的密钥请放在环境变量或项目 .env 中，不要写进本文件。
+schema_version: "1.0"
+agents:
+  - id: my-agent
+    type: command
+    name: My Agent CLI
+    command: ["my-agent", "--non-interactive", "--prompt", "{prompt}"]
+    timeout_seconds: 300

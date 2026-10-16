@@ -57,6 +57,21 @@ GUI/脚本可给各命令加 `--json` 读取版本化结果；`run --jsonl` 实�
 
 若系统依赖已具备，或使用 OSTree 桌面而不进行系统包变更，可用 `SKIP_SYSTEM=1 SKIP_AGENTS=1 bash scripts/setup_openkylin.sh` 仅在项目虚拟环境安装 Python 部分。它不会自动启用系统开发模式；缺失的 Python/venv 依赖仍需明确解决，不能跳过后声称验证通过。
 
+## 接入其他 Agent
+
+除内置的 Codex CLI 与 DeepSeek Harness 外，任何能“接收一段提示词、在 stdout 输出回答”的命令行 Agent 都可以在配置中声明，无需写代码：
+
+```yaml
+agents:
+  - id: my-agent
+    type: command
+    name: My Agent CLI
+    command: ["my-agent", "--prompt", "{prompt}"]   # 参数列表，不经过 shell；{prompt} 替换为本轮消息
+    timeout_seconds: 300
+```
+
+把条目写进运行配置即可用 CLI 运行；复制 [configs/custom-agents.example.yaml](configs/custom-agents.example.yaml) 为 `configs/custom-agents.yaml`，GUI“新建评测”页会自动列出，勾选即可。命令型 Agent 享有与内置 Agent 相同的隔离（每例独立 home 与工作区）和 `MEMORY.md` 记忆约定；由于通用命令没有会话续接通道，记忆约定会附在每条提示词前，会话内上下文也只通过 `MEMORY.md` 传递。需要深度集成（续接会话、解析工具事件）时，再按 `adapters/` 下的方式写 Adapter。
+
 ## 修改或新增用例
 
 用例在 `datasets/<目录>/*.jsonl`，一行一条，格式见 `datasets/schema/case.schema.json` 与[方案文档第 4 节](docs/SOLUTION.md)。

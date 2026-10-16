@@ -169,3 +169,24 @@ def test_window_runs_synthetic_evaluation_through_cli_and_shows_it(qapp, project
     assert page.progress.value() == page.progress.maximum() >= 1
     assert "报告已生成" in page.phase.text() and not window.running
     window.close()
+
+
+def test_custom_agents_are_listed_and_written_to_request(qapp, project):
+    from memoryscope_gui.app import MainWindow
+
+    (project / "configs/custom-agents.yaml").write_text(
+        'schema_version: "1.0"\nagents:\n  - id: mine\n    type: command\n    name: Mine\n'
+        '    command: ["mine", "{prompt}"]\n    timeout_seconds: 120\n', encoding="utf-8")
+    window = MainWindow(project)
+    page = window.runner
+    assert "mine" in page.agent_rows and "command" not in page.agent_rows
+    for agent_id, row in page.agent_rows.items():
+        row[0].setChecked(agent_id == "mine")
+    request = page._new_request()
+    agents = yaml.safe_load(request.config_path.read_text(encoding="utf-8"))["agents"]
+    assert agents == [{"id": "mine", "type": "command", "timeout_seconds": 120, "command": ["mine", "{prompt}"],
+                       "name": "Mine"}]
+    (project / "configs/custom-agents.yaml").write_text("agents:\n  - id: bad\n    type: command\n", encoding="utf-8")
+    window.runner.populate()
+    assert "custom-agents.yaml 无效" in page.key_label.text()
+    window.close()

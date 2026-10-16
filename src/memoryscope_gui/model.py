@@ -253,3 +253,24 @@ def find_project(start: Path | None = None) -> Path | None:
         if (candidate / "pyproject.toml").is_file() and (candidate / "datasets").is_dir():
             return candidate
     return None
+
+
+CUSTOM_AGENTS = Path("configs") / "custom-agents.yaml"
+
+
+def load_custom_agents(project: Path) -> tuple[list[dict[str, Any]], str | None]:
+    """User-declared agents from ``configs/custom-agents.yaml`` (``agents:`` list), validated by the core model."""
+    from memoryscope.models import AgentConfig
+
+    path = project / CUSTOM_AGENTS
+    if not path.is_file():
+        return [], None
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        items = data.get("agents") if isinstance(data, dict) else None
+        if not isinstance(items, list):
+            raise ValueError("缺少 agents 列表")
+        agents = [AgentConfig.model_validate(item).model_dump(exclude_none=True) for item in items]
+    except (OSError, ValueError, TypeError, yaml.YAMLError) as error:
+        return [], f"{CUSTOM_AGENTS} 无效：{error}"
+    return agents, None
