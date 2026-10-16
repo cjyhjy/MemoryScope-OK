@@ -247,12 +247,28 @@ class AgentConfig(StrictModel):
         return self
 
 
+class PairedProtocol(StrictModel):
+    """Opt-in P0 contract; no file carry-over is supported in this round."""
+
+    version: Literal["1.0"] = "1.0"
+    max_calls_per_arm: int = Field(default=64, ge=1, le=1000, strict=True)
+    retained_workspace_files: list[SafeRelativePath] = Field(default_factory=list)
+
+    @field_validator("retained_workspace_files")
+    @classmethod
+    def no_file_reuse_in_p0(cls, value: list[str]) -> list[str]:
+        if value:
+            raise ValueError("P0 supports pure memory only: retained_workspace_files must be empty; file reuse is unsupported")
+        return value
+
+
 class RunConfig(StrictModel):
     schema_version: Literal["1.0"]
     dataset: NonBlank
     output_dir: NonBlank = "../runs"
     agents: list[AgentConfig] = Field(min_length=1)
     seed: int = Field(default=0, strict=True, ge=0, le=2**32 - 1)
+    paired: PairedProtocol | None = None
 
     @field_validator("dataset", "output_dir")
     @classmethod

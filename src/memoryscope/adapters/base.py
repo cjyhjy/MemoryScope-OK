@@ -18,6 +18,18 @@ class AgentAdapter(ABC):
     capabilities: frozenset[Capability] = frozenset()
     required_environment: tuple[str, ...] = ()
 
+    @staticmethod
+    def paired_isolation_support() -> dict[str, Any]:
+        """Fail closed: env vars, a new thread ID or prompts are not isolation.
+
+        Support requires an audited inventory of every answer-bearing surface.
+        Real/command adapters do not inherit a claim from their CLI sandbox.
+        """
+        return {"status": "unsupported", "reason": "Complete paired state isolation has not been demonstrated."}
+
+    def isolate_paired_session(self, session_id: str, *, memory_enabled: bool) -> dict[str, Any]:
+        raise NotImplementedError("paired isolation is unsupported")
+
     def describe(self) -> dict[str, Any]:
         return {"class": type(self).__name__, "synthetic": self.synthetic,
                 "capabilities": sorted(capability.value for capability in self.capabilities)}

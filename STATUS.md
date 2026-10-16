@@ -1,5 +1,35 @@
 # 项目状态
 
+## 2026-10-16 云端 P0：可审计配对基础设施
+
+本节为当前云端任务记录；下文 Mac/openKylin 内容保留为历史。云端目录 `/workspace/MemoryScope-OK`，Debian GNU/Linux 13 x86_64，Python 3.12.14；不是 openKylin 实机验证。初始工作区干净，HEAD 与远端 main 均为 `b8b89a98e32f56726351635eef1d154c9299bf1d`，远端检查时不存在 `dot/memoryscope-p0`，本轮新建该分支。用户最新授权允许测试通过后提交并推送该分支，禁止强推、合并 main、创建 PR。
+
+已实现：独立 `run-paired`、`paired-1.0` 结果、显式协议与相同调用预算、受控 synthetic Adapter、每个会话边界的状态清理及前后审计、公共回答与存储检查分离、独立 Markdown 报告。memory-on 只保留 `demo_memory_list`；memory-off 同时清空它；两组都清空上下文和整个沙箱。禁止任务文件保留，真实 codex/dsh/command 在构造/启动前 unsupported；缺少或违反隔离证据为 unknown，执行异常为 error。没有加载 `.env`、调用真实 Agent/付费 API、配置密钥或操作其他设备/系统包。
+
+新单例位于 `datasets/paired/`，hard / draft，明确未人工复核，不计入原 48 条。原 `datasets/golden` 和 `docs/results` 没有 diff；历史仍为 95/96 pass，同模型、统一 `MEMORY.md` 协议，不能声称原生产品记忆比较。`dynamic_update-007` 正确回答致远楼 571、保留已撤销旧值 517、原明确删除约束失败均保留，未改评分器或重评。
+
+| 实际命令 / 检查 | 结果 |
+| --- | --- |
+| `python3 -m venv .venv`；`.venv/bin/python -m pip install -e '.[dev]'` | 成功，未安装 GUI extra |
+| `.venv/bin/memoryscope --help` | 成功，列出 run-paired |
+| `.venv/bin/memoryscope validate datasets/golden` | 48 cases / 6 files 有效 |
+| `.venv/bin/memoryscope validate datasets/paired` | 1 case / 1 file 有效 |
+| `.venv/bin/memoryscope check-config configs/paired-demo.yaml --json` | 成功 |
+| `.venv/bin/pytest -q tests/test_paired.py`（阶段验证） | 20 passed；随后新增 1 项遗漏状态面负例纳入完整测试 |
+| `.venv/bin/pytest -q`（最终代码） | **114 passed, 1 skipped**，3.29s；GUI 模块缺少 PySide6，未验证 GUI |
+| `.venv/bin/memoryscope run-paired configs/paired-demo.yaml --json` | 实际运行成功，synthetic 公共差值 +1.0；不是实际模型记忆收益 |
+| `run_paired(Path('configs/paired-demo.yaml'))`（最终代码归档） | run `20261016T180415254958Z-paired-5ac582b07111`，42 个连续事件、两组各 7 次调用；五项产物 SHA-256 一致 |
+| `.venv/bin/memoryscope run configs/demo.yaml --json` | 旧 synthetic 流程完成：8 条 retention，3 pass / 5 fail，整体缺维 null；不伪报全通过 |
+| `.venv/bin/memoryscope run configs/demo-smoke.yaml --json` | run `20261016T180415419976Z-1953de4f1303`，synthetic 单例 pass，Overall null |
+| `.venv/bin/memoryscope report runs/20261016T180415419976Z-1953de4f1303 --json` | 成功生成四类旧格式报告；matplotlib 对只读默认缓存采用临时目录回退 |
+| `git diff --exit-code -- datasets/golden docs/results`；`git diff --check` | 历史数据/结果无修改，差异格式检查通过 |
+
+最终配对原始产物：[docs/validation/paired-p0-20261016/](docs/validation/paired-p0-20261016/paired-report.md)，包含完整快照、事件、结果与元数据，测试日志也归档于该目录。源码 SHA-256 `544bb5eb409f69b52cf525706606bde655acf2f5d507c5ab0d3e73865434078d` 与最终 Python 代码树核对一致；产物中的 git_commit 是初始 HEAD，源码摘要包含当时尚未提交的实现。
+
+实际困难草案结果：memory-on 回答正确、旧值在最终回答中未使用，但指定存储仍保留 517，删除检查 fail；memory-off 回答 fail，存储清空由 harness 导致，其 Agent 删除判断为 unknown。公共差值仅由回答计算，存储不进入分母，Overall 为 null。
+
+限制与恢复条件：真实 Agent 的 HOME/XDG、缓存、原生/远端存储、会话数据库、权限等完整隔离待逐项证明；`MEMORYSCOPE_AGENT_HOME` 不能作证明。文件复用、语义失效判定、重复采样/顺序平衡、人工用例审核及配对 GUI/离线重评待完成。详见 [配对协议](docs/p0-paired-protocol.md)。本轮交付只验证云端离线基础设施。
+
 更新日期：2026-10-16（America/New_York）。项目根目录：`/Users/cjy/Documents/MemoryScope-OK`。本文件只记录已实际执行并核对过的事实。
 
 ## 当前结论

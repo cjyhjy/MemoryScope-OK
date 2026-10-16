@@ -1,0 +1,11 @@
+schema_version: "1.0"
+dataset: ../datasets/paired/dynamic-update-hard-001.jsonl
+output_dir: ../runs/paired
+agents:
+  - id: demo
+    type: demo
+seed: 0
+paired:
+  version: "1.0"
+  max_calls_per_arm: 12
+  retained_workspace_files: []

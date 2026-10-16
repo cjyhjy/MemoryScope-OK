@@ -10,6 +10,10 @@
 
 ## 快速开始
 
+2026-10-16 云端 P0 新增[可审计配对协议](docs/p0-paired-protocol.md)：
+`.venv/bin/memoryscope run-paired configs/paired-demo.yaml --json`。
+当前仅支持受控 synthetic 离线单例；真实 Adapter 隔离未证明时返回 unsupported。公共回答、旧值非使用与指定存储删除检查分开，任务文件不保留。历史 48×2 为同模型、统一 `MEMORY.md` 协议结果，不能当作原生产品记忆比较；原有 95/96 与删除失败不变。
+
 作品材料：
 
 - [作品介绍 PDF](docs/submission/MemoryScope-OK-作品介绍.pdf)
@@ -51,6 +55,7 @@ memoryscope-ok all                                     # 两个真实 Agent 完�
 | `memoryscope list-agents` | 列出 Adapter 及其是否为 synthetic |
 | `memoryscope check-config configs/agents.yaml --json` | 离线预检配置、数据与路径；不创建 Agent 或调用 API |
 | `memoryscope run configs/agents.yaml` | 运行评测，写入 `runs/<run_id>/`（含 events.jsonl 证据） |
+| `memoryscope run-paired configs/paired-demo.yaml --json` | 受控 synthetic memory-on/off 配对，保存独立结果与 `paired-report.md`；不调用真实 Agent |
 | `memoryscope report runs/<run_id>` | 生成 JSON / CSV / Markdown / 雷达图，不调用 Agent |
 | `memoryscope rescore runs/<run_id>` | 用当前评分器离线重评已保存证据 |
 | `memoryscope-gui`（需 `pip install -e '.[gui]'`；.deb 中为 `memoryscope-ok gui`） | 桌面 GUI：历史结果、新建评测与进度、证据查看 |
@@ -78,7 +83,7 @@ agents:
     timeout_seconds: 300
 ```
 
-把条目写进运行配置即可用 CLI 运行；复制 [configs/custom-agents.example.yaml](configs/custom-agents.example.yaml) 为 `configs/custom-agents.yaml`，GUI“新建评测”页会自动列出，勾选即可。命令型 Agent 享有与内置 Agent 相同的隔离（每例独立 home 与工作区）和 `MEMORY.md` 记忆约定；由于通用命令没有会话续接通道，记忆约定会附在每条提示词前，会话内上下文也只通过 `MEMORY.md` 传递。需要深度集成（续接会话、解析工具事件）时，再按 `adapters/` 下的方式写 Adapter。
+把条目写进运行配置即可用 CLI 运行；复制 [configs/custom-agents.example.yaml](configs/custom-agents.example.yaml) 为 `configs/custom-agents.yaml`，GUI“新建评测”页会自动列出，勾选即可。命令型 Agent 使用每例独立工作目录，并接收 `MEMORYSCOPE_AGENT_HOME` 环境变量及 `MEMORY.md` 约定。任意命令可能忽略该变量，当前没有强制切断真实 HOME、缓存、会话库或远端状态，不能据此宣称完整隔离。约定附在每条提示词前，框架不提供通用会话续接；命令自身如何保存上下文仍须独立验证。P0 配对命令对它返回 unsupported。需要深度集成（续接会话、解析工具事件）时，再按 `adapters/` 下的方式写 Adapter。
 
 ## 修改或新增用例
 
@@ -95,6 +100,7 @@ agents:
 - [openKylin 48×2 真实评测记录](docs/validation/openkylin-real-20261016.md)：环境、隔离、结果、完整性与边界
 - [方案文档](docs/SOLUTION.md)：测试目标、架构、隔离、数据、评分、结果、局限、创新点
 - [数据集审阅表](docs/dataset-review.md)
+- [P0 配对协议、指标边界与云端 synthetic 证据](docs/p0-paired-protocol.md)
 - openKylin 48×2 实测结果副本：[报告](docs/results/openkylin-48x2/report.md)、[雷达图](docs/results/openkylin-48x2/radar.png)、[HTML 结果页](docs/results/openkylin-48x2/view.html)、results.json / metadata.json；完整证据在 `runs/`（不入库）。`docs/results/macos-36/` 为 macOS 36 条历史结果
 - [演示录屏脚本](docs/demo-script.md)
 - [进度](STATUS.md) / [待办](TODO.md) / [开发约定](AGENTS.md) / [贡献指南](CONTRIBUTING.md)
@@ -102,7 +108,7 @@ agents:
 ## 安全
 
 - 密钥只从环境变量或项目 `.env` 读取，不会写入配置、日志或报告。
-- 每个用例使用独立的临时 Agent home 和工作区，不读写 `~/.codex`、`~/.dsh`。
+- 内置 CLI Adapter 配置独立的临时 Agent home 和工作区；这不是完整 OS 沙箱证明。通用 command 可能忽略 home 环境变量，完整配对隔离仍 unsupported。
 - 数据全部虚构。
 
 许可证：[MIT](LICENSE)。

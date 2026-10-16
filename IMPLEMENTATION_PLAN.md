@@ -1,5 +1,7 @@
 # MemoryScope-OK 执行计划
 
+> 2026-10-16 云端任务更新：当前优先级为 [P0 配对协议](docs/p0-paired-protocol.md)，先交付受控 synthetic 困难单例与回归。历史阶段和结果保留；不按旧评审建议将明确删除失败改判通过。用户本轮另行授权测试通过后提交并推送 `dot/memoryscope-p0`，覆盖下文旧的“不推送”任务约定；禁止强推、合并 main 或创建 PR。
+
 > 最新评价与剩余规划见 [docs/architecture-review-20261016.md](docs/architecture-review-20261016.md)。
 >
 > 架构评审补充（2026-10-13）：见 [ARCHITECTURE_REVIEW.md](ARCHITECTURE_REVIEW.md)。其中保存了提前接入真实 Agent、对照实验、步骤化用例、行为评分与离线重评、能力与观测范围、openKylin 初验六点建议，以及建议执行顺序。原 Phase 编号和验收标准保留；建议的落实情况由 STATUS/TODO 记录。

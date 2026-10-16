@@ -1,0 +1,303 @@
+{
+  "executed_real_agents": 0,
+  "limitations": [
+    "Only the controlled synthetic fixture executes; no real product-memory comparison.",
+    "Fixed on/off order, no repeated sampling or statistical inference.",
+    "Forbidden-value non-use is lexical in the declared answer scope; it does not prove semantic invalidation.",
+    "Store absence is limited to demo_memory_list; it does not prove global deletion.",
+    "File retention/reuse unsupported; no full six-dimension score or legacy GUI/report/rescore integration."
+  ],
+  "overall_score": null,
+  "pair_status_counts": {
+    "completed": 1,
+    "error": 0,
+    "unknown": 0,
+    "unsupported": 0
+  },
+  "pairs": [
+    {
+      "adapter_type": "demo",
+      "agent_id": "demo",
+      "arms": {
+        "memory_off": {
+          "answers": [
+            {
+              "answer_correct": {
+                "explanation": "missing required: 致远楼, 571.",
+                "forbidden_hits": [],
+                "forbidden_terms": [
+                  "517",
+                  "632",
+                  "804"
+                ],
+                "missing_terms": [
+                  "致远楼",
+                  "571"
+                ],
+                "passed": false,
+                "required_terms": [
+                  "致远楼",
+                  "571"
+                ],
+                "scope": "answer_line",
+                "score": 0.0,
+                "scored_text": "不知道",
+                "status": "fail",
+                "type": "answer_line",
+                "version": "1.2"
+              },
+              "event": 39,
+              "forbidden_value_not_used": {
+                "explanation": "All required terms found; no forbidden terms found.",
+                "forbidden_hits": [],
+                "forbidden_terms": [
+                  "517",
+                  "632",
+                  "804"
+                ],
+                "missing_terms": [],
+                "passed": true,
+                "required_terms": [],
+                "scope": "answer_line",
+                "score": 1.0,
+                "scored_text": "不知道",
+                "status": "pass",
+                "type": "answer_line",
+                "version": "1.2"
+              },
+              "probe_id": "current-location",
+              "response": "没有相关记忆。\n答案：不知道"
+            }
+          ],
+          "calls": 7,
+          "file_checks": [],
+          "isolation_events": [
+            22,
+            29,
+            34,
+            37
+          ],
+          "isolation_verified": true,
+          "status": "completed",
+          "storage_checks": [
+            {
+              "check_id": "explicit-deletion",
+              "evaluation": {
+                "explanation": "missing required: 571.",
+                "forbidden_hits": [],
+                "forbidden_terms": [
+                  "517"
+                ],
+                "missing_terms": [
+                  "571"
+                ],
+                "passed": false,
+                "required_terms": [
+                  "571"
+                ],
+                "scope": "full_response",
+                "score": 0.0,
+                "scored_text": "",
+                "status": "fail",
+                "type": "contains",
+                "version": "1.2"
+              },
+              "event": 40,
+              "global_deletion_proven": false,
+              "scope": "demo_memory_list",
+              "specified_store_absence": {
+                "explanation": "All required terms found; no forbidden terms found.",
+                "forbidden_hits": [],
+                "forbidden_terms": [
+                  "517"
+                ],
+                "missing_terms": [],
+                "passed": true,
+                "required_terms": [],
+                "scope": "full_response",
+                "score": 1.0,
+                "scored_text": "",
+                "status": "pass",
+                "type": "contains",
+                "version": "1.2"
+              },
+              "specified_store_deletion": {
+                "explanation": "Harness reset/absence without a deletion constraint cannot establish Agent deletion.",
+                "score": null,
+                "status": "unknown"
+              }
+            }
+          ]
+        },
+        "memory_on": {
+          "answers": [
+            {
+              "answer_correct": {
+                "explanation": "All required terms found; no forbidden terms found.",
+                "forbidden_hits": [],
+                "forbidden_terms": [
+                  "517",
+                  "632",
+                  "804"
+                ],
+                "missing_terms": [],
+                "passed": true,
+                "required_terms": [
+                  "致远楼",
+                  "571"
+                ],
+                "scope": "answer_line",
+                "score": 1.0,
+                "scored_text": "青岚项目周四研讨会地点改为致远楼 571，以后以此为准；请从指定记忆存储中删除旧地点。",
+                "status": "pass",
+                "type": "answer_line",
+                "version": "1.2"
+              },
+              "event": 19,
+              "forbidden_value_not_used": {
+                "explanation": "All required terms found; no forbidden terms found.",
+                "forbidden_hits": [],
+                "forbidden_terms": [
+                  "517",
+                  "632",
+                  "804"
+                ],
+                "missing_terms": [],
+                "passed": true,
+                "required_terms": [],
+                "scope": "answer_line",
+                "score": 1.0,
+                "scored_text": "青岚项目周四研讨会地点改为致远楼 571，以后以此为准；请从指定记忆存储中删除旧地点。",
+                "status": "pass",
+                "type": "answer_line",
+                "version": "1.2"
+              },
+              "probe_id": "current-location",
+              "response": "根据记忆：青岚项目周四研讨会地点改为致远楼 571，以后以此为准；请从指定记忆存储中删除旧地点。\n答案：青岚项目周四研讨会地点改为致远楼 571，以后以此为准；请从指定记忆存储中删除旧地点。"
+            }
+          ],
+          "calls": 7,
+          "file_checks": [],
+          "isolation_events": [
+            2,
+            9,
+            14,
+            17
+          ],
+          "isolation_verified": true,
+          "status": "completed",
+          "storage_checks": [
+            {
+              "check_id": "explicit-deletion",
+              "evaluation": {
+                "explanation": "forbidden present: 517.",
+                "forbidden_hits": [
+                  "517"
+                ],
+                "forbidden_terms": [
+                  "517"
+                ],
+                "missing_terms": [],
+                "passed": false,
+                "required_terms": [
+                  "571"
+                ],
+                "scope": "full_response",
+                "score": 0.0,
+                "scored_text": "记住：青岚项目周四研讨会地点是致远楼 517。\n记住：流云项目周四研讨会地点是明理楼 632，和青岚项目无关。\n青岚项目周四研讨会地点改为致远楼 571，以后以此为准；请从指定记忆存储中删除旧地点。\n记住：流云项目周五读书会地点是知行楼 804。",
+                "status": "fail",
+                "type": "contains",
+                "version": "1.2"
+              },
+              "event": 20,
+              "global_deletion_proven": false,
+              "scope": "demo_memory_list",
+              "specified_store_absence": {
+                "explanation": "forbidden present: 517.",
+                "forbidden_hits": [
+                  "517"
+                ],
+                "forbidden_terms": [
+                  "517"
+                ],
+                "missing_terms": [],
+                "passed": false,
+                "required_terms": [],
+                "scope": "full_response",
+                "score": 0.0,
+                "scored_text": "记住：青岚项目周四研讨会地点是致远楼 517。\n记住：流云项目周四研讨会地点是明理楼 632，和青岚项目无关。\n青岚项目周四研讨会地点改为致远楼 571，以后以此为准；请从指定记忆存储中删除旧地点。\n记住：流云项目周五读书会地点是知行楼 804。",
+                "status": "fail",
+                "type": "contains",
+                "version": "1.2"
+              },
+              "specified_store_deletion": {
+                "explanation": "forbidden present: 517.",
+                "forbidden_hits": [
+                  "517"
+                ],
+                "forbidden_terms": [
+                  "517"
+                ],
+                "missing_terms": [],
+                "passed": false,
+                "required_terms": [],
+                "scope": "full_response",
+                "score": 0.0,
+                "scored_text": "记住：青岚项目周四研讨会地点是致远楼 517。\n记住：流云项目周四研讨会地点是明理楼 632，和青岚项目无关。\n青岚项目周四研讨会地点改为致远楼 571，以后以此为准；请从指定记忆存储中删除旧地点。\n记住：流云项目周五读书会地点是知行楼 804。",
+                "status": "fail",
+                "type": "contains",
+                "version": "1.2"
+              }
+            }
+          ]
+        }
+      },
+      "case_id": "paired-dynamic-update-hard-001",
+      "comparison": {
+        "attribution": "pure_declared_memory_with_no_file_reuse",
+        "comparable": true,
+        "planned_public_probes": 1,
+        "public_pair_coverage": 1.0,
+        "public_score_delta_on_minus_off": 1.0,
+        "scorable_pairs": 1,
+        "storage_checks_in_public_metric": false
+      },
+      "controls": {
+        "adapter_contract": {
+          "algorithm": "demo_character_bigrams_latest_tie",
+          "effective_model": null,
+          "host_home_cache_database": "not accessed by this fixture; no OS isolation claim",
+          "memory_backend": "demo_memory_list",
+          "permissions": "no tools, subprocesses, network or host-state retrieval",
+          "scope": "controlled_synthetic_only",
+          "status": "supported"
+        },
+        "agent_config": {
+          "command": null,
+          "id": "demo",
+          "model": null,
+          "name": null,
+          "timeout_seconds": 300,
+          "type": "demo"
+        },
+        "max_calls_per_arm": 12,
+        "order": [
+          "memory_on",
+          "memory_off"
+        ],
+        "planned_calls_per_arm": 7,
+        "public_schedule_sha256": "bb90ff65ef46b6680cb89e404bac1644b0567258f52104a01753a57dfbcf7b74",
+        "retained_workspace_files": [],
+        "seed": 0
+      },
+      "review_status": "draft",
+      "status": "completed",
+      "synthetic": true
+    }
+  ],
+  "purpose": "paired_protocol_validation",
+  "run_id": "20261016T180415254958Z-paired-5ac582b07111",
+  "schema_version": "paired-1.0",
+  "status": "completed",
+  "synthetic": true
+}

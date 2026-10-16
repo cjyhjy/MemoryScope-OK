@@ -1,0 +1,64 @@
+{
+  "artifacts": {
+    "config.snapshot.yaml": {
+      "sha256": "d30048f111664471d661340086f0911e596485af5488e4aa25c9ee1c99ed7a24"
+    },
+    "dataset.snapshot.jsonl": {
+      "sha256": "20af0e998590ee7d17cb51932cd4a2655edb9f177b847e44957e6e93638d405b"
+    },
+    "events.jsonl": {
+      "sha256": "f9235ffdbb256b829e158932f646c5a95c813ba6c66df05c59b0244a324bd2b5"
+    },
+    "paired-report.md": {
+      "sha256": "20e3efbd60dc1aee673cd2b6d03d8e6484f40c1483b790ecfebf49e432778fc1"
+    },
+    "results.json": {
+      "sha256": "6f900a05593567b490ae4ceb9b7edfc4384e486537c651970779c2eabd519c9b"
+    }
+  },
+  "dataset_sources": [
+    {
+      "path": "datasets/paired/dynamic-update-hard-001.jsonl",
+      "sha256": "59fcea7eebaeade281f47eb6d7b44b52616be0520eda0909a716e9ad2ae7a847"
+    }
+  ],
+  "dependencies": {
+    "PyYAML": "6.0.3",
+    "httpx": "0.28.1",
+    "matplotlib": "3.11.2",
+    "pydantic": "2.14.1",
+    "typer": "0.27.3"
+  },
+  "evaluator_version": "1.2",
+  "event_count": 42,
+  "executed_real_agents": 0,
+  "finished_at": "2026-10-16T18:04:15.260260+00:00",
+  "git_commit": "b8b89a98e32f56726351635eef1d154c9299bf1d",
+  "os_release": {
+    "BUG_REPORT_URL": "https://bugs.debian.org/",
+    "DEBIAN_VERSION_FULL": "13.6",
+    "HOME_URL": "https://www.debian.org/",
+    "ID": "debian",
+    "NAME": "Debian GNU/Linux",
+    "PRETTY_NAME": "Debian GNU/Linux 13 (trixie)",
+    "SUPPORT_URL": "https://www.debian.org/support",
+    "VERSION": "13 (trixie)",
+    "VERSION_CODENAME": "trixie",
+    "VERSION_ID": "13"
+  },
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "protocol": {
+    "max_calls_per_arm": 12,
+    "retained_workspace_files": [],
+    "version": "1.0"
+  },
+  "purpose": "paired_protocol_validation",
+  "python_version": "3.12.14",
+  "run_id": "20261016T180415254958Z-paired-5ac582b07111",
+  "schema_version": "paired-1.0",
+  "source_identity_note": "git_commit identifies HEAD; source_sha256 identifies the executed Python working tree, including uncommitted edits.",
+  "source_sha256": "544bb5eb409f69b52cf525706606bde655acf2f5d507c5ab0d3e73865434078d",
+  "started_at": "2026-10-16T18:04:15.255159+00:00",
+  "status": "completed",
+  "temporary_sandboxes_removed": true
+}

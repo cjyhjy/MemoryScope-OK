@@ -221,6 +221,8 @@ def _run_case(agent: AgentAdapter, agent_id: str, case: BenchmarkCase, writer: E
 def run_benchmark(config_path: Path, *,
                   progress: Callable[[dict[str, Any]], None] | None = None) -> tuple[Path, dict[str, Any]]:
     loaded = load_config(config_path)
+    if loaded.config.paired is not None:
+        raise ValueError("paired configuration requires run-paired; legacy run cannot enforce paired isolation")
     dataset = load_dataset(loaded.dataset, loaded.root)
     env_names = load_env_file(loaded.root)
     # Validate every input before creating outputs; each invocation owns a new directory.

@@ -136,6 +136,29 @@ def run(config: Path = typer.Argument(..., help="YAML configuration inside the p
         raise typer.Exit(1)
 
 
+@app.command("run-paired")
+def run_paired_command(config: Path = typer.Argument(..., help="Config with an explicit paired declaration."),
+                       json_output: bool = typer.Option(False, "--json", help="Emit a versioned JSON result.")) -> None:
+    """Audit memory-on/off offline; P0 executes only the controlled synthetic adapter."""
+    from memoryscope.paired import run_paired
+    try:
+        run_dir, result = run_paired(config)
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        _reject("run-paired", error, json_output)
+    data = {"run_dir": str(run_dir), "status": result["status"], "executed_real_agents": 0,
+            "pair_status_counts": result["pair_status_counts"],
+            "pairs": [{"agent_id": pair["agent_id"], "case_id": pair["case_id"],
+                       "status": pair["status"], "comparison": pair["comparison"]} for pair in result["pairs"]]}
+    if json_output:
+        _result("run-paired", data, error=None if result["status"] == "completed" else
+                RuntimeError("paired execution failed; inspect saved evidence"))
+    else:
+        typer.echo(f"P0 paired protocol {result['status']}: {run_dir}")
+        typer.echo("Only controlled synthetic execution is supported. Inspect results.json and paired-report.md.")
+    if result["status"] != "completed":
+        raise typer.Exit(1)
+
+
 @app.command()
 def report(run_dir: Path = typer.Argument(..., help="Existing run directory."),
            json_output: bool = typer.Option(False, "--json", help="Emit a versioned JSON result."),
