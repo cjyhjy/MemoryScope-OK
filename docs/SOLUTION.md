@@ -114,7 +114,7 @@ dsh 在 macOS 上运行在 DeepSeek Harness 桌面应用内部。它的 CLI 以 
 
 环境：openKylin 3.0 (huanghe)，aarch64，Linux 7.0.0-3-generic，Python 3.12.2。codex-cli 0.162.1 与 dsh 0.2.0-rc.2 均使用 deepseek-flash，评分器 1.2。
 
-Run `20261016T064413939014Z-0d5dfa7e5bd8`：48 条 draft cases × 2 个真实 Agent，共 96 条 case 结果，状态 completed、synthetic=false，覆盖率均为 100%。[报告](../runs/20261016T064413939014Z-0d5dfa7e5bd8/report/report.md)、[雷达图](../runs/20261016T064413939014Z-0d5dfa7e5bd8/report/radar.png) 与[验证记录](validation/openkylin-real-20261016.md)均可追踪到同一运行。
+Run `20261016T064413939014Z-0d5dfa7e5bd8`：48 条 draft cases × 2 个真实 Agent，共 96 条 case 结果，状态 completed、synthetic=false，覆盖率均为 100%。[报告](results/openkylin-48x2/report.md)、[雷达图](results/openkylin-48x2/radar.png)、[HTML 结果页](results/openkylin-48x2/view.html) 与[验证记录](validation/openkylin-real-20261016.md)均可追踪到同一运行（results.json 与 metadata.json 副本同目录，SHA-256 与 metadata 一致）。
 
 | 维度 | codex | dsh |
 | --- | --- | --- |
@@ -130,7 +130,7 @@ Codex 的 `dynamic_update-007` 最终回答用了正确新值“致远楼 571”
 
 ### macOS 历史结果
 
-[results/report.md](results/report.md) 和 [results/radar.png](results/radar.png)保留 2026-10-14 的 36 条历史结果，不是当前 openKylin 48 条运行。
+[results/macos-36/report.md](results/macos-36/report.md) 和 [results/macos-36/radar.png](results/macos-36/radar.png) 保留 2026-10-14 的 36 条历史结果，不是当前 openKylin 48 条运行。
 
 环境：macOS 26.5.1（arm64）。codex-cli 0.162.0-alpha.17.2 与 dsh 0.2.0-rc.2，两者都用 deepseek-flash，评分器 1.2。
 
@@ -164,7 +164,7 @@ Codex 的 `dynamic_update-007` 最终回答用了正确新值“致远楼 571”
 - 每个 Agent 只跑了 1 次，没有重复采样和方差。
 - 只用确定性规则评分，开放式语义判断有限；LLM Judge 尚未实现（设计上默认关闭，且不能覆盖事实检查）。
 - 当前 48 条均为 draft，尚未经过独立人工复核；数量达标不等于质量验收完成。
-- openKylin 已完成两个真实 Agent 的 48 条全量实测；GUI、.deb、Python 3.10、重复运行和录屏仍待完成。
+- openKylin 已完成两个真实 Agent 的 48 条全量实测；Python 3.10 下 90 项测试通过。图形化部分只有离线 HTML 结果页（`memoryscope view`），没有配置表单和运行进度界面。没有重复运行。
 
 ## 10 创新点
 

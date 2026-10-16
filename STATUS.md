@@ -50,7 +50,7 @@
 
 - Run：`runs/20261014T134105387645Z-4d4bb8788e74`，13:41–14:25 UTC（约 44 分钟），completed，982 条事件。
 - 代码与数据为提交 379e74c 时的状态。metadata 中的 git_commit 显示为 700964a，是因为当时在运行结束时才记录；9b81681 已改为在开始时记录。运行期间数据和评分器都没有改动。
-- 报告副本：[docs/results/report.md](docs/results/report.md)、[docs/results/radar.png](docs/results/radar.png)。
+- 报告副本：[docs/results/macos-36/report.md](docs/results/macos-36/report.md)、[docs/results/macos-36/radar.png](docs/results/macos-36/radar.png)。
 
 | 维度 | codex（Codex CLI + deepseek-flash） | dsh（DeepSeek Harness + deepseek-flash） |
 | --- | --- | --- |
@@ -156,3 +156,12 @@ CLI MVP、本地检查、openKylin 初验及两款真实 Agent 的 48×2 全量�
 - `git diff --check`：退出 0。
 - 重新计算配置、数据、events、results 四个 SHA-256，与 metadata 全部一致。
 - 结果确认带回后，已移除 VMware 的 `MSOK_TRANSFER` 临时共享、关闭运行时共享文件夹，并删除宿主 `/private/tmp` 中的传输归档；正式 run 目录保留且未覆盖既有运行。
+
+## 2026-10-16 收尾（Claude）
+
+- 把 Codex 留在工作区的 CLI 0.3.0 改动与文档在本地提交为 b1de9b6（提交前 86 项测试通过，做过密钥形态扫描）。
+- 新增 `memoryscope view RUN_DIR [--open]`（`src/memoryscope/htmlview.py`）：离线生成自包含 HTML 结果页，作为图形化结果查看；`run_all.sh` 与 .deb 的 `memoryscope-ok all` 在报告之后自动生成并在有桌面时打开。已在浏览器中打开 openKylin 48×2 run 的页面核对：雷达图、六维表（Codex dynamic_update 87.5）、状态筛选到 fail 只剩 `dynamic_update-007`，评分理由与存储内容显示正确。
+- `.deb` 改为 `scripts/build_deb.py`（标准库 + pip，无需 dpkg-deb，可在 macOS 交叉构建）：依赖 wheel 按目标平台下载并打包，postinst 用 `python3 -m venv --without-pip` 加随包 pip wheel 安装，不再依赖 openKylin 默认缺失的 ensurepip/python3-venv；Python 小版本写入 Depends 并在 postinst 校验。已在 macOS 构建 `dist/memoryscope-ok_0.3.0_arm64.deb`（Python 3.12，47,157,982 字节，sha256 `06e679d45f3f9e2a24693e4fb3e9f41749472a5c5529d025c1eda060c383fec4`），解析 ar/control/data 结构核对。openKylin 安装验收见下一条。
+- `docs/results/` 重组：`openkylin-48x2/`（report.md/csv/json、radar.png、view.html、results.json、metadata.json；results.json SHA-256 与 metadata 一致）和 `macos-36/`（历史）。
+- 录屏脚本按 .deb + 桌面 + HTML 结果页重写。
+- 测试：`.venv/bin/pytest -q` **90 passed**（Python 3.13.15，macOS）；uv 创建的 Python **3.10.21** 环境 `pytest -q` **90 passed**。`bash scripts/run_all.sh configs/demo-smoke.yaml` 成功（synthetic）。

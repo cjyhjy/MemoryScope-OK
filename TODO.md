@@ -10,7 +10,8 @@
 - [x] Codex CLI 本地实现：0.3.0 机器接口、进度、可复用报告、自包含离线重评；85 项测试及 synthetic 一键脚本通过，见 STATUS。
 - [x] Codex CLI MVP Goal：补齐稳定的机器可读命令、运行定位/进度、报告与重评、错误处理和扩展接口，完成测试及 openKylin 的项目初验；保留现有真实结果，不以 48 条或 Judge 作为 MVP 门槛。
 - [x] openKylin 真实全量评测：48 条 draft cases × Codex CLI/dsh，共 96 条 case 结果；报告、雷达图、事件与快照已安全带回宿主项目。
-- [ ] Claude：按交接文档实现 GUI 历史结果页，再接入配置、异步进程与进度页；GUI 目前尚未实现。
+- [x] Claude：历史结果页以 `memoryscope view` 离线 HTML 交付（2026-10-16）。
+- [ ] （截止后）PySide6 配置表单、异步进程与进度页；当前用 `run --jsonl` 代替。
 - [ ] 双方：在 openKylin 桌面联调 CLI/GUI、检查证据与图表来源，再录屏。
 
 ## 已完成
@@ -20,7 +21,7 @@
 - [x] Codex CLI 与 DeepSeek Harness Adapter，每个 case 独立 home/工作区，不触碰用户配置。
 - [x] JSON/CSV/Markdown/雷达图报告。
 - [x] 24 条用例（六维各 4）上两个真实 Agent 完整评测（macOS），两者均 100。
-- [x] 新增 12 条 hard 用例（共 36 条），完整评测：codex 97.2，dsh 100.0，结果在 docs/results/。
+- [x] 新增 12 条 hard 用例（共 36 条），完整评测：codex 97.2，dsh 100.0，结果在 docs/results/macos-36/。
 - [x] dsh 模型通过 `--patch` 固定为 deepseek-flash，并用 `--dump-config` 读回验证。
 - [x] 脚本：setup_openkylin.sh、run_all.sh、build_deb.sh、dataset_table.py（macOS 一键脚本已验证；openKylin 本轮手动执行等价的 Python 安装/测试/CLI/报告流程，未声称脚本整体或 .deb 通过）。
 - [x] 文档：SOLUTION.md、dataset-review.md、demo-script.md，README 已重写。
@@ -51,7 +52,8 @@
 - [x] openKylin 上：CLI 安装、85 项 pytest、validate、synthetic 单例、报告与雷达图文件；记录环境和日志。
 - [x] openKylin 上：两个真实 Agent 完整 48 条 run，生成 JSON/CSV/Markdown/雷达图并目视核对；run `20261016T064413939014Z-0d5dfa7e5bd8`。
 - [ ] openKylin 桌面录屏中展示完整报告和雷达图；GUI 联调仍待 Claude 完成。
-- [ ] Python 3.10 解释器完整测试。
-- [ ] 在 openKylin 上执行 build_deb.sh，并实测安装与 `memoryscope-ok all`。
+- [x] Python 3.10 解释器完整测试（macOS，uv 3.10.21，90 passed）。
+- [x] .deb 交叉构建（macOS → arm64 / Python 3.12），见 STATUS。
+- [ ] 在 openKylin 上 `sudo dpkg -i` 安装并运行 `memoryscope-ok all configs/demo-smoke.yaml`（脚本 `/mnt/hgfs/msok/check.sh`，等用户在虚拟机内执行）。
 - [x] 把 SOLUTION.md 第 7、8 节、STATUS、README、演示和验证文档更新为 openKylin 实机结果。
 - [ ] 从官方来源核实赛题、截止时间（项目目标写的是 2026-10-16）、提交要求。

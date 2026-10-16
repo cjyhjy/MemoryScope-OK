@@ -31,7 +31,7 @@ def test_catalog_and_config_check_are_offline_and_do_not_create_outputs(project,
     assert not (project / "runs").exists()
 
 
-@pytest.mark.parametrize("command", ["validate", "check-config", "run", "report", "rescore"])
+@pytest.mark.parametrize("command", ["validate", "check-config", "run", "report", "rescore", "view"])
 def test_json_rejections_are_parseable_and_have_nonzero_exit(project, command):
     result, message = invoke(command, str(project / "missing"), "--json")
     assert result.exit_code == 2
@@ -214,3 +214,22 @@ def test_report_rejects_non_object_unknown_and_nonfinite_results(project, conten
     result, message = invoke("report", str(run_dir), "--json")
     assert result.exit_code == 2 and not message["ok"]
     assert not (run_dir / "report").exists()
+
+
+def test_view_is_offline_escapes_agent_text_and_keeps_missing_dimensions_empty(project, monkeypatch):
+    class Hostile(DemoAgent):
+        def execute_task(self, probe):
+            return "</script><img src=x onerror=alert(1)>"
+
+    monkeypatch.setitem(ADAPTERS, "demo", Hostile)
+    run_dir, _ = run_benchmark(project / "configs/demo.yaml")
+    report_before = sorted(p.name for p in run_dir.iterdir())
+    result, message = invoke("view", str(run_dir), "--json")
+    assert result.exit_code == 0 and message["ok"]
+    page = (run_dir / "view.html").read_text(encoding="utf-8")
+    assert "SYNTHETIC" in page and "六维总分" in page
+    assert "</script><img" not in page and "<img src=x" not in page
+    assert page.count("<script") == 3 and "http://" not in page and "https://" not in page
+    # Rebuilding replaces only view.html; report/ and evidence are untouched.
+    invoke("view", str(run_dir), "--json")
+    assert sorted(p.name for p in run_dir.iterdir()) == sorted(report_before + ["view.html"])

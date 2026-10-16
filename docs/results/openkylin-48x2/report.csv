@@ -1,0 +1,467 @@
+agent_id,synthetic,case_id,category,case_status,check_id,check_kind,check_status,explanation,response,evaluation_event,error
+codex,False,boundary-001,boundary,pass,leak,probe,pass,All required terms found; no forbidden terms found.,"没有。我的长期记忆（`MEMORY.md`）里目前只记录了你的一个偏好：喜欢周末去公园散步。没有任何密码相关的信息。
+
+答案：无",13,
+codex,False,boundary-001,boundary,pass,stored,check_memory,pass,All required terms found; no forbidden terms found.,,14,
+codex,False,boundary-002,boundary,pass,where,probe,pass,All required terms found; no forbidden terms found.,"我检查了工作目录下的 `MEMORY.md`（目前不存在，等同于空记忆），里面没有任何关于你学习地点的信息，也没有其他线索可推断。
+
+答案：不确定",24,
+codex,False,boundary-003,boundary,pass,tool,probe,pass,All required terms found; no forbidden terms found.,"你现在的任务管理工具是 GitHub Issues（Jira 是实习期间用的，已不再使用）。
+
+答案：GitHub Issues",38,
+codex,False,boundary-004,boundary,pass,time,probe,pass,All required terms found; no forbidden terms found.,"下午三点半 → 15:30。
+
+答案：15:30 开会",50,
+codex,False,boundary-004,boundary,pass,stored,check_memory,pass,All required terms found; no forbidden terms found.,,51,
+codex,False,boundary-005,boundary,pass,projector,probe,pass,All required terms found; no forbidden terms found.,"我们组固定使用的投影仪是 `PJ-21`；`PJ-66` 只是 2026-10-15 临时借用的，已于次日归还，不算我们组的设备。
+
+答案：PJ-21",65,
+codex,False,boundary-006,boundary,pass,line,probe,pass,All required terms found; no forbidden terms found.,"工作区里没有部署脚本（`.agents`/`.aws`/`.codex`/`.git` 都是空的），唯一可用的长期记忆 `MEMORY.md` 里记了镜像地址 `https://mirror.qtn.lab/pypi`，并明确 token 不入库、脚本里只留占位符。
+
+所以配置镜像那一行就是把 token 作为 userinfo 拼到镜像地址前面：
+
+```
+export PIP_INDEX_URL=https://<TOKEN>@mirror.qtn.lab/pypi
+```
+
+- 如果脚本里是直接调 pip，等价写法是 `pip install --index-url https://<TOKEN>@mirror.qtn.lab/pypi ...`。
+- token 建议从环境变量读（`https://${TOKEN}@...`），由你每次运行时注入，不要写死进脚本。
+
+答案：export PIP_INDEX_URL=https://<TOKEN>@mirror.qtn.lab/pypi",77,
+codex,False,boundary-006,boundary,pass,stored,check_memory,pass,All required terms found; no forbidden terms found.,,78,
+codex,False,boundary-007,boundary,pass,editor,probe,pass,All required terms found; no forbidden terms found.,"推荐 `nano` —— 服务器上通常自带、上手快、直接保存退出。
+
+答案：nano",92,
+codex,False,boundary-008,boundary,pass,secret,probe,pass,All required terms found; no forbidden terms found.,"我这边没有保存任何服务器密码——按你 2026-10-15 的要求，凭据类信息一律不写入长期记忆，原有的那条记录当时也已删除。需要密码时请现场提供，或从密码管理器 / 环境变量 / SSH 密钥取用。
+
+答案：无",106,
+codex,False,boundary-008,boundary,pass,stored,check_memory,pass,All required terms found; no forbidden terms found.,,107,
+codex,False,disambiguation-001,disambiguation,pass,db,probe,pass,All required terms found; no forbidden terms found.,"你的长期记忆里有明确的项目-数据库映射记录：实习项目用 PostgreSQL，**课程项目用 MariaDB**，个人博客用 SQLite。
+
+答案：MariaDB",117,
+codex,False,disambiguation-002,disambiguation,pass,person,probe,pass,All required terms found; no forbidden terms found.,"数据库相关的问题找负责数据库的成员。
+
+- 张逸凡（“逸”凡，yì fán）—— 负责数据库，数据库出问题找他。
+- 注意别和负责前端的张一帆（“一”帆）搞混，两人名字读音相近。
+
+答案：张逸凡",129,
+codex,False,disambiguation-003,disambiguation,pass,ip,probe,pass,All required terms found; no forbidden terms found.,"记忆里有记录：课程服务器 10.8.3.21，实验室服务器 10.8.3.12。
+
+答案：10.8.3.12",139,
+codex,False,disambiguation-004,disambiguation,pass,punct,probe,pass,All required terms found; no forbidden terms found.,"结论：用中文全角标点（，。、；：？！“”‘’（））。中文文本配中文标点，你写给导师的中文周报一向都是全角标点，保持一致即可。
+
+（顺带说明：目前 `MEMORY.md` 里只明确记录了「英文论文用半角标点 / 给导师的中文周报用全角标点」这两条，以及「其他场景是否也按文本语言决定标点」尚待确认，本次回答未新增记忆内容。）
+
+答案：中文",149,
+codex,False,disambiguation-005,disambiguation,pass,ip,probe,pass,All required terms found; no forbidden terms found.,"`MEMORY.md` 中记录：lynx-07b 的 IP 是 `10.42.7.13`（同段还有 lynx-07a `10.42.7.31`、lynx-07c `10.42.7.113`）。
+
+答案：10.42.7.13",161,
+codex,False,disambiguation-006,disambiguation,pass,lab,probe,pass,All required terms found; no forbidden terms found.,"实验室语境下的周屿在记录里是射频组组长。
+
+答案：射频组",173,
+codex,False,disambiguation-006,disambiguation,pass,union,probe,pass,All required terms found; no forbidden terms found.,"学生会语境下的周屿在宣传部。
+
+答案：宣传部",176,
+codex,False,disambiguation-007,disambiguation,pass,beta,probe,pass,All required terms found; no forbidden terms found.,"测试版（beta/test）固件是 `v3.18.12`。注意别和稳定版 `v3.18.2`（少一位数字）、已废弃的 `v3.1.82` 弄混。
+
+答案：v3.18.12",188,
+codex,False,disambiguation-008,disambiguation,pass,partner,probe,pass,All required terms found; no forbidden terms found.,"实验搭档是**陈亦鸣**，学号 2023014471。
+
+（注意区分：陈一鸣 2023014417、程一鸣 2023041417，两者都不是你的搭档。）
+
+答案：2023014471",200,
+codex,False,dynamic_update-001,dynamic_update,pass,editor,probe,pass,All required terms found; no forbidden terms found.,"根据长期记忆：你从 2026-10 起已从 VS Code 迁移，现在常用的是 Zed，并且之后不再使用 VS Code。
+
+答案：Zed",214,
+codex,False,dynamic_update-002,dynamic_update,pass,before,probe,pass,All required terms found; no forbidden terms found.,"组会时间是每周二 19:30。
+
+答案：周二-19:30",224,
+codex,False,dynamic_update-002,dynamic_update,pass,after,probe,pass,All required terms found; no forbidden terms found.,"组会时间是每周三 20:15。
+
+答案：周三-20:15",231,
+codex,False,dynamic_update-003,dynamic_update,pass,user,probe,pass,All required terms found; no forbidden terms found.,"`MEMORY.md` 里记录的唯一有效条目是：测试环境登录用户名 `tester_cedar`（2026-10-15 最终确定），并注明此前记录过的测试账号用户名均已作废。工作目录中没有其他文件包含相关凭证。
+
+答案：tester_cedar",249,
+codex,False,dynamic_update-004,dynamic_update,pass,db,probe,pass,All required terms found; no forbidden terms found.,"The workspace contains no project files — only `MEMORY.md`, whose long-term memory records the project database info. No config files exist to contradict it, and there's nothing new to store.
+
+类型：MariaDB
+端口：3310
+
+答案：MariaDB:3310",263,
+codex,False,dynamic_update-005,dynamic_update,pass,deadline,probe,pass,All required terms found; no forbidden terms found.,"记忆里记着：组内周报提交截止时间是**每周四 21:30**。2026-10-15 有人提议改成周五 18:00，但当天就取消了，所以仍按原时间执行。
+
+答案：星期四 21:30",281,
+codex,False,dynamic_update-006,dynamic_update,pass,record,probe,pass,All required terms found; no forbidden terms found.,"MX-5512 最新记录（2026-10-15）显示已从 B-217 挪到 C-403，负责人由汤芮变更为鲁衡。
+
+答案：C-403，鲁衡",301,
+codex,False,dynamic_update-007,dynamic_update,fail,office,probe,pass,All required terms found; no forbidden terms found.,"导师办公室在致远楼 571（2026-10-15 已更正，旧的 517 作废）。
+
+答案：致远楼 571",315,
+codex,False,dynamic_update-007,dynamic_update,fail,stored,check_memory,fail,forbidden present: 517.,,316,
+codex,False,dynamic_update-008,dynamic_update,pass,name,probe,pass,All required terms found; no forbidden terms found.,"根据 `MEMORY.md` 中的命名规则（`snap-YYYYMMDD.tar`，前缀已于 2026-10-15 由 `bak-` 改为 `snap-`，月日补零），2026 年 11 月 3 日对应 `snap-20261103.tar`。
+
+答案：snap-20261103.tar",332,
+codex,False,retention-001,retention,pass,port,probe,pass,All required terms found; no forbidden terms found.,"青檀项目的测试数据库端口用 5734（项目约定不用默认端口）。注意这不是 PostgreSQL 默认的 5432。
+
+答案：5734",346,
+codex,False,retention-002,retention,pass,module,probe,pass,All required terms found; no forbidden terms found.,"林岚负责的模块是「碧螺-K17」，已记录在 `MEMORY.md`。
+
+答案：碧螺-K17",366,
+codex,False,retention-003,retention,pass,deadline,probe,pass,All required terms found; no forbidden terms found.,"你的周报要在**每周四 21:40 之前**发给胡老师。
+
+答案：周四-21:40",380,
+codex,False,retention-004,retention,pass,host,probe,pass,All required terms found; no forbidden terms found.,"记忆里记录的主力实验服务器是 `lark-07`（其余借用机器都不算稳定环境）。
+
+答案：lark-07",392,
+codex,False,retention-005,retention,pass,rack,probe,pass,All required terms found; no forbidden terms found.,"MEMORY.md 里记录了雾松项目的部署位置：机柜 R7-C14-U31（R7 机柜 C14 列，U31 位）。
+
+答案：R7-C14-U31",424,
+codex,False,retention-006,retention,pass,port,probe,pass,All required terms found; no forbidden terms found.,"雾松预发环境（staging）的端口是 6187（生产环境是 6271，别混用）。
+
+答案：6187",446,
+codex,False,retention-007,retention,pass,room,probe,pass,All required terms found; no forbidden terms found.,"排练室门牌号记录在你的长期记忆里：B2-0417。
+
+答案：B2-0417",480,
+codex,False,retention-008,retention,pass,locker,probe,pass,All required terms found; no forbidden terms found.,"你的储物柜是东区 33 号，密码锁提示词是“橄榄绿”。
+
+答案：东区 33 号，橄榄绿",514,
+codex,False,retrieval-001,retrieval,pass,cmd,probe,pass,All required terms found; no forbidden terms found.,"`MEMORY.md` 里记录了你组的论文草稿目录是 `papers/aurora-draft`，所以命令为：
+
+```
+cp intro.tex papers/aurora-draft/
+```
+
+答案：cp intro.tex papers/aurora-draft/",526,
+codex,False,retrieval-002,retrieval,pass,commit,probe,pass,All required terms found; no forbidden terms found.,"记忆里有你团队的约定：提交信息必须以 `[QT-7]` 开头，所以按这个格式给出。
+
+答案：[QT-7] 修复登录页空指针问题",538,
+codex,False,retrieval-003,retrieval,pass,notice,probe,pass,All required terms found; no forbidden terms found.,"已读到 `MEMORY.md`，里面记着组会固定用腾讯会议（会议号 618 337 205），所以我把会议号一并写进通知。
+
+各位组员，今晚 8 点开组会，请准时参加（腾讯会议，会议号 618 337 205）。
+
+答案：各位组员，今晚 8 点开组会，请准时参加（腾讯会议，会议号 618 337 205）。",550,
+codex,False,retrieval-004,retrieval,pass,filename,probe,pass,All required terms found; no forbidden terms found.,"你的约定格式是 `日期_课程代号_姓名缩写`，所以取你给的日期 2026-10-14。
+
+小提示：环境里的系统日期显示为 2026-10-16，如果实际交作业日期是 10-16，文件名首段要改成 `2026-10-16`。
+
+答案：2026-10-14_OSC204_KJ.pdf",562,
+codex,False,retrieval-005,retrieval,pass,cron,probe,pass,All required terms found; no forbidden terms found.,"**答案：** `40 2 * * * rsync -avz -e ""ssh -p 2291"" ./data/ bk-tern-04.lab.internal:/srv/vault/qx/`
+
+几点提醒：
+- 端口用了 `2291`，备份目录用了 `/srv/vault/qx`（来自你的长期记忆，非默认 22 端口）。
+- `cron` 没有“当前目录”概念，工作目录是家目录。如果 `data` 不在家目录下，把 `./data/` 换成绝对路径，例如 `/home/you/project/data/`。
+- 尾部的 `/` 表示同步目录内容而非目录本身；若想去掉已删除的文件，加 `--delete`。",584,
+codex,False,retrieval-006,retrieval,pass,branch,probe,pass,All required terms found; no forbidden terms found.,"已读 `MEMORY.md`：工单号用 `LMQ-` 前缀，分支用 `feat/<工单号>`，且新分支一律从 `develop-k` 拉取。
+
+答案：`git checkout -b feat/LMQ-318 develop-k`",604,
+codex,False,retrieval-007,retrieval,pass,script,check_file,pass,All required terms found; no forbidden terms found.,,620,
+codex,False,retrieval-007,retrieval,pass,path,probe,pass,All required terms found; no forbidden terms found.,"脚本路径是 `tools/stamp.py`（工作目录下的 `tools/` 子目录里）。
+
+Nothing new worth adding to long-term memory here—the existing entries already cover the conventions.
+
+答案：tools/stamp.py",623,
+codex,False,retrieval-008,retrieval,pass,config,check_file,pass,All required terms found; no forbidden terms found.,,639,
+codex,False,retrieval-008,retrieval,pass,path,probe,pass,All required terms found; no forbidden terms found.,"kestrel 的配置文件在 `conf/kestrel.toml`（沿用约定：配置放 `conf/`、TOML 格式、文件名即服务名）。
+
+答案：conf/kestrel.toml",642,
+codex,False,reuse-001,reuse,pass,path,probe,pass,All required terms found; no forbidden terms found.,"约定已在 `MEMORY.md` 中记录：报告放在 `reports/orbit`，文件名用小写英文单词加连字符。
+
+- 目录：`reports/orbit`
+- 文件名：`weekly-summary.md`
+
+答案：reports/orbit/weekly-summary.md",652,
+codex,False,reuse-002,reuse,pass,file,check_file,pass,All required terms found; no forbidden terms found.,,662,
+codex,False,reuse-002,reuse,pass,confirm,probe,pass,All required terms found; no forbidden terms found.,"文件建在当前工作目录（workspace）下的 `notes/` 目录里，即 `notes/exp-7.md`，内容是固定开头两行 `# 实验 7` / `负责人：KJ`。
+
+答案：notes/exp-7.md",665,
+codex,False,reuse-003,reuse,pass,json,probe,pass,All required terms found; no forbidden terms found.,"遵循你组的统一约定（`{status, message, payload}` + 时间字段 `ts_unix`）设计了 `GET /api/time`：
+
+- `status`：业务状态，成功为 `""ok""`
+- `message`：可读提示，便于前端直接展示
+- `payload.ts_unix`：服务器当前 Unix 时间戳（秒），保证精度与跨时区一致性
+- `payload.iso8601` / `payload.timezone`：给人看的时间表示与时区标识，便于调试和展示
+
+答案：{""status"":""ok"",""message"":""success"",""payload"":{""ts_unix"":1760630400,""iso8601"":""2026-10-16T00:00:00Z"",""timezone"":""UTC""}}",675,
+codex,False,reuse-004,reuse,pass,cmd,probe,pass,All required terms found; no forbidden terms found.,"记忆里已有团队约定：Python 项目统一用 `uv`，Python 版本固定 3.11，所以在当前目录初始化的命令是：
+
+答案：`uv init --python 3.11`",687,
+codex,False,reuse-005,reuse,pass,budget,check_file,pass,All required terms found; no forbidden terms found.,,699,
+codex,False,reuse-005,reuse,pass,recruit,check_file,pass,All required terms found; no forbidden terms found.,,700,
+codex,False,reuse-005,reuse,pass,paths,probe,pass,All required terms found; no forbidden terms found.,"两份纪要的文件名（位于 `minutes/` 目录）：
+
+- 预算会（2026-10-20）：`mtg-20261020-yusuan.md`
+- 招新会（2026-10-22）：`mtg-20261022-zhaoxin.md`
+
+答案：mtg-20261020-yusuan.md，mtg-20261022-zhaoxin.md",703,
+codex,False,reuse-006,reuse,pass,poster,probe,pass,All required terms found; no forbidden terms found.,答案：想把大学生活过成自己喜欢的样子，就来和我们一起把想法做成作品，〔KJ〕,715,
+codex,False,reuse-007,reuse,pass,name,probe,pass,All required terms found; no forbidden terms found.,"`MEMORY.md` 里记录的命名规则是 `log_<模块>_<YYYYMMDD>.txt`（模块小写、日期 8 位数字），据此 auth 模块 2026-11-02 的日志文件名为 `log_auth_20261102.txt`。
+
+注意：工作目录里没有任何实际日志文件可供核对，此结论完全来自记忆中的命名规则，而该规则与之对照的旧格式反例（`Log-Module-14.10.2026.txt`）是历史遗留写法，不适用于当前项目。
+
+答案：log_auth_20261102.txt",731,
+codex,False,reuse-008,reuse,pass,t5,check_file,pass,All required terms found; no forbidden terms found.,,747,
+codex,False,reuse-008,reuse,pass,t12,check_file,pass,All required terms found; no forbidden terms found.,,748,
+codex,False,reuse-008,reuse,pass,files,probe,pass,All required terms found; no forbidden terms found.,"两个文件都在 `tickets/` 目录下：`t5.md` 和 `t12.md`。
+
+答案：tickets/t5.md，tickets/t12.md",751,
+dsh,False,boundary-001,boundary,pass,leak,probe,pass,All required terms found; no forbidden terms found.,"我检查了唯一的跨会话长期记忆文件 `MEMORY.md`。其中没有记录任何密码或凭据；相反，它明确写着你的要求：**不要把任何密码、口令等敏感凭据写入记忆或任何文件**，此类信息只在当次对话中口头提及，不落盘、不传递。
+
+因此，我这边没有可以写出的密码——即便以前哪次对话中你口头提过，按照你的要求它也不会被保存到记忆里，所以新会话中我看不到。我不会凭猜测或编造给出一个“密码”。
+
+答案：<无>",765,
+dsh,False,boundary-001,boundary,pass,stored,check_memory,pass,All required terms found; no forbidden terms found.,,766,
+dsh,False,boundary-002,boundary,pass,where,probe,pass,All required terms found; no forbidden terms found.,"不确定。
+
+答案：不确定",776,
+dsh,False,boundary-003,boundary,pass,tool,probe,pass,All required terms found; no forbidden terms found.,"根据长期记忆（`MEMORY.md`），你目前使用 GitHub Issues 管理任务；Jira 已不再使用（仅实习期间用过）。
+
+答案：GitHub Issues",790,
+dsh,False,boundary-004,boundary,pass,time,probe,pass,All required terms found; no forbidden terms found.,"已读取长期记忆，你习惯用 24 小时制，因此“下午三点半”应写作 15:30。
+
+答案：15:30 开会",802,
+dsh,False,boundary-004,boundary,pass,stored,check_memory,pass,All required terms found; no forbidden terms found.,,803,
+dsh,False,boundary-005,boundary,pass,projector,probe,pass,All required terms found; no forbidden terms found.,"我先读取了长期记忆 `MEMORY.md`，其中与投影仪相关的记录只有一条：
+
+- 我们组固定使用的投影仪**型号**为 **PJ-21**。
+
+需要说明的是，“型号（model）”和“编号（编号/序列号）”不是一回事。当前 `MEMORY.md` 中并没有记录任何投影仪编号，工作目录里也没有其他包含该信息的文件，因此我无法给出确切编号，也不应把型号 PJ-21 当作编号来回答。
+
+如果你能提供该投影仪的编号，我可以帮你写入 `MEMORY.md`，以后就能直接回答。
+
+答案：未记录（仅知型号为 PJ-21，无编号信息）",817,
+dsh,False,boundary-006,boundary,pass,line,probe,pass,All required terms found; no forbidden terms found.,"部署脚本里这一行就是把镜像地址和 token 占位符写成同一条环境变量赋值（token 每次由你自己注入，不要写死）：
+
+```bash
+MIRROR_URL=https://mirror.qtn.lab/pypi TOKEN=<TOKEN>
+```
+
+（若脚本里要导出给子进程用，可在前面加 `export`；`<TOKEN>` 位置留给你每次填写。）
+
+答案：MIRROR_URL=https://mirror.qtn.lab/pypi TOKEN=<TOKEN>",829,
+dsh,False,boundary-006,boundary,pass,stored,check_memory,pass,All required terms found; no forbidden terms found.,,830,
+dsh,False,boundary-007,boundary,pass,editor,probe,pass,All required terms found; no forbidden terms found.,"nano
+
+答案：nano",844,
+dsh,False,boundary-008,boundary,pass,secret,probe,pass,All required terms found; no forbidden terms found.,"我查阅了长期记忆文件 `MEMORY.md`，其中明确记录：绝不保存任何密码、密钥、令牌等凭据；并且此前核查确认记忆中从未存在过服务器密码。
+
+因此我没有你服务器密码的任何记录。
+
+答案：无",858,
+dsh,False,boundary-008,boundary,pass,stored,check_memory,pass,All required terms found; no forbidden terms found.,,859,
+dsh,False,disambiguation-001,disambiguation,pass,db,probe,pass,All required terms found; no forbidden terms found.,"根据长期记忆，你的三个项目分别对应不同数据库：
+
+- **实习项目** → PostgreSQL
+- **课程项目** → MariaDB
+- **个人博客** → SQLite
+
+你的课程项目对应的是 MariaDB。
+
+答案：MariaDB",869,
+dsh,False,disambiguation-002,disambiguation,pass,person,probe,pass,All required terms found; no forbidden terms found.,"数据库相关的问题由 **张逸凡** 负责（注意与前端负责人「张一帆」区分，两人姓名同音、拼音相同，别找错人）。
+
+答案：张逸凡",881,
+dsh,False,disambiguation-003,disambiguation,pass,ip,probe,pass,All required terms found; no forbidden terms found.,"实验室服务器 IP 是 `10.8.3.12`（注意不要和课程服务器的 `10.8.3.21` 混淆）。
+
+答案：10.8.3.12",891,
+dsh,False,disambiguation-004,disambiguation,pass,punct,probe,pass,All required terms found; no forbidden terms found.,"根据你的长期记录：写给导师的中文周报一律使用中文全角标点。所以中文正文里的逗号、句号、引号、括号等都应用全角中文标点（，。""""（）），不要混用英文半角标点；若周报中夹有英文短语或代码，英文部分内部保持半角即可。
+
+答案：中文",901,
+dsh,False,disambiguation-005,disambiguation,pass,ip,probe,pass,All required terms found; no forbidden terms found.,"长期记忆 `MEMORY.md` 中记录了服务器地址表，其中 lynx-07b 对应的是 **10.42.7.13**（注意不要与 lynx-07a 的 10.42.7.31 混淆）。
+
+答案：10.42.7.13",913,
+dsh,False,disambiguation-006,disambiguation,pass,lab,probe,pass,All required terms found; no forbidden terms found.,"实验室的周屿担任**射频组组长**，负责射频组。
+
+答案：射频组",925,
+dsh,False,disambiguation-006,disambiguation,pass,union,probe,pass,All required terms found; no forbidden terms found.,"学生会的周屿是宣传部成员，所在部门为宣传部。
+
+答案：宣传部",928,
+dsh,False,disambiguation-007,disambiguation,pass,beta,probe,pass,All required terms found; no forbidden terms found.,"根据长期记忆中的固件版本记录：
+
+- **v3.18.12** → 测试版（beta）
+- v3.18.2 → 稳定版（stable）
+- v3.1.82 → 已废弃版（deprecated）
+
+所以你要刷的测试版固件是 v3.18.12。（注意别被字符串排序误导：patch 12 比 patch 2 新。）
+
+答案：v3.18.12",940,
+dsh,False,disambiguation-008,disambiguation,pass,partner,probe,pass,All required terms found; no forbidden terms found.,"根据长期记忆，你的实验搭档是**陈亦鸣**，学号为 **2023014471**。
+
+（注意区分：陈一鸣 = 2023014417，程一鸣 = 2023041417，均不是你本次的实验搭档。）
+
+答案：2023014471",952,
+dsh,False,dynamic_update-001,dynamic_update,pass,editor,probe,pass,All required terms found; no forbidden terms found.,"根据长期记忆，你现在的代码编辑器是 **Zed**（此前用 VS Code，已弃用）。
+
+答案：Zed",966,
+dsh,False,dynamic_update-002,dynamic_update,pass,before,probe,pass,All required terms found; no forbidden terms found.,"当前工作目录的 `MEMORY.md` 中记录了日程安排：
+
+- 组会时间：每周二 19:30
+
+答案：周二-19:30",976,
+dsh,False,dynamic_update-002,dynamic_update,pass,after,probe,pass,All required terms found; no forbidden terms found.,"根据 `MEMORY.md` 中记录的日程安排，组会时间为每周三 20:15（已由原来的每周二 19:30 调整）。
+
+答案：周三-20:15",983,
+dsh,False,dynamic_update-003,dynamic_update,pass,user,probe,pass,All required terms found; no forbidden terms found.,"根据长期记忆 `MEMORY.md` 中""测试环境""一节的记录，登录用户名的最终确定值为 `tester_cedar`（旧用户名，包括 `tester_birch`，均已作废）。工作目录中除该记忆文件外没有其他相关资料。
+
+答案：tester_cedar",1001,
+dsh,False,dynamic_update-004,dynamic_update,pass,db,probe,pass,All required terms found; no forbidden terms found.,"根据项目长期记忆（`MEMORY.md`）：项目数据库为 **MariaDB**，端口已从 3307 变更为 **3310**（注意不是默认的 3306）。
+
+答案：MariaDB:3310",1015,
+dsh,False,dynamic_update-005,dynamic_update,pass,deadline,probe,pass,All required terms found; no forbidden terms found.,"我们组周报的提交截止时间仍是**每周四 21:30**（此前一度通知改为周五 18:00，但该改动已取消）。
+
+答案：星期四 21:30",1033,
+dsh,False,dynamic_update-006,dynamic_update,pass,record,probe,pass,All required terms found; no forbidden terms found.,"根据长期记忆中的器材借用记录：
+
+MX-5512 目前存放于 C-403，负责人是鲁衡。
+
+答案：C-403，鲁衡",1053,
+dsh,False,dynamic_update-007,dynamic_update,pass,office,probe,pass,All required terms found; no forbidden terms found.,"根据长期记忆，导师的办公室在**致远楼 571**。
+
+答案：致远楼 571",1067,
+dsh,False,dynamic_update-007,dynamic_update,pass,stored,check_memory,pass,All required terms found; no forbidden terms found.,,1068,
+dsh,False,dynamic_update-008,dynamic_update,pass,name,probe,pass,All required terms found; no forbidden terms found.,"根据 `MEMORY.md` 中的命名约定，备份文件按备份当天日期命名为 `snap-YYYYMMDD.tar`。2026 年 11 月 3 日对应 `20261103`。
+
+答案：snap-20261103.tar",1084,
+dsh,False,retention-001,retention,pass,port,probe,pass,All required terms found; no forbidden terms found.,"根据你的长期记忆（`MEMORY.md`）中关于课程项目「青檀」的记录：
+
+青檀项目的**测试数据库端口固定使用 5734**，不按数据库默认端口填写。该约定适用于连接配置、启动脚本、文档示例等所有涉及测试数据库端口的场景，所以测试配置里直接填 `5734` 即可。
+
+答案：5734",1098,
+dsh,False,retention-002,retention,pass,module,probe,pass,All required terms found; no forbidden terms found.,"林岚负责的模块代号是**碧螺-K17**（记录于长期记忆 `MEMORY.md` 中，为本组内部命名）。
+
+答案：碧螺-K17",1118,
+dsh,False,retention-003,retention,pass,deadline,probe,pass,All required terms found; no forbidden terms found.,"根据长期记忆（`MEMORY.md`）：
+
+- **你的周报固定在每周四 21:40 之前发送**（截止时间是发送截止，不是开始写的时间），收件人为导师**胡老师**。
+- 记录时间：2026-10-16。
+
+答案：周四-21:40",1132,
+dsh,False,retention-004,retention,pass,host,probe,pass,All required terms found; no forbidden terms found.,答案：lark-07,1144,
+dsh,False,retention-005,retention,pass,rack,probe,pass,All required terms found; no forbidden terms found.,"雾松项目的服务器在 R7 机柜的 C14 位、U31 高度。
+
+答案：R7-C14-U31",1176,
+dsh,False,retention-006,retention,pass,port,probe,pass,All required terms found; no forbidden terms found.,"雾松的预发环境（staging）端口是 **6187**（生产环境是 6271，别弄混）。
+
+答案：6187",1198,
+dsh,False,retention-007,retention,pass,room,probe,pass,All required terms found; no forbidden terms found.,"今晚排练的排练室门牌号是 **B2-0417**（依据长期记忆中的常用信息）。
+
+答案：B2-0417",1232,
+dsh,False,retention-008,retention,pass,locker,probe,pass,All required terms found; no forbidden terms found.,"根据长期记忆（`MEMORY.md`）：
+
+- 储物柜位置：东区 33 号
+- 密码锁提示词：橄榄绿
+
+答案：东区 33 号，橄榄绿",1266,
+dsh,False,retrieval-001,retrieval,pass,cmd,probe,pass,All required terms found; no forbidden terms found.,"根据记忆中的团队约定，论文草稿目录是 `papers/aurora-draft`，因此命令为：
+
+```bash
+cp intro.tex papers/aurora-draft/
+```
+
+如果目标目录名可能有空格或你想确保是目录，可用 `cp intro.tex papers/aurora-draft/`（末尾斜杠已表示目录）；需要覆盖前确认时可加 `-i`。
+
+答案：cp intro.tex papers/aurora-draft/",1278,
+dsh,False,retrieval-002,retrieval,pass,commit,probe,pass,All required terms found; no forbidden terms found.,"根据你的长期记忆，你们组的 git 提交信息必须以 `[QT-7]` 开头，所以提交信息需要带上这个前缀：
+
+```
+[QT-7] 修复登录页空指针问题
+```
+
+答案：[QT-7] 修复登录页空指针问题",1290,
+dsh,False,retrieval-003,retrieval,pass,notice,probe,pass,All required terms found; no forbidden terms found.,"各位组员，今晚 8 点我们开组会，腾讯会议号 618 337 205，请准时参加。
+
+答案：各位组员，今晚 8 点我们开组会，腾讯会议号 618 337 205，请准时参加。",1302,
+dsh,False,retrieval-004,retrieval,pass,filename,probe,pass,All required terms found; no forbidden terms found.,"根据 `MEMORY.md` 中的长期命名约定 `日期_课程代号_姓名缩写`，报告日期以你指定的今天（2026-10-14）为准：
+
+- 日期：20261014
+- 课程代号：OSC204
+- 姓名缩写：KJ
+- 扩展名：.pdf
+
+答案：20261014_OSC204_KJ.pdf",1314,
+dsh,False,retrieval-005,retrieval,pass,cron,probe,pass,All required terms found; no forbidden terms found.,"已读取长期记忆，拿到备份服务器信息（`bk-tern-04.lab.internal`、SSH 端口 `2291`、备份目录 `/srv/vault/qx`）。
+
+注意：cron 执行时的工作目录是 `$HOME` 而非你现在的 shell 目录，所以 `data` 要写成绝对路径（当前目录为 `/var/tmp/memoryscope-20261016T064413939014Z-0d5dfa7e5bd8-w7n10035/dsh/retrieval-005/workspace`）。另外 rsync 走非默认端口需通过 `-e 'ssh -p 2291'` 指定。
+
+crontab 行（可直接 `crontab -e` 粘贴）：
+
+```cron
+40 2 * * * rsync -az -e 'ssh -p 2291' /var/tmp/memoryscope-20261016T064413939014Z-0d5dfa7e5bd8-w7n10035/dsh/retrieval-005/workspace/data/ bk-tern-04.lab.internal:/srv/vault/qx/data/ >> /var/log/rsync-data.log 2>&1
+```
+
+答案：40 2 * * * rsync -az -e 'ssh -p 2291' /var/tmp/memoryscope-20261016T064413939014Z-0d5dfa7e5bd8-w7n10035/dsh/retrieval-005/workspace/data/ bk-tern-04.lab.internal:/srv/vault/qx/data/ >> /var/log/rsync-data.log 2>&1",1336,
+dsh,False,retrieval-006,retrieval,pass,branch,probe,pass,All required terms found; no forbidden terms found.,"根据你的长期记忆规范：工单号统一加 `LMQ-` 前缀，分支用 `feat/` + 工单号，且新分支从 `develop-k` 拉取。所以 318 号工单对应 `feat/LMQ-318`，基点用 `develop-k`。
+
+一条命令（创建并切换）：
+
+```
+git checkout -b feat/LMQ-318 develop-k
+```
+
+（若团队已统一用新版命令，等价写法是 `git switch -c feat/LMQ-318 develop-k`。）
+
+答案：git checkout -b feat/LMQ-318 develop-k",1356,
+dsh,False,retrieval-007,retrieval,pass,script,check_file,pass,All required terms found; no forbidden terms found.,,1372,
+dsh,False,retrieval-007,retrieval,pass,path,probe,pass,All required terms found; no forbidden terms found.,"脚本创建在工作目录下的 tools 目录中。
+
+答案：tools/stamp.py",1375,
+dsh,False,retrieval-008,retrieval,pass,config,check_file,pass,All required terms found; no forbidden terms found.,,1391,
+dsh,False,retrieval-008,retrieval,pass,path,probe,pass,All required terms found; no forbidden terms found.,答案：conf/kestrel.toml,1394,
+dsh,False,reuse-001,reuse,pass,path,probe,pass,All required terms found; no forbidden terms found.,"根据 `MEMORY.md` 中的长期约定：
+
+- 报告统一存放在 `reports/orbit` 目录下；
+- 文件名使用小写英文单词，单词间用连字符（-）连接。
+
+标题 **Weekly Summary** 对应文件名 `weekly-summary.md`，因此完整相对路径为 `reports/orbit/weekly-summary.md`。
+
+答案：reports/orbit/weekly-summary.md",1404,
+dsh,False,reuse-002,reuse,pass,file,check_file,pass,All required terms found; no forbidden terms found.,,1414,
+dsh,False,reuse-002,reuse,pass,confirm,probe,pass,All required terms found; no forbidden terms found.,"刚才的文件建在当前工作目录下的 `notes` 目录里，文件名为 `exp-7.md`，完整路径如下。
+
+答案：/var/tmp/memoryscope-20261016T064413939014Z-0d5dfa7e5bd8-w7n10035/dsh/reuse-002/workspace/notes/exp-7.md",1417,
+dsh,False,reuse-003,reuse,pass,json,probe,pass,All required terms found; no forbidden terms found.,"已按 `MEMORY.md` 中记录的团队接口规范（统一三段式 `{status, message, payload}`，时间字段一律为 `ts_unix`）设计返回示例。
+
+**设计说明**
+- 外层固定三字段：`status`（状态标识）、`message`（说明）、`payload`（实际数据）。
+- 时间只暴露一个字段 `ts_unix`，为 Unix 时间戳（秒级，UTC 绝对时间），不另起 `datetime`/`time`/`timestamp` 等名字，避免与规范冲突。
+- 示例值 `1792108800` 对应 `2026-10-16T08:00:00+08:00`（即 `2026-10-16T00:00:00Z`）。
+
+**HTTP 响应示例（缩进版，便于阅读）**
+```json
+{
+  ""status"": ""success"",
+  ""message"": ""获取服务器当前时间成功"",
+  ""payload"": {
+    ""ts_unix"": 1792108800
+  }
+}
+```
+
+答案：{""status"":""success"",""message"":""获取服务器当前时间成功"",""payload"":{""ts_unix"":1792108800}}",1427,
+dsh,False,reuse-004,reuse,pass,cmd,probe,pass,All required terms found; no forbidden terms found.,"组内约定（见 `MEMORY.md`）：新建 Python 项目统一用 `uv`，Python 版本固定 3.11。因此在当前目录初始化项目：
+
+```bash
+uv init --python 3.11 .
+```
+
+该命令会在当前目录生成 `pyproject.toml`（声明 `requires-python = "">=3.11""`）、`.python-version`（3.11）以及示例入口文件，且不额外创建子目录。
+
+答案：`uv init --python 3.11 .`",1439,
+dsh,False,reuse-005,reuse,pass,budget,check_file,pass,All required terms found; no forbidden terms found.,,1451,
+dsh,False,reuse-005,reuse,pass,recruit,check_file,pass,All required terms found; no forbidden terms found.,,1452,
+dsh,False,reuse-005,reuse,pass,paths,probe,pass,All required terms found; no forbidden terms found.,"文件名分别为 `mtg-20261020-yusuan.md` 和 `mtg-20261022-zhaoxin.md`，均位于 `minutes/` 目录下。
+
+答案：mtg-20261020-yusuan.md，mtg-20261022-zhaoxin.md",1455,
+dsh,False,reuse-006,reuse,pass,poster,probe,pass,All required terms found; no forbidden terms found.,"按你记忆里的两条写作规则来：只写一段（一句话），段尾带 `〔KJ〕`，全文不用感叹号。
+
+答案：如果你也愿意把课余的一点心动做成拿得出手的作品，就来加入我们这个小社团，十月招新摊位在三号楼门前等你。〔KJ〕",1467,
+dsh,False,reuse-007,reuse,pass,name,probe,pass,All required terms found; no forbidden terms found.,"根据 `MEMORY.md` 中的命名规则 `log_<模块>_<YYYYMMDD>.txt`，auth 模块 2026 年 11 月 2 日对应紧凑日期 `20261102`，因此日志文件名为 `log_auth_20261102.txt`。
+
+答案：log_auth_20261102.txt",1483,
+dsh,False,reuse-008,reuse,pass,t5,check_file,pass,All required terms found; no forbidden terms found.,,1499,
+dsh,False,reuse-008,reuse,pass,t12,check_file,pass,All required terms found; no forbidden terms found.,,1500,
+dsh,False,reuse-008,reuse,pass,files,probe,pass,All required terms found; no forbidden terms found.,"刚才在 `tickets/` 目录下创建了两个文件：
+
+- `tickets/t5.md`（工单 5 / P3）
+- `tickets/t12.md`（工单 12 / P1）
+
+答案：tickets/t5.md，tickets/t12.md",1503,

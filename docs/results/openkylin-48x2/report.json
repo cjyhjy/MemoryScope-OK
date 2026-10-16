@@ -1,0 +1,193 @@
+{
+  "schema_version": "1.0",
+  "run_id": "20261016T064413939014Z-0d5dfa7e5bd8",
+  "status": "completed",
+  "synthetic": false,
+  "agents": [
+    {
+      "agent_id": "codex",
+      "synthetic": false,
+      "describe": {
+        "agent": "codex-cli",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "binary": "/home/openkylin/.local/bin/codex",
+        "capabilities": [
+          "cross_session",
+          "memory_inspection",
+          "workspace_files"
+        ],
+        "class": "CodexAgent",
+        "memory_mechanism": "workspace MEMORY.md declared via per-case CODEX_HOME/AGENTS.md",
+        "model": "deepseek-flash",
+        "provider_base_url": "https://api.deepseek.com",
+        "session_mechanism": "new agent thread per session; resume the thread within a session",
+        "synthetic": false,
+        "version": "codex-cli 0.162.1"
+      },
+      "status": "completed",
+      "dimensions": {
+        "boundary": {
+          "error": 0,
+          "fail": 0,
+          "pass": 8,
+          "planned": 8,
+          "scorable": 8,
+          "scorable_coverage": 100.0,
+          "score": 100.0,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "disambiguation": {
+          "error": 0,
+          "fail": 0,
+          "pass": 8,
+          "planned": 8,
+          "scorable": 8,
+          "scorable_coverage": 100.0,
+          "score": 100.0,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "dynamic_update": {
+          "error": 0,
+          "fail": 1,
+          "pass": 7,
+          "planned": 8,
+          "scorable": 8,
+          "scorable_coverage": 100.0,
+          "score": 87.5,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "retention": {
+          "error": 0,
+          "fail": 0,
+          "pass": 8,
+          "planned": 8,
+          "scorable": 8,
+          "scorable_coverage": 100.0,
+          "score": 100.0,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "retrieval": {
+          "error": 0,
+          "fail": 0,
+          "pass": 8,
+          "planned": 8,
+          "scorable": 8,
+          "scorable_coverage": 100.0,
+          "score": 100.0,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "reuse": {
+          "error": 0,
+          "fail": 0,
+          "pass": 8,
+          "planned": 8,
+          "scorable": 8,
+          "scorable_coverage": 100.0,
+          "score": 100.0,
+          "unknown": 0,
+          "unsupported": 0
+        }
+      },
+      "overall_score": 97.91666666666667
+    },
+    {
+      "agent_id": "dsh",
+      "synthetic": false,
+      "describe": {
+        "agent": "deepseek-harness",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "binary": "/home/openkylin/.local/bin/dsh",
+        "capabilities": [
+          "cross_session",
+          "memory_inspection",
+          "workspace_files"
+        ],
+        "class": "DshAgent",
+        "effective_model": "deepseek-flash",
+        "memory_mechanism": "workspace MEMORY.md declared via per-case DSH_HOME/AGENTS.md",
+        "model": "deepseek-flash",
+        "model_pin": "--patch memoryscope-model.patch.yml on agent-default-model",
+        "provider": "deepseek-official",
+        "session_mechanism": "new agent thread per session; resume the thread within a session",
+        "synthetic": false,
+        "version": "0.2.0-rc.2"
+      },
+      "status": "completed",
+      "dimensions": {
+        "boundary": {
+          "error": 0,
+          "fail": 0,
+          "pass": 8,
+          "planned": 8,
+          "scorable": 8,
+          "scorable_coverage": 100.0,
+          "score": 100.0,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "disambiguation": {
+          "error": 0,
+          "fail": 0,
+          "pass": 8,
+          "planned": 8,
+          "scorable": 8,
+          "scorable_coverage": 100.0,
+          "score": 100.0,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "dynamic_update": {
+          "error": 0,
+          "fail": 0,
+          "pass": 8,
+          "planned": 8,
+          "scorable": 8,
+          "scorable_coverage": 100.0,
+          "score": 100.0,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "retention": {
+          "error": 0,
+          "fail": 0,
+          "pass": 8,
+          "planned": 8,
+          "scorable": 8,
+          "scorable_coverage": 100.0,
+          "score": 100.0,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "retrieval": {
+          "error": 0,
+          "fail": 0,
+          "pass": 8,
+          "planned": 8,
+          "scorable": 8,
+          "scorable_coverage": 100.0,
+          "score": 100.0,
+          "unknown": 0,
+          "unsupported": 0
+        },
+        "reuse": {
+          "error": 0,
+          "fail": 0,
+          "pass": 8,
+          "planned": 8,
+          "scorable": 8,
+          "scorable_coverage": 100.0,
+          "score": 100.0,
+          "unknown": 0,
+          "unsupported": 0
+        }
+      },
+      "overall_score": 100.0
+    }
+  ],
+  "source_results_sha256": "2cd131c9218da58f5c469ecab18a2e4c438676d1e49ad1d8ff7d610aa1af189f"
+}

@@ -56,13 +56,17 @@ if ! "$MS" report "$RUN_DIR" --reuse --json; then
   exit 1
 fi
 REPORT="$RUN_DIR/report"
+"$MS" view "$RUN_DIR" >/dev/null || echo "注意：HTML 结果页生成失败，其余报告不受影响" >&2
 echo "运行目录：$RUN_DIR"
 echo "Markdown 报告：$REPORT/report.md"
 echo "雷达图：$REPORT/radar.png"
 echo "CSV / JSON：$REPORT/report.csv  $REPORT/report.json"
+echo "HTML 结果页（雷达图 + 逐条评分理由）：$RUN_DIR/view.html"
 sed -n '/## 六维得分/,/## Agent 信息/p' "$REPORT/report.md"
 
 if command -v xdg-open >/dev/null && [ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ]; then
-  xdg-open "$REPORT/radar.png" >/dev/null 2>&1 &
+  if [ -f "$RUN_DIR/view.html" ]; then xdg-open "$RUN_DIR/view.html" >/dev/null 2>&1 &
+  else xdg-open "$REPORT/radar.png" >/dev/null 2>&1 &
+  fi
 fi
 exit "$STATUS"

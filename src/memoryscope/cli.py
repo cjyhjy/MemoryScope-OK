@@ -169,3 +169,22 @@ def rescore(run_dir: Path = typer.Argument(..., help="Existing run directory."),
         typer.echo(f"Rescored into {out}; {len(result['status_changes'])} status change(s).")
         for change in result["status_changes"]:
             typer.echo(f"  {change['agent_id']}/{change['case_id']}/{change['check_id']}: {change['old']} -> {change['new']}")
+
+
+@app.command()
+def view(run_dir: Path = typer.Argument(..., help="Existing run directory."),
+         open_page: bool = typer.Option(False, "--open", help="Open the page in the desktop browser."),
+         json_output: bool = typer.Option(False, "--json", help="Emit a versioned JSON result.")) -> None:
+    """Write a self-contained HTML page (radar, scores, per-check reasons); never calls an agent."""
+    from memoryscope.htmlview import build_view
+    try:
+        page = build_view(run_dir)
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        _reject("view", error, json_output)
+    if json_output:
+        _result("view", {"run_dir": str(run_dir.resolve()), "view_path": str(page.resolve())})
+    else:
+        typer.echo(f"View: {page}")
+    if open_page:
+        import webbrowser
+        webbrowser.open(page.resolve().as_uri())

@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- | --- |
 | `retention` | `retrieval` | `dynamic_update` | `disambiguation` | `boundary` | `reuse` |
 
-当前目标为可扩展的 MVP：CLI 与 GUI 共用评测核心，Codex 负责 CLI，Claude 负责 GUI。CLI 版本 0.3.0，当前有 48 条候选用例（质量复核待完成）。2026-10-16 已在 openKylin 3.0 ARM64 / Python 3.12.2 上完成 Codex CLI 与 DeepSeek Harness 两个真实 Agent 的全量评测，共产生 96 条 case 结果；Codex 47/48、六维总分 97.9，dsh 48/48、总分 100.0，覆盖率均为 100%。详见 [STATUS.md](STATUS.md) 与 [openKylin 真实评测记录](docs/validation/openkylin-real-20261016.md)。GUI 当前待实现。
+当前目标为可扩展的 MVP：CLI 与 GUI 共用评测核心，Codex 负责 CLI，Claude 负责 GUI。CLI 版本 0.3.0，当前有 48 条候选用例（质量复核待完成）。2026-10-16 已在 openKylin 3.0 ARM64 / Python 3.12.2 上完成 Codex CLI 与 DeepSeek Harness 两个真实 Agent 的全量评测，共产生 96 条 case 结果；Codex 47/48、六维总分 97.9，dsh 48/48、总分 100.0，覆盖率均为 100%。详见 [STATUS.md](STATUS.md) 与 [openKylin 真实评测记录](docs/validation/openkylin-real-20261016.md)。图形化结果查看由 `memoryscope view` 生成的离线 HTML 页提供（雷达图、六维表、逐条评分理由与证据序号）；配置表单和运行进度界面未实现，运行进度用 `run --jsonl`。
 
 ## 快速开始
 
@@ -25,7 +25,15 @@ python3 -m venv .venv && .venv/bin/python -m pip install -e '.[dev]'
 .venv/bin/memoryscope run configs/demo.yaml   # synthetic 管线自检，不调用 API
 ```
 
-`.deb` 包：`bash scripts/build_deb.sh` 会生成 `dist/memoryscope-ok_<版本>_<架构>.deb`。安装后运行 `memoryscope-ok all`。
+`.deb` 包（依赖 wheel 已打包，离线安装，不依赖 python3-venv/ensurepip）：
+
+```bash
+bash scripts/build_deb.sh                              # 在 openKylin 上按本机架构与 Python 构建
+bash scripts/build_deb.sh --arch arm64 --python 3.12   # 或在其他机器上交叉构建
+sudo dpkg -i dist/memoryscope-ok_0.3.0_arm64.deb
+memoryscope-ok all configs/demo-smoke.yaml             # synthetic 自检，不调用 API
+memoryscope-ok all                                     # 两个真实 Agent 完整评测 + 报告 + HTML 结果页
+```
 
 ## 命令
 
@@ -37,6 +45,7 @@ python3 -m venv .venv && .venv/bin/python -m pip install -e '.[dev]'
 | `memoryscope run configs/agents.yaml` | 运行评测，写入 `runs/<run_id>/`（含 events.jsonl 证据） |
 | `memoryscope report runs/<run_id>` | 生成 JSON / CSV / Markdown / 雷达图，不调用 Agent |
 | `memoryscope rescore runs/<run_id>` | 用当前评分器离线重评已保存证据 |
+| `memoryscope view runs/<run_id> [--open]` | 生成自包含 HTML 结果页 `view.html`（雷达图、得分、逐条评分理由），不联网、不调用 Agent |
 | `python scripts/dataset_table.py` | 输出数据集审阅表 |
 
 配置：`configs/agents.yaml` 跑完整评测，`configs/smoke.yaml` 每个 Agent 各跑 1 条，`configs/demo.yaml` 是 synthetic 自检。
@@ -49,12 +58,12 @@ GUI/脚本可给各命令加 `--json` 读取版本化结果；`run --jsonl` 实�
 
 ## 文档
 
-- [CLI 与图形界面分工和接口约定](docs/CLI_GUI_HANDOFF.md)：Claude 接手 GUI 的入口；GUI 当前待实现
+- [CLI 与图形界面分工和接口约定](docs/CLI_GUI_HANDOFF.md)：机器接口与 HTML 结果页的边界
 - [openKylin 桌面部署记录](docs/openkylin-deployment.md)：系统安装、启动兼容参数、资源与验证边界
 - [openKylin 48×2 真实评测记录](docs/validation/openkylin-real-20261016.md)：环境、隔离、结果、完整性与边界
 - [方案文档](docs/SOLUTION.md)：测试目标、架构、隔离、数据、评分、结果、局限、创新点
 - [数据集审阅表](docs/dataset-review.md)
-- [openKylin 实测报告](runs/20261016T064413939014Z-0d5dfa7e5bd8/report/report.md) 与 [雷达图](runs/20261016T064413939014Z-0d5dfa7e5bd8/report/radar.png)；`docs/results/` 保留旧 macOS 36 条历史结果
+- openKylin 48×2 实测结果副本：[报告](docs/results/openkylin-48x2/report.md)、[雷达图](docs/results/openkylin-48x2/radar.png)、[HTML 结果页](docs/results/openkylin-48x2/view.html)、results.json / metadata.json；完整证据在 `runs/`（不入库）。`docs/results/macos-36/` 为 macOS 36 条历史结果
 - [演示录屏脚本](docs/demo-script.md)
 - [进度](STATUS.md) / [待办](TODO.md) / [开发约定](AGENTS.md) / [贡献指南](CONTRIBUTING.md)
 

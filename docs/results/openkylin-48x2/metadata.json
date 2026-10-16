@@ -1,0 +1,103 @@
+{
+  "artifacts": {
+    "config.snapshot.yaml": {
+      "sha256": "59f5723683a2a99ee59f0dc2638f33b3293eec7167579eebfcccbee3788d19ed"
+    },
+    "dataset.snapshot.jsonl": {
+      "sha256": "05dbeaed234f3e40d94d13ee3d66cb80162c9628bef0d7848751a14237e86faa"
+    },
+    "events.jsonl": {
+      "sha256": "257ced42e43698a50b5f45cdb47d3624c8e6caf821aa04b16ae161bc5a37b4e9"
+    },
+    "results.json": {
+      "sha256": "6bc8dd9bc1f0390051d6ea7e165dfa9bd9e6522e86fed3161416d28a65b38b91"
+    }
+  },
+  "config_path": "configs/agents.yaml",
+  "dataset_sources": [
+    {
+      "path": "datasets/golden/boundary.jsonl",
+      "sha256": "a7baaf9fb34561a8ac5dce76e3ad6b9ec558fe560730647283abae9987b88b86"
+    },
+    {
+      "path": "datasets/golden/disambiguation.jsonl",
+      "sha256": "deb6b92bf1f22a07688ce3becfcb8d8f9a9c669bbddfe7cb758eb4dcef1622ef"
+    },
+    {
+      "path": "datasets/golden/dynamic_update.jsonl",
+      "sha256": "b5b47561003b3996cc7b5a24a357599bc5f42f46436fff643e60795e58881451"
+    },
+    {
+      "path": "datasets/golden/retention.jsonl",
+      "sha256": "618208b1285fef6858d99924727904f292aea2c72bec9e37e9076fe64f4e281c"
+    },
+    {
+      "path": "datasets/golden/retrieval.jsonl",
+      "sha256": "eba81ba8dee4d6c05874ddd406c9a2bea21b928a8990466c03cf6a9605124ff6"
+    },
+    {
+      "path": "datasets/golden/reuse.jsonl",
+      "sha256": "69c2486441e7fbb4e057fa90a93c12afe96c0c50585a20ffab5822cc3c95f70d"
+    }
+  ],
+  "dependencies": {
+    "PyYAML": "6.0.3",
+    "httpx": "0.28.1",
+    "matplotlib": "3.11.2",
+    "pydantic": "2.14.1",
+    "typer": "0.27.3"
+  },
+  "env_file_variables_loaded": [
+    "DEEPSEEK_API_KEY",
+    "MEMORYSCOPE_CODEX_BIN",
+    "MEMORYSCOPE_DSH_BIN"
+  ],
+  "evaluator": {
+    "case_score_scale": [
+      0,
+      1
+    ],
+    "case_sensitive": false,
+    "dimension_score_scale": [
+      0,
+      100
+    ],
+    "types": [
+      "contains",
+      "answer_line"
+    ],
+    "version": "1.2"
+  },
+  "event_count": 1506,
+  "finished_at": "2026-10-16T07:40:50.206931+00:00",
+  "git_commit": null,
+  "input_config_sha256": "59f5723683a2a99ee59f0dc2638f33b3293eec7167579eebfcccbee3788d19ed",
+  "limitations": [
+    "rule scoring only (no LLM judge)",
+    "environment evidence applies to this run only; see platform and os_release"
+  ],
+  "os_release": {
+    "FULL_NAME": "openKylin",
+    "HOME_URL": "https://www.openkylin.top/",
+    "ID": "openkylin",
+    "NAME": "openKylin",
+    "PRETTY_NAME": "openKylin 3.0",
+    "PRODUCT_FEATURES": "3",
+    "VERSION": "3.0 (huanghe)",
+    "VERSION_CODENAME": "huanghe",
+    "VERSION_ID": "3.0",
+    "VERSION_US": "3.0 (huanghe)"
+  },
+  "package_version": "0.3.0",
+  "platform": "Linux-7.0.0-3-generic-aarch64-with-glibc2.43",
+  "purpose": "agent_evaluation",
+  "python_version": "3.12.2 (main, Apr 13 2026, 07:40:29) [GCC 12.3.0]",
+  "run_id": "20261016T064413939014Z-0d5dfa7e5bd8",
+  "sandbox_root": "/tmp/memoryscope-20261016T064413939014Z-0d5dfa7e5bd8-w7n10035",
+  "schema_version": "1.1",
+  "seed": 0,
+  "source_sha256": "abea4acde462ac78b71dc15443e40c4dd46bed61434e600d561bc44e73e56a05",
+  "started_at": "2026-10-16T06:44:13.939159+00:00",
+  "status": "completed",
+  "synthetic": false
+}
